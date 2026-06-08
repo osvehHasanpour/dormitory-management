@@ -8,20 +8,28 @@
 * Docker Desktop
 
 ## Installation
+git clone <repository>
 
-Clone repository:
-
-```bash
-git clone git@github.com:osvehHasanpour/dormitory-management.git
 cd dormitory-management
-```
 
-Run project:
+python3 -m venv .venv
 
-```bash
-docker compose up --build
-```
+source .venv/bin/activate
 
-Backend:
+pip install -r backend/requirements.txt
 
-http://localhost:8000
+docker-compose up -d
+
+cd backend
+
+python manage.py migrate
+
+python manage.py runserver
+
+frontend 
+
+cd frontend
+
+npm install
+
+npm run dev
