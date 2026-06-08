@@ -2,6 +2,30 @@ services:
 
   backend:
     build: ./backend
+    environment:
+      DATABASE_URL: postgresql://dormitory:dormitory@postgres:5432/dormitory_db
+    depends_on:
+      postgres:
+        condition: service_healthy
 
     ports:
       - "8000:8000"
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: dormitory_db
+      POSTGRES_USER: dormitory
+      POSTGRES_PASSWORD: dormitory
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dormitory -d dormitory_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
