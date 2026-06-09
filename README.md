@@ -8,7 +8,7 @@
 * Docker Desktop
 
 ## Installation
-git clone <repository>
+git clone dormitory-management
 
 cd dormitory-management
 
