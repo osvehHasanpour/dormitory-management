@@ -1,7 +1,103 @@
+
 services:
+  # ─── PostgreSQL Database ───────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: dormitory_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-dormitory_db}
+      POSTGRES_USER: ${POSTGRES_USER:-dormitory_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dormitory_pass}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - dormitory_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dormitory_user} -d ${POSTGRES_DB:-dormitory_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # ─── pgAdmin (Database GUI) ────────────────────────────────────────────
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: dormitory_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@dormitory.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
+    ports:
+      - "5050:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dormitory_network
+
+  # ─── Django Backend ────────────────────────────────────────────────────
   backend:
-    build: ./backend
-
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dormitory_backend
+    restart: unless-stopped
+    environment:
+      DEBUG: ${DEBUG:-True}
+      SECRET_KEY: ${SECRET_KEY:-your-secret-key-change-in-production}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-dormitory_user}:${POSTGRES_PASSWORD:-dormitory_pass}@db:5432/${POSTGRES_DB:-dormitory_db}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-dormitory_db}
+      POSTGRES_USER: ${POSTGRES_USER:-dormitory_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dormitory_pass}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://frontend:3000}
+    volumes:
+      - ./backend:/app
+      - static_files:/app/staticfiles
+      - media_files:/app/media
     ports:
       - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dormitory_network
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
+
+  # ─── React Frontend ────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: dormitory_frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000/api}
+      VITE_GRAPHQL_URL: ${VITE_GRAPHQL_URL:-http://localhost:8000/graphql}
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - dormitory_network
+
+# ─── Volumes ────────────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+  static_files:
+  media_files:
+
+# ─── Networks ───────────────────────────────────────────────────────────
+networks:
+  dormitory_network:
+    driver: bridge
