@@ -1,78 +1,13 @@
 """
-Django settings for dormitory project.
-
-Generated for Docker + PostgreSQL environment.
+Add/update these settings in your backend/settings.py
+to connect Django to PostgreSQL via Docker environment variables.
 """
 
 import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-8x^&*#k2!9x7@p+_$#2@r%q5j8k9l0z1x2c3v4b5n6m7')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
-
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
-
-# Application definition
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
-    # Third-party apps
-    'corsheaders',
-    'rest_framework',
-    'rest_framework.authtoken',   # if you use token authentication
-    'drf_yasg',                    # Swagger
-    'graphene_django',             # GraphQL
-
-    # Your custom apps (add your app names here)
-    # 'students',
-    # 'dormitories',
-    # 'attendance',
-    # ... etc.
-]
-
-MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # Must be as high as possible
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-ROOT_URLCONF = 'config.urls'   # adjust if your urlconf is different (e.g. 'dormitory.urls')
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
-
-WSGI_APPLICATION = 'config.wsgi.application'   # adjust if needed
-
-# Database – PostgreSQL (from Docker environment variables)
+# ─── Database ─────────────────────────────────────────────────────────
+# Replaces the default SQLite config
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -87,38 +22,27 @@ DATABASES = {
     }
 }
 
-# Password validation
-AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+# ─── CORS ─────────────────────────────────────────────────────────────
+# pip install django-cors-headers
+INSTALLED_APPS = [
+    # ... your existing apps ...
+    'corsheaders',
+    'rest_framework',
+    'drf_yasg',       # Swagger
+    'graphene_django', # GraphQL
 ]
 
-# Internationalization
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
-USE_I18N = True
-USE_TZ = True
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # Must be before CommonMiddleware
+    'corsheaders.middleware.CorsMiddleware',
+]
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'      # collectstatic will put files here
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-# Default primary key field type
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# CORS settings (allow React frontend)
 CORS_ALLOWED_ORIGINS = os.environ.get(
     'CORS_ALLOWED_ORIGINS',
-    'http://localhost:3000,http://localhost:8000'
+    'http://localhost:3000'
 ).split(',')
-# If you want to allow all during development (not recommended for production):
-# CORS_ALLOW_ALL_ORIGINS = DEBUG
 
-# REST Framework settings
+# ─── REST Framework ───────────────────────────────────────────────────
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
@@ -131,19 +55,18 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
 }
 
-# GraphQL (Graphene)
+# ─── GraphQL ──────────────────────────────────────────────────────────
 GRAPHENE = {
-    'SCHEMA': 'dormitory.schema.schema',   # adjust to your schema location
-    # 'SCHEMA': 'config.schema.schema',    # alternative
+    'SCHEMA': 'dormitory.schema.schema',  # adjust to your schema path
 }
 
-# Swagger (drf-yasg) settings – optional
-SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
-        }
-    }
-}
+# ─── Static / Media ───────────────────────────────────────────────────
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# ─── Security ─────────────────────────────────────────────────────────
+SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-only-secret-key')
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
