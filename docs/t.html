@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سامانه مدیریت خوابگاه - دانشجو</title>
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #582281;
+            --primary-pressed: #3e1860;
+            --ink: #2E1145;
+            --body: #2E1145;
+            --ash: #B29EC2;
+            --stone: #C6A5DF;
+            --hairline: #C6A5DF;
+            --canvas: #FFFFFF;
+            --surface-soft: #faf7fd;
+            --surface-card: #f3ecfa;
+            --surface-dark: #2E1145;
+            --on-primary: #FFFFFF;
+            --secondary-bg: #C6A5DF;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'El Messiri', Tahoma, sans-serif;
+            background-color: var(--surface-soft);
+            color: var(--body);
+            direction: rtl;
+            padding-bottom: 80px; /* برای نویگیشن پایین */
+        }
+
+        /* نوار وضعیت بالا */
+        .top-nav {
+            height: 60px;
+            background-color: var(--canvas);
+            border-bottom: 1px solid var(--hairline);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .page-title { font-size: 20px; font-weight: 700; color: var(--ink); flex-grow: 1; text-align: center; }
+
+        /* بنر تصویر هیرو */
+        .banner {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #C6A5DF 0%, #582281 100%);
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .banner img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+
+        /* بخش‌بندی محتوا */
+        .section-container { padding: 0 16px; margin-bottom: 32px; }
+        .section-header { 
+            font-size: 17px; font-weight: 600; margin-bottom: 16px; 
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .section-header::after { content: ""; flex: 1; height: 1px; background: var(--hairline); margin-right: 12px; }
+
+        /* گرید آیکون‌ها (خدمات) */
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .service-card {
+            background: var(--canvas);
+            border: 1px solid var(--hairline);
+            border-radius: 12px;
+            padding: 16px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .service-card:active { transform: scale(0.95); background: var(--surface-card); }
+        .service-card i { font-size: 28px; color: var(--primary); margin-bottom: 8px; display: block; }
+        .service-card span { font-size: 13px; font-weight: 500; display: block; line-height: 1.4; }
+
+        /* گرید فرهنگی (S2) */
+        .cultural-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        /* فرم‌ها (S5) */
+        .form-card {
+            background: var(--canvas);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--hairline);
+        }
+
+        .input-group { margin-bottom: 16px; position: relative; }
+        .input-group label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+        .input-group i { position: absolute; right: 12px; top: 42px; color: var(--primary); }
+        
+        .input-field {
+            width: 100%;
+            height: 44px;
+            border: 1px solid var(--stone);
+            border-radius: 12px;
+            padding: 8px 36px 8px 12px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        textarea.input-field { height: 100px; padding-top: 12px; }
+
+        .btn-primary {
+            width: 100%;
+            height: 44px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* منوی پایین (Bottom Nav) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 70px;
+            background-color: var(--surface-dark);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            z-index: 1000;
+        }
+
+        .nav-item { color: var(--ash); text-align: center; text-decoration: none; font-size: 11px; }
+        .nav-item.active { color: var(--on-primary); }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+
+        /* کنترل نمایش صفحات */
+        .page { display: none; }
+        .page.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <div id="homePage" class="page active">
+        <div class="top-nav">
+            <div style="width: 24px;"></div> <h1 class="page-title">پیشخوان خدمات خوابگاه</h1>
+            <i class="fa-solid fa-bell" style="color: var(--primary);"></i>
+        </div>
+
+        <div class="banner">
+            <img src="https://img.freepik.com/free-vector/dormitory-room-interior-hostel-with-bunk-beds_107791-6401.jpg" alt="Dormitory illustration">
+        </div>
+
+        <div class="section-container">
+            <h2 class="section-header">خدمات رفاهی</h2>
+            <div class="icon-grid">
+                <div class="service-card" onclick="showPage('requestSuppliesPage')">
+                    <i class="fa-solid fa-box-open"></i>
+                    <span>درخواست لوازم اتاق</span>
+                </div>
+                <div class="service-card">
+                    <i class="fa-solid fa-broom"></i>
+                    <span>درخواست نظافت</span>
+                </div>
+                <div class="service-card">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <span>گزارش خرابی</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-container">
+            <h2 class="section-header">فرهنگی و دانشجویی</h2>
+            <div class="cultural-grid">
+                <div class="service-card">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <span>اطلاعیه‌ها</span>
+                </div>
+                <div class="service-card">
+                    <i class="fa-solid fa-store"></i>
+                    <span>درخواست غرفه</span>
+                </div>
+                <div class="service-card">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>ثبت نام کلاس</span>
+                </div>
+                <div class="service-card">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <span>ایده‌ها و پیشنهادات</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="requestSuppliesPage" class="page">
+        <div class="top-nav">
+            <i class="fa-solid fa-chevron-right" style="cursor:pointer" onclick="showPage('homePage')"></i>
+            <h1 class="page-title">ثبت جزئیات درخواست لوازم</h1>
+            <div style="width: 24px;"></div>
+        </div>
+
+        <div class="section-container" style="margin-top: 24px;">
+            <h2 class="section-header">درخواست لوازم اتاق</h2>
+            <div class="form-card">
+                <div class="input-group">
+                    <label>انتخاب بلوک</label>
+                    <i class="fa-solid fa-building"></i>
+                    <select class="input-field">
+                        <option>انتخاب بلوک...</option>
+                        <option>بلوک الف</option>
+                        <option>بلوک ب</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>شماره اتاق</label>
+                    <i class="fa-solid fa-door-open"></i>
+                    <input type="text" class="input-field" placeholder="شماره اتاق را وارد کنید">
+                </div>
+
+                <div class="input-group">
+                    <label>لیست اقلام</label>
+                    <i class="fa-solid fa-list-check"></i>
+                    <select class="input-field">
+                        <option>انتخاب اقلام مورد نظر...</option>
+                        <option>لامپ</option>
+                        <option>پتو/ملحفه</option>
+                        <option>صندلی</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>توضیحات تکمیلی (اختیاری)</label>
+                    <i class="fa-solid fa-comment-dots"></i>
+                    <textarea class="input-field" placeholder="توضیحات خود را اینجا بنویسید..."></textarea>
+                </div>
+
+                <button class="btn-primary">ارسال درخواست لوازم</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>خروج</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-magnifying-glass-chart"></i>
+            <span>پیگیری</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fa-solid fa-circle-user"></i>
+            <span>پروفایل</span>
+        </a>
+        <a href="#" class="nav-item active" onclick="showPage('homePage')">
+            <i class="fa-solid fa-house"></i>
+            <span>خانه</span>
+        </a>
+    </nav>
+
+    <script>
+        function showPage(pageId) {
+            // مخفی کردن همه صفحات
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            // نمایش صفحه مورد نظر
+            document.getElementById(pageId).classList.add('active');
+            
+            // مدیریت اسکرول
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
