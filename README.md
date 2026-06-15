@@ -137,7 +137,7 @@ DATABASES = {
 Make sure `backend/requirements.txt` includes:
 
 ```
-django>=4.2
+django==6.0.6
 djangorestframework
 django-cors-headers
 psycopg2-binary
