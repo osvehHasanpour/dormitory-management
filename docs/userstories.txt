@@ -1,0 +1,382 @@
+تو یک مهندس نرم افزار هستی و این سند SRS پروژه ات است. تو میخواهی این پروژه را به نحو احسن پیاده سازی و تکمیل کنی. برای مدیریت پروژه از متدولوژی چابک و فریمورک Scrum استفاده میکنی. یوزر استوری ها:
+
+## ورود به سامانه
+
+- **ID:** Dorm_Login
+- **User:** Student, Supervisor, Manager, Admin
+
+- Open login page
+- Enter username (student ID for students, personnel ID for supervisors/staff)
+- Enter password (shown as stars/dots)
+- Click login button
+- System validates credentials
+- System checks user role
+- If valid: "You logged in successfully"
+- User redirected based on role:
+    - Student → Student homepage
+    - Supervisor → Supervisor panel
+    - Manager → Manager dashboard
+    - Admin → Admin panel
+- If invalid: "Username or password incorrect"
+
+- Username must not be empty
+- Password must not be empty
+- Student ID must be 9 digits
+- Account locks after 3 failed attempts
+- Password recovery available via email
+- All login events logged to database
+- Internet required
+
+## خروج از سامانه
+
+- **ID:** Dorm_Logout
+- **User:** Student, Supervisor, Manager, Admin
+
+- Click logout button in panel
+- Popup message: "Are you sure you want to logout?"
+- Choose Yes or No
+- If Yes: successfully logged out
+- Redirected to login page
+- Session token invalidated
+
+- Must log in again to access system
+- Internet required
+
+## ثبت مشکل خرابی
+
+- **ID:** Dorm_Report_Issue
+- **User:** Student
+
+- Select "Report Issue"
+- Select category (bathroom, bath, kitchen, room, facilities)
+- Select location (floor, room number, section)
+- Upload photo (optional, max 1 file)
+- Enter description
+- Click "Submit report"
+- Message: "Issue reported successfully"
+
+- Category, location, description required
+- No offensive content (AI filter)
+- Max 1 photo attachment
+- Status flow: Registered → In Review → Assigned → Resolved
+- After resolved, student can rate the process (1-5)
+- Internet required
+
+## ثبت وضعیت مشکل
+
+- **ID:** Dorm_RequestStatusUpdate
+- **User:** Supervisor
+
+- Enter "Request Dashboard"
+- See all problems/requests list
+- Click request for details
+- Change request status
+- Add optional description/comment
+- Click "Update"
+
+- Statuses: Registered, In Review, Assigned to Staff, Resolved, Rejected
+- Student gets automatic notification on each status change
+- Each status change saved with timestamp
+- Cannot change status without permission
+- Internet required
+
+## درخواست نظافت
+
+- **ID:** Dorm_Cleaning_Request
+- **User:** Student
+
+- Select "Cleaning Request"
+- Click "New request"
+- Select space type (hall, kitchen, bathroom, bath, common area)
+- Select exact location
+- Add description
+- Click "Submit"
+- Message: "Cleaning request registered"
+
+- Space type and location required
+- No offensive content (AI filter)
+- Max 3 active requests (not completed)
+- Status flow: Registered → Approved/Rejected → In Progress → Completed
+- After completed, student can rate service (1-5)
+- Internet required
+
+## درخواست لوازم اتاق
+
+- **ID:** Dorm_Room_Supplies_Request
+- **User:** Student
+
+- Select "Room Supplies Request"
+- Select item from predefined list
+- Enter quantity (1 to 3 only)
+- Add optional description
+- Click "Submit request"
+- Message: "Request registered successfully"
+
+- Max 3 active requests (not delivered or rejected)
+- Request valid only for student's own room
+- Status flow: Registered → Approved/Rejected → Preparing → Delivered
+- Inventory availability checked at approval time
+- If item not available: request rejected with reason
+- Internet required
+
+## ثبت درخواست غرفه
+
+- **ID:** Dorm_BoothRequest
+- **User:** Student
+
+- Enter "Booth Request" section
+- Fill form: booth title, goods/services type, optional description
+- Click "Submit"
+- Message: "Request registered, wait for supervisor approval"
+
+- One request per student per bazaar
+- Booth title and goods type required
+- Initial status: "Registered"
+- Can view request status in "My Requests"
+- Cannot submit after bazaar registration deadline
+- Internet required
+
+## تایید یا رد درخواست غرفه
+
+- **ID:** Dorm_SupervisorBoothApproval
+- **User:** Supervisor
+
+- Enter "Student Bazaar" section
+- See request list (student name, booth title, goods type, date, status)
+- Click request for details
+- Two options: Approve or Reject
+
+- If Approve: click "Approve" → message "Request approved"
+- If Reject: click "Reject" → mandatory reason field → confirm
+- Notification sent to student
+- Request moves to history section
+
+- Only supervisor/manager can approve/reject
+- Status changes to approved or rejected
+- Decision date/time recorded
+- Cannot approve/reject after bazaar registration closes
+- Internet required
+
+## ثبت شکایات و پیشنهادات
+
+- **ID:** Dorm_Suggestions_Complaints
+- **User:** Student
+
+- Enter "Suggestions & Complaints"
+- Select type (Suggestion or Complaint)
+- Select category (Cleaning, Facilities, Welfare, Security, Education, Other)
+- Enter title
+- Enter full description
+- Click "Submit"
+- Message: "Suggestion/complaint registered successfully"
+
+- Title, type, category, description all required
+- Max 5 active requests per student
+- Supervisor must respond within 72 hours
+- No offensive content (AI validation)
+- If AI detects bad content: "Please fix your text"
+- Internet required
+
+## مشاهده ایده دیگران و ثبت رای
+
+- **ID:** Dorm_IdeaVoting
+- **User:** Student
+
+- Enter "Ideas & Suggestions" section
+- See list of registered ideas
+- Filter by: Most votes, Newest, Oldest
+- Click idea for details
+- Click 👍 or 👎 to vote
+- Vote count updates immediately
+- Message: "Your vote was registered"
+
+- One vote per student per idea
+- Cancel vote by clicking again
+- Only approved ideas visible
+- Cannot vote on own idea
+- Internet required
+
+## مشاهده ایده و شکایت و پاسخ دهی
+
+- **ID:** Dorm_RequestReview
+- **User:** Supervisor
+
+- Enter "Ideas & Complaints" section
+- See full list of complaints and ideas
+- Filter by status or date
+- Click to read details
+- Write response in response field
+- Click "Send Response"
+- Student sees response status
+
+- Response must be within 72 hours of submission
+- Response saved with timestamp
+- Student gets notification when responded
+- Internet required
+
+## ثبت اطلاعیه‌ها
+
+- **ID:** Dorm_AnnouncementCreate
+- **User:** Supervisor
+
+- Enter announcements section
+- See existing announcements list
+- Click "New announcement"
+- Write title and text
+- Select priority (Normal or Urgent)
+- Click "Submit"
+- Message: "Announcement successfully registered"
+
+- Title and text required
+- Urgent announcements send SMS/notification to all students
+- Can edit or delete before sending
+- Internet required
+
+## مشاهده اطلاعیه‌ها
+
+- **ID:** Dorm_ViewAnnouncements
+- **User:** Student
+
+- Enter homepage
+- See "Announcements" section at top
+- Click to see all announcements
+- List sorted by date (newest first)
+- Each announcement shows: title, date, summary
+- Click announcement for full text
+
+- Only supervisors/admins can create announcements
+- Types: Normal, Urgent (red highlight)
+- Urgent announcements sent via SMS/notification automatically
+- Archived announcements in separate section
+- Internet required
+
+## ثبت کلاس در سامانه
+
+- **ID:** Dorm_SupervisorCreateClass
+- **User:** Supervisor
+
+- Enter "Class Management" section
+- View all classes list
+- Click "New Class"
+- Fill: title, instructor, category, start date/time, end date/time, capacity, location (optional), description (optional)
+- Click "Submit class"
+- Message: "Class successfully registered"
+
+- Start date must be > current date
+- End date must be > start date
+- Category from predefined list (educational, sports, cultural, artistic)
+- Default status: Active
+- Cannot create class in past
+- Internet required
+
+## مشاهده کلاس های فعال
+
+- **ID:** Dorm_ViewActiveClasses
+- **User:** Student
+
+- Enter "Classes" main menu
+- See list of active classes
+- Each class shows: title, instructor, date/time, capacity, remaining capacity
+- Filter by category (educational, sports, cultural, artistic)
+- Click class for details (description, syllabus, reviews)
+- See "Register" button if capacity available
+- If full: "Capacity full" shown
+
+- Only future-dated classes shown
+- Average rating displayed (1-5 stars)
+- Search by title available
+- Internet required
+
+## ثبت نام کلاس‌ها
+
+- **ID:** Dorm_Classes
+- **User:** Student
+
+- Select "Class Registration"
+- See active classes list
+- Each class shows: title, instructor, date/time, capacity, description
+- Click on class
+- Click "Register" button
+- Message: "Registration successful"
+- If capacity full: "Capacity full" shown, button disabled
+
+- Student must be logged in
+- Class capacity must not be full
+- One registration per student per class
+- Only registered students can rate class after it ends
+- Can cancel registration (adds seat back)
+- Cancel message: "Registration cancelled"
+- Internet required
+
+## امتیاز دهی به کلاس
+
+- **ID:** Dorm_ClassRating
+- **User:** Student
+
+- Enter "My Classes" section
+- See completed registered classes only
+- Click "Rating" button next to class
+- Select score 1 to 5
+- Click "Submit rating"
+- Message: "Your rating was successful"
+
+- One rating per student per class
+- Only students who registered can rate
+- Class must be finished (status = completed)
+- Rating saved, class average updates automatically
+- Internet required
+- Cannot rate before class ends
+- Optional comment with AI content filter
+
+## مشاهده مراحل پیگیری (Student)
+
+- **ID:** Dorm_RequestTracking
+- **User:** Student
+
+- Enter "My Requests" section
+- See all registered requests
+- Click request for status details
+- View current status
+- See timeline: Registered → In Review → Assigned to Staff → Resolved
+- See each status change with date/time
+- See staff comments if any
+
+- Automatic notification on each status change
+- Closed requests also visible
+- Cannot edit request after submission
+- Internet required
+
+## مشاهده مراحل پیگیری (Supervisor)
+
+- **ID:** Dorm_ReportTracking
+- **User:** Supervisor
+
+- Enter "View Reports" section
+- See all student reports list
+- Filter by: student, report type, date, status
+- Click report for full details
+- View text, attachments, date submitted
+- Check current status: Pending, In Review, Reviewed
+- Forward to staff if needed
+
+- Cannot edit or delete student reports
+- Only view and update status
+- Add internal notes for staff
+- Internet required
+
+## مشاهده تاریخچه درخواست ها
+
+- **ID:** Dorm_RequestHistory
+- **User:** Student
+
+- Enter "My Requests" section
+- See all registered requests
+- Each request shows: type, date, status, summary
+- Click request for full details
+- Filter by request type or date
+
+- Only student's own requests shown
+- Closed requests (resolved/rejected) clearly identifiable
+- Open requests shown at top
+- Search by keyword available
+- Internet required
