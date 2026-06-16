@@ -246,3 +246,39 @@ def serialize_request_detail(request_obj):
     }
     serializer_class = mapping[request_obj.request_type]
     return serializer_class(request_obj).data
+
+
+class FeedbackCreateSerializer(serializers.Serializer):
+    title = serializers.CharField(
+        max_length=200,
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'blank': PERSIAN_BLANK_MESSAGE,
+            'max_length': 'عنوان نباید بیشتر از ۲۰۰ کاراکتر باشد.',
+        },
+    )
+    description = serializers.CharField(
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'blank': PERSIAN_BLANK_MESSAGE,
+        },
+    )
+
+
+class FeedbackAuthorSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    personnel_code = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+
+
+class FeedbackDetailSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    type = serializers.CharField()
+    type_display = serializers.CharField()
+    title = serializers.CharField()
+    description = serializers.CharField()
+    status = serializers.CharField()
+    status_display = serializers.CharField()
+    supervisor_response = serializers.CharField()
+    author = FeedbackAuthorSerializer()
