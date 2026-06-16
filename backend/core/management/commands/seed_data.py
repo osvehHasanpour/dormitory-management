@@ -22,7 +22,22 @@ from users.models import Role, User
 class Command(BaseCommand):
     help = 'Seed the database with realistic Persian sample data (≥5 records per model).'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--force',
+            action='store_true',
+            help='Clear existing data and re-seed (default when DB is empty).',
+        )
+
     def handle(self, *args, **options):
+        if Role.objects.exists() and not options['force']:
+            self.stdout.write(
+                self.style.WARNING(
+                    'Database already seeded. Use --force to clear and re-seed.',
+                ),
+            )
+            return
+
         self.stdout.write('Clearing existing data...')
         self._clear_data()
 

@@ -87,7 +87,7 @@ class MaintenanceRequest(RequestBase):
         blank=True,
         verbose_name='تصویر',
     )
-    description = models.TextField(blank=True, verbose_name='توضیحات تکمیلی')
+    extra_description = models.TextField(blank=True, verbose_name='توضیحات تکمیلی')
 
     class Meta:
         verbose_name = 'درخواست تعمیرات'
@@ -97,7 +97,7 @@ class MaintenanceRequest(RequestBase):
 class CleaningRequest(RequestBase):
     location = models.CharField(max_length=200, verbose_name='محل')
     preferred_date = models.DateField(verbose_name='تاریخ ترجیحی')
-    description = models.TextField(blank=True, verbose_name='توضیحات تکمیلی')
+    extra_description = models.TextField(blank=True, verbose_name='توضیحات تکمیلی')
 
     class Meta:
         verbose_name = 'درخواست نظافت'
