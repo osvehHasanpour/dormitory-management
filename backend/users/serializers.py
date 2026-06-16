@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from users.models import User
@@ -44,6 +45,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         )
         read_only_fields = fields
 
+    @extend_schema_field(serializers.CharField(allow_null=True))
     def get_role_name(self, obj):
         if not obj.role_id:
             return None
