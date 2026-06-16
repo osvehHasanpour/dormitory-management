@@ -31,6 +31,10 @@ urlpatterns = [
         'api/v1/requests/',
         include(('requests_app.urls', 'requests_app'), namespace='requests'),
     ),
+    path(
+        'api/v1/classes/',
+        include(('classes.urls', 'classes'), namespace='classes'),
+    ),
     path('graphql/', JWTGraphQLView.as_view(graphiql=settings.DEBUG), name='graphql'),
 
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
