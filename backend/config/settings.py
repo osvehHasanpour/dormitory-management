@@ -168,6 +168,10 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API documentation for the Dormitory Management System',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'TAGS': [
+        {'name': 'Authentication', 'description': 'ورود، خروج و مدیریت توکن'},
+        {'name': 'Requests', 'description': 'درخواست‌های خوابگاه'},
+    ],
 }
 
 GRAPHENE = {
