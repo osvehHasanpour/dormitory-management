@@ -1,0 +1,248 @@
+from rest_framework import serializers
+
+from requests_app.models import (
+    BoothRequest,
+    CleaningRequest,
+    InventoryItem,
+    ItemRequest,
+    MaintenanceRequest,
+    RequestBase,
+)
+
+PERSIAN_REQUIRED_MESSAGE = 'این فیلد الزامی است.'
+PERSIAN_BLANK_MESSAGE = 'این فیلد نمی‌تواند خالی باشد.'
+
+
+class UserSummarySerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    personnel_code = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    role_name = serializers.SerializerMethodField()
+
+    def get_role_name(self, obj):
+        if getattr(obj, 'role_id', None):
+            return obj.role.name
+        return None
+
+
+class InventoryItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InventoryItem
+        fields = ('id', 'item_name', 'category', 'quantity', 'description')
+        read_only_fields = fields
+
+
+class RequestBaseSerializer(serializers.ModelSerializer):
+    status_display = serializers.CharField(source='get_status_display', read_only=True)
+    request_type_display = serializers.CharField(
+        source='get_request_type_display',
+        read_only=True,
+    )
+    user = UserSummarySerializer(read_only=True)
+    handled_by = UserSummarySerializer(read_only=True)
+
+    class Meta:
+        model = RequestBase
+        fields = (
+            'id',
+            'request_type',
+            'request_type_display',
+            'status',
+            'status_display',
+            'description',
+            'created_at',
+            'updated_at',
+            'user',
+            'handled_by',
+            'ai_content_flag',
+        )
+        read_only_fields = fields
+
+
+class MaintenanceRequestDetailSerializer(RequestBaseSerializer):
+    location = serializers.CharField(read_only=True)
+    extra_description = serializers.CharField(read_only=True)
+    photo_url = serializers.ImageField(read_only=True)
+
+    class Meta(RequestBaseSerializer.Meta):
+        model = MaintenanceRequest
+        fields = RequestBaseSerializer.Meta.fields + (
+            'location',
+            'extra_description',
+            'photo_url',
+        )
+
+
+class MaintenanceRequestCreateSerializer(serializers.ModelSerializer):
+    description = serializers.CharField(
+        required=True,
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'blank': PERSIAN_BLANK_MESSAGE,
+        },
+    )
+    location = serializers.CharField(
+        required=True,
+        max_length=200,
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'blank': PERSIAN_BLANK_MESSAGE,
+        },
+    )
+    extra_description = serializers.CharField(required=False, allow_blank=True)
+    photo_url = serializers.ImageField(required=False, allow_null=True)
+
+    class Meta:
+        model = MaintenanceRequest
+        fields = ('description', 'location', 'extra_description', 'photo_url')
+
+
+class CleaningRequestDetailSerializer(RequestBaseSerializer):
+    location = serializers.CharField(read_only=True)
+    preferred_date = serializers.DateField(read_only=True)
+    extra_description = serializers.CharField(read_only=True)
+
+    class Meta(RequestBaseSerializer.Meta):
+        model = CleaningRequest
+        fields = RequestBaseSerializer.Meta.fields + (
+            'location',
+            'preferred_date',
+            'extra_description',
+        )
+
+
+class CleaningRequestCreateSerializer(serializers.ModelSerializer):
+    description = serializers.CharField(
+        required=True,
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'blank': PERSIAN_BLANK_MESSAGE,
+        },
+    )
+    location = serializers.CharField(
+        required=True,
+        max_length=200,
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'blank': PERSIAN_BLANK_MESSAGE,
+        },
+    )
+    preferred_date = serializers.DateField(
+        required=True,
+        error_messages={'required': PERSIAN_REQUIRED_MESSAGE},
+    )
+    extra_description = serializers.CharField(required=False, allow_blank=True)
+
+    class Meta:
+        model = CleaningRequest
+        fields = ('description', 'location', 'preferred_date', 'extra_description')
+
+
+class ItemSummarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InventoryItem
+        fields = ('id', 'item_name', 'category', 'quantity')
+        read_only_fields = fields
+
+
+class ItemRequestDetailSerializer(RequestBaseSerializer):
+    quantity = serializers.IntegerField(read_only=True)
+    delivery_status = serializers.CharField(read_only=True)
+    item = ItemSummarySerializer(read_only=True)
+
+    class Meta(RequestBaseSerializer.Meta):
+        model = ItemRequest
+        fields = RequestBaseSerializer.Meta.fields + (
+            'item',
+            'quantity',
+            'delivery_status',
+        )
+
+
+class ItemRequestCreateSerializer(serializers.ModelSerializer):
+    description = serializers.CharField(
+        required=True,
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'blank': PERSIAN_BLANK_MESSAGE,
+        },
+    )
+    item = serializers.PrimaryKeyRelatedField(
+        queryset=InventoryItem.objects.all(),
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'does_not_exist': 'کالای انتخاب‌شده یافت نشد.',
+        },
+    )
+    quantity = serializers.IntegerField(
+        min_value=1,
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'min_value': 'تعداد باید حداقل ۱ باشد.',
+        },
+    )
+    delivery_status = serializers.CharField(required=False, allow_blank=True)
+
+    class Meta:
+        model = ItemRequest
+        fields = ('description', 'item', 'quantity', 'delivery_status')
+
+
+class BoothRequestDetailSerializer(RequestBaseSerializer):
+    name = serializers.CharField(read_only=True)
+    category = serializers.CharField(read_only=True)
+    event_date = serializers.DateField(read_only=True)
+    approval_date = serializers.DateField(read_only=True)
+
+    class Meta(RequestBaseSerializer.Meta):
+        model = BoothRequest
+        fields = RequestBaseSerializer.Meta.fields + (
+            'name',
+            'category',
+            'event_date',
+            'approval_date',
+        )
+
+
+class BoothRequestCreateSerializer(serializers.ModelSerializer):
+    description = serializers.CharField(
+        required=True,
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'blank': PERSIAN_BLANK_MESSAGE,
+        },
+    )
+    name = serializers.CharField(
+        required=True,
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'blank': PERSIAN_BLANK_MESSAGE,
+        },
+    )
+    category = serializers.CharField(
+        required=True,
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'blank': PERSIAN_BLANK_MESSAGE,
+        },
+    )
+    event_date = serializers.DateField(
+        required=True,
+        error_messages={'required': PERSIAN_REQUIRED_MESSAGE},
+    )
+
+    class Meta:
+        model = BoothRequest
+        fields = ('description', 'name', 'category', 'event_date')
+
+
+def serialize_request_detail(request_obj):
+    mapping = {
+        RequestBase.RequestType.MAINTENANCE: MaintenanceRequestDetailSerializer,
+        RequestBase.RequestType.CLEANING: CleaningRequestDetailSerializer,
+        RequestBase.RequestType.ITEM: ItemRequestDetailSerializer,
+        RequestBase.RequestType.BOOTH: BoothRequestDetailSerializer,
+    }
+    serializer_class = mapping[request_obj.request_type]
+    return serializer_class(request_obj).data
