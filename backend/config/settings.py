@@ -171,6 +171,7 @@ SPECTACULAR_SETTINGS = {
     'TAGS': [
         {'name': 'Authentication', 'description': 'ورود، خروج و مدیریت توکن'},
         {'name': 'Requests', 'description': 'درخواست‌های خوابگاه'},
+        {'name': 'Classes', 'description': 'ثبت‌نام و امتیازدهی کلاس‌ها'},
     ],
 }
 
