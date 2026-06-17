@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from ideas.models import IdeaComplaint
 from requests_app.models import (
     BoothRequest,
     CleaningRequest,
@@ -335,6 +336,13 @@ class FeedbackCreateSerializer(serializers.Serializer):
             'blank': PERSIAN_BLANK_MESSAGE,
         },
     )
+    category = serializers.ChoiceField(
+        choices=IdeaComplaint.Category.choices,
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'invalid_choice': 'دسته‌بندی معتبر نیست.',
+        },
+    )
 
 
 class FeedbackAuthorSerializer(serializers.Serializer):
@@ -348,9 +356,15 @@ class FeedbackDetailSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     type = serializers.CharField()
     type_display = serializers.CharField()
+    category = serializers.CharField(allow_null=True, required=False)
+    category_display = serializers.CharField(allow_null=True, required=False)
     title = serializers.CharField()
     description = serializers.CharField()
     status = serializers.CharField()
     status_display = serializers.CharField()
     supervisor_response = serializers.CharField()
+    response_text = serializers.CharField(required=False, allow_blank=True)
+    created_at = serializers.DateTimeField(required=False, allow_null=True)
+    responded_at = serializers.DateTimeField(required=False, allow_null=True)
+    responded_within_sla = serializers.BooleanField(required=False, allow_null=True)
     author = FeedbackAuthorSerializer()

@@ -1,4 +1,5 @@
 from ideas.models import IdeaComplaint
+from ideas.selectors.supervisor_feedback_selectors import SupervisorFeedbackSelector
 from requests_app.exceptions import RequestServiceError
 from rest_framework import status
 
@@ -21,18 +22,22 @@ class ComplaintSelector:
         ).select_related(*FEEDBACK_SELECT_RELATED)
 
     @classmethod
-    def get_my_complaints(cls, user, *, status=None):
+    def get_my_complaints(cls, user, *, status=None, category=None):
         queryset = cls._base_queryset(IdeaComplaint.Type.COMPLAINT).filter(user=user)
         if status:
             queryset = queryset.filter(status=status)
-        return queryset.order_by('-id')
+        if category:
+            queryset = queryset.filter(category=category)
+        return queryset.order_by('-created_at')
 
     @classmethod
-    def get_my_suggestions(cls, user, *, status=None):
+    def get_my_suggestions(cls, user, *, status=None, category=None):
         queryset = cls._base_queryset(IdeaComplaint.Type.SUGGESTION).filter(user=user)
         if status:
             queryset = queryset.filter(status=status)
-        return queryset.order_by('-id')
+        if category:
+            queryset = queryset.filter(category=category)
+        return queryset.order_by('-created_at')
 
     @classmethod
     def get_complaint_for_user(cls, user, pk):
@@ -85,7 +90,7 @@ class ComplaintSelector:
 
     @classmethod
     def build_feedback_payload(cls, item):
-        return {
+        payload = {
             'id': item.id,
             'type': item.type,
             'type_display': item.get_type_display(),
@@ -101,3 +106,5 @@ class ComplaintSelector:
                 'last_name': item.user.last_name,
             },
         }
+        payload.update(SupervisorFeedbackSelector.build_student_feedback_fields(item))
+        return payload

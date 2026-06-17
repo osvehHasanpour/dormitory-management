@@ -9,6 +9,7 @@ class NotificationSelector:
     def _base_queryset(cls, user):
         return Notification.objects.filter(user=user).select_related(
             'related_request',
+            'related_idea_complaint',
         )
 
     @classmethod
@@ -42,4 +43,5 @@ class NotificationSelector:
             'is_read': notification.is_read,
             'created_at': notification.created_at,
             'related_request_id': notification.related_request_id,
+            'related_idea_complaint_id': notification.related_idea_complaint_id,
         }
