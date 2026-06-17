@@ -46,6 +46,18 @@
   --text-body-sm--line-height: 1.5;
   --text-body-sm--font-weight: 400;
 
+  --text-heading-lg: 20px;
+  --text-heading-lg--line-height: 1.35;
+  --text-heading-lg--font-weight: 600;
+
+  --text-body-sm-strong: 13px;
+  --text-body-sm-strong--line-height: 1.5;
+  --text-body-sm-strong--font-weight: 700;
+
+  --text-caption-sm: 11px;
+  --text-caption-sm--line-height: 1.4;
+  --text-caption-sm--font-weight: 400;
+
   --text-button-md: 14px;
   --text-button-md--line-height: 1;
   --text-button-md--font-weight: 700;
@@ -85,6 +97,20 @@
   border-radius: var(--radius-md);
 }
 
+@utility rounded-lg {
+  border-radius: var(--radius-lg);
+}
+
+@utility rounded-t-lg {
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+}
+
+@utility rounded-b-lg {
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
 @utility text-heading-xl {
   font-size: var(--text-heading-xl);
   line-height: var(--text-heading-xl--line-height);
@@ -101,6 +127,24 @@
   font-size: var(--text-body-sm);
   line-height: var(--text-body-sm--line-height);
   font-weight: var(--text-body-sm--font-weight);
+}
+
+@utility text-heading-lg {
+  font-size: var(--text-heading-lg);
+  line-height: var(--text-heading-lg--line-height);
+  font-weight: var(--text-heading-lg--font-weight);
+}
+
+@utility text-body-sm-strong {
+  font-size: var(--text-body-sm-strong);
+  line-height: var(--text-body-sm-strong--line-height);
+  font-weight: var(--text-body-sm-strong--font-weight);
+}
+
+@utility text-caption-sm {
+  font-size: var(--text-caption-sm);
+  line-height: var(--text-caption-sm--line-height);
+  font-weight: var(--text-caption-sm--font-weight);
 }
 
 @utility text-button-md {
