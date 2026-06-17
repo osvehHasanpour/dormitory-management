@@ -1,5 +1,17 @@
 from rest_framework import serializers
 
+PERSIAN_REQUIRED_MESSAGE = 'این فیلد الزامی است.'
+PERSIAN_BLANK_MESSAGE = 'این فیلد نمی‌تواند خالی باشد.'
+
+
+class CreatedBySummarySerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    personnel_code = serializers.CharField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    display_name = serializers.CharField()
+    avatar = serializers.CharField(allow_null=True, required=False)
+
 
 class AnnouncementDetailSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -7,7 +19,7 @@ class AnnouncementDetailSerializer(serializers.Serializer):
     content = serializers.CharField()
     is_active = serializers.BooleanField()
     created_at = serializers.DateTimeField()
-    created_by = serializers.DictField()
+    created_by = CreatedBySummarySerializer()
 
 
 class AnnouncementCreateSerializer(serializers.Serializer):
@@ -26,6 +38,18 @@ class AnnouncementCreateSerializer(serializers.Serializer):
         },
     )
 
+    def validate_title(self, value):
+        stripped = value.strip()
+        if not stripped:
+            raise serializers.ValidationError('عنوان اطلاعیه نمی‌تواند خالی باشد.')
+        return stripped
+
+    def validate_content(self, value):
+        stripped = value.strip()
+        if not stripped:
+            raise serializers.ValidationError('متن اطلاعیه نمی‌تواند خالی باشد.')
+        return stripped
+
 
 class AnnouncementUpdateSerializer(serializers.Serializer):
     title = serializers.CharField(
@@ -42,3 +66,22 @@ class AnnouncementUpdateSerializer(serializers.Serializer):
             'blank': 'متن اطلاعیه نمی‌تواند خالی باشد.',
         },
     )
+
+    def validate_title(self, value):
+        stripped = value.strip()
+        if not stripped:
+            raise serializers.ValidationError('عنوان اطلاعیه نمی‌تواند خالی باشد.')
+        return stripped
+
+    def validate_content(self, value):
+        stripped = value.strip()
+        if not stripped:
+            raise serializers.ValidationError('متن اطلاعیه نمی‌تواند خالی باشد.')
+        return stripped
+
+    def validate(self, attrs):
+        if not attrs:
+            raise serializers.ValidationError(
+                'حداقل یکی از فیلدهای عنوان یا محتوا باید ارسال شود.',
+            )
+        return attrs
