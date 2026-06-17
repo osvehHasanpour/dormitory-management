@@ -2,6 +2,7 @@ from django.db import transaction
 
 from core.models import Notification
 from core.selectors.notification_selectors import NotificationSelector
+from users.models import Role, User
 
 
 class NotificationService:
@@ -24,3 +25,22 @@ class NotificationService:
             is_read=False,
         ).update(is_read=True)
         return updated_count
+
+    @classmethod
+    @transaction.atomic
+    def broadcast_to_students(cls, *, message):
+        students = User.objects.filter(
+            role__name=Role.Name.STUDENT,
+            is_active=True,
+        ).only('id')
+
+        notifications = [
+            Notification(
+                user_id=student.id,
+                message=message,
+                related_request=None,
+            )
+            for student in students
+        ]
+        Notification.objects.bulk_create(notifications, batch_size=500)
+        return len(notifications)

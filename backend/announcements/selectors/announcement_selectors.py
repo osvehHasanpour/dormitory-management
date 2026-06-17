@@ -28,6 +28,17 @@ class AnnouncementSelector:
                 status.HTTP_404_NOT_FOUND,
             ) from exc
 
+    @staticmethod
+    def _build_created_by_payload(user):
+        return {
+            'id': user.id,
+            'personnel_code': user.personnel_code,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'display_name': f'{user.first_name} {user.last_name}'.strip(),
+            'avatar': None,
+        }
+
     @classmethod
     def build_payload(cls, announcement):
         return {
@@ -36,10 +47,5 @@ class AnnouncementSelector:
             'content': announcement.content,
             'is_active': announcement.is_active,
             'created_at': announcement.created_at,
-            'created_by': {
-                'id': announcement.created_by_id,
-                'personnel_code': announcement.created_by.personnel_code,
-                'first_name': announcement.created_by.first_name,
-                'last_name': announcement.created_by.last_name,
-            },
+            'created_by': cls._build_created_by_payload(announcement.created_by),
         }

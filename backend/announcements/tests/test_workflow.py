@@ -137,3 +137,42 @@ class AnnouncementWorkflowTests(TestCase):
         self.assertIsNotNone(notification)
         self.assertIn('عنوان ویژه', notification.message)
         self.assertFalse(notification.is_read)
+
+    def test_create_strips_whitespace_from_fields(self):
+        announcement = AnnouncementService.create(
+            user=self.supervisor,
+            data={'title': '  عنوان  ', 'content': '  محتوا  '},
+        )
+
+        self.assertEqual(announcement.title, 'عنوان')
+        self.assertEqual(announcement.content, 'محتوا')
+
+    def test_update_strips_whitespace_from_fields(self):
+        announcement = AnnouncementService.create(
+            user=self.supervisor,
+            data={'title': 'قدیمی', 'content': 'متن قدیمی'},
+        )
+
+        updated = AnnouncementService.update(
+            user=self.supervisor,
+            announcement_id=announcement.id,
+            data={'title': '  جدید  ', 'content': '  متن جدید  '},
+        )
+
+        self.assertEqual(updated.title, 'جدید')
+        self.assertEqual(updated.content, 'متن جدید')
+
+    def test_empty_update_raises_error(self):
+        announcement = AnnouncementService.create(
+            user=self.supervisor,
+            data={'title': 'تست', 'content': 'متن'},
+        )
+
+        with self.assertRaises(AnnouncementServiceError) as ctx:
+            AnnouncementService.update(
+                user=self.supervisor,
+                announcement_id=announcement.id,
+                data={},
+            )
+
+        self.assertIn('حداقل', ctx.exception.message)

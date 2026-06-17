@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from announcements.models import Announcement
+from core.models import Notification
 from users.models import Role, User
 
 
@@ -14,6 +15,7 @@ class AnnouncementsAPITestBase(APITestCase):
             name=Role.Name.SUPERVISOR,
             description='سرپرست',
         )
+        self.admin_role = Role.objects.create(name=Role.Name.ADMIN, description='مدیر')
 
         self.student = User.objects.create(
             personnel_code='401234567',
@@ -34,6 +36,16 @@ class AnnouncementsAPITestBase(APITestCase):
         )
         self.supervisor.set_password('supervisor-pass')
         self.supervisor.save()
+
+        self.admin = User.objects.create(
+            personnel_code='9002001',
+            national_code='3234567890',
+            first_name='مدیر',
+            last_name='سیستم',
+            role=self.admin_role,
+        )
+        self.admin.set_password('admin-pass')
+        self.admin.save()
 
         self.announcement = Announcement.objects.create(
             title='اطلاعیه تست',
@@ -85,6 +97,17 @@ class AnnouncementListAPITests(AnnouncementsAPITestBase):
         result = response.data['data']['results'][0]
         for field in ('id', 'title', 'content', 'is_active', 'created_at', 'created_by'):
             self.assertIn(field, result)
+
+    def test_list_response_includes_created_by_display_name_and_avatar(self):
+        self.auth_as(self.student)
+        response = self.client.get(reverse('announcements:announcement-list'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        created_by = response.data['data']['results'][0]['created_by']
+        self.assertEqual(created_by['display_name'], 'حسین کریمی')
+        self.assertIsNone(created_by['avatar'])
+        for field in ('id', 'personnel_code', 'first_name', 'last_name'):
+            self.assertIn(field, created_by)
 
 
 class AnnouncementCreateAPITests(AnnouncementsAPITestBase):
@@ -147,6 +170,83 @@ class AnnouncementCreateAPITests(AnnouncementsAPITestBase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_create_with_whitespace_only_title_fails(self):
+        self.auth_as(self.supervisor)
+        response = self.client.post(
+            reverse('announcements:announcement-list'),
+            {'title': '   ', 'content': 'محتوای معتبر'},
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(response.data['success'])
+        self.assertIn('title', response.data['errors'])
+
+    def test_create_with_whitespace_only_content_fails(self):
+        self.auth_as(self.supervisor)
+        response = self.client.post(
+            reverse('announcements:announcement-list'),
+            {'title': 'عنوان معتبر', 'content': '   '},
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(response.data['success'])
+        self.assertIn('content', response.data['errors'])
+
+    def test_create_with_title_exceeding_max_length_fails(self):
+        self.auth_as(self.supervisor)
+        response = self.client.post(
+            reverse('announcements:announcement-list'),
+            {'title': 'ا' * 201, 'content': 'محتوا'},
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(response.data['success'])
+        self.assertIn('title', response.data['errors'])
+
+    def test_create_strips_whitespace_from_fields(self):
+        self.auth_as(self.supervisor)
+        response = self.client.post(
+            reverse('announcements:announcement-list'),
+            {'title': '  عنوان با فاصله  ', 'content': '  محتوا با فاصله  '},
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['data']['title'], 'عنوان با فاصله')
+        self.assertEqual(response.data['data']['content'], 'محتوا با فاصله')
+
+    def test_create_notifies_active_students(self):
+        self.auth_as(self.supervisor)
+        initial_count = Notification.objects.filter(user=self.student).count()
+
+        response = self.client.post(
+            reverse('announcements:announcement-list'),
+            {'title': 'اطلاعیه با اعلان', 'content': 'متن'},
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(
+            Notification.objects.filter(user=self.student).count(),
+            initial_count + 1,
+        )
+        latest = Notification.objects.filter(user=self.student).order_by('-id').first()
+        self.assertIn('اطلاعیه با اعلان', latest.message)
+
+    def test_admin_creates_announcement(self):
+        self.auth_as(self.admin)
+        response = self.client.post(
+            reverse('announcements:announcement-list'),
+            {'title': 'اطلاعیه مدیر', 'content': 'متن مدیر'},
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(response.data['success'])
+
 
 class AnnouncementDetailAPITests(AnnouncementsAPITestBase):
     def test_student_retrieves_active_announcement(self):
@@ -191,6 +291,17 @@ class AnnouncementDetailAPITests(AnnouncementsAPITestBase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_detail_includes_created_by_display_name(self):
+        self.auth_as(self.student)
+        response = self.client.get(
+            reverse('announcements:announcement-detail', kwargs={'pk': self.announcement.pk}),
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        created_by = response.data['data']['created_by']
+        self.assertEqual(created_by['display_name'], 'حسین کریمی')
+        self.assertIsNone(created_by['avatar'])
+
 
 class AnnouncementUpdateAPITests(AnnouncementsAPITestBase):
     def test_supervisor_updates_announcement(self):
@@ -233,6 +344,40 @@ class AnnouncementUpdateAPITests(AnnouncementsAPITestBase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertFalse(response.data['success'])
 
+    def test_patch_updates_announcement(self):
+        self.auth_as(self.supervisor)
+        response = self.client.patch(
+            reverse('announcements:announcement-detail', kwargs={'pk': self.announcement.pk}),
+            {'content': 'محتوای patch شده'},
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.announcement.refresh_from_db()
+        self.assertEqual(self.announcement.content, 'محتوای patch شده')
+
+    def test_update_with_empty_body_fails(self):
+        self.auth_as(self.supervisor)
+        response = self.client.put(
+            reverse('announcements:announcement-detail', kwargs={'pk': self.announcement.pk}),
+            {},
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(response.data['success'])
+
+    def test_admin_updates_announcement(self):
+        self.auth_as(self.admin)
+        response = self.client.put(
+            reverse('announcements:announcement-detail', kwargs={'pk': self.announcement.pk}),
+            {'title': 'ویرایش توسط مدیر'},
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['data']['title'], 'ویرایش توسط مدیر')
+
 
 class AnnouncementDeactivateAPITests(AnnouncementsAPITestBase):
     def test_supervisor_deactivates_announcement(self):
@@ -269,3 +414,12 @@ class AnnouncementDeactivateAPITests(AnnouncementsAPITestBase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertFalse(response.data['success'])
+
+    def test_admin_deactivates_announcement(self):
+        self.auth_as(self.admin)
+        response = self.client.delete(
+            reverse('announcements:announcement-detail', kwargs={'pk': self.announcement.pk}),
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data['data']['is_active'])

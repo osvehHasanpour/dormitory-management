@@ -5,6 +5,7 @@ from announcements.exceptions import AnnouncementServiceError
 from announcements.models import Announcement
 from announcements.selectors.announcement_selectors import AnnouncementSelector
 from core.api.permissions import is_supervisor_or_admin
+from core.services.notification_service import NotificationService
 
 
 class AnnouncementService:
@@ -23,12 +24,14 @@ class AnnouncementService:
         cls._ensure_supervisor(user)
 
         announcement = Announcement.objects.create(
-            title=data['title'],
-            content=data['content'],
+            title=data['title'].strip(),
+            content=data['content'].strip(),
             created_by=user,
         )
 
-        cls._broadcast_to_students(announcement)
+        NotificationService.broadcast_to_students(
+            message=f'اطلاعیه جدید: {announcement.title}',
+        )
         return AnnouncementSelector.get_by_id(announcement.pk)
 
     @classmethod
@@ -36,12 +39,18 @@ class AnnouncementService:
     def update(cls, *, user, announcement_id, data):
         cls._ensure_supervisor(user)
 
+        if not data:
+            raise AnnouncementServiceError(
+                'حداقل یکی از فیلدهای عنوان یا محتوا باید ارسال شود.',
+                {'detail': ['هیچ فیلدی برای به‌روزرسانی ارسال نشده است.']},
+            )
+
         announcement = AnnouncementSelector.get_by_id(announcement_id)
 
         if 'title' in data:
-            announcement.title = data['title']
+            announcement.title = data['title'].strip()
         if 'content' in data:
-            announcement.content = data['content']
+            announcement.content = data['content'].strip()
 
         update_fields = [k for k in ('title', 'content') if k in data]
         if update_fields:
@@ -66,23 +75,3 @@ class AnnouncementService:
         announcement.is_active = False
         announcement.save(update_fields=['is_active'])
         return AnnouncementSelector.get_by_id(announcement.pk)
-
-    @staticmethod
-    def _broadcast_to_students(announcement):
-        from core.models import Notification
-        from users.models import Role, User
-
-        students = User.objects.filter(
-            role__name=Role.Name.STUDENT,
-            is_active=True,
-        ).only('id')
-
-        notifications = [
-            Notification(
-                user_id=student.id,
-                message=f'اطلاعیه جدید: {announcement.title}',
-                related_request=None,
-            )
-            for student in students
-        ]
-        Notification.objects.bulk_create(notifications, batch_size=500)
