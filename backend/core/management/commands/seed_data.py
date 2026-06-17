@@ -390,12 +390,14 @@ class Command(BaseCommand):
             cls = Class.objects.create(
                 title=title,
                 description=desc,
+                location=f'سالن {i + 1}',
                 capacity=capacity,
                 start_datetime=now + timedelta(days=7 + i, hours=10),
                 end_datetime=now + timedelta(days=7 + i, hours=12),
                 created_by=supervisors[i % len(supervisors)],
                 teacher=supervisors[(i + 1) % len(supervisors)],
                 category=category,
+                status=Class.Status.ACTIVE,
             )
             class_objects.append(cls)
 

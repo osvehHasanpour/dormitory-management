@@ -10,11 +10,23 @@ class Class(models.Model):
         CULTURAL = 'cultural', 'فرهنگی'
         ART = 'art', 'هنری'
 
+    class Status(models.TextChoices):
+        ACTIVE = 'active', 'فعال'
+        COMPLETED = 'completed', 'پایان‌یافته'
+        CANCELLED = 'cancelled', 'لغو شده'
+
     title = models.CharField(max_length=200, verbose_name='عنوان')
     description = models.TextField(blank=True, verbose_name='توضیحات')
+    location = models.CharField(max_length=200, blank=True, verbose_name='مکان')
     capacity = models.PositiveIntegerField(verbose_name='ظرفیت')
     start_datetime = models.DateTimeField(verbose_name='زمان شروع')
     end_datetime = models.DateTimeField(verbose_name='زمان پایان')
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.ACTIVE,
+        verbose_name='وضعیت',
+    )
     created_by = models.ForeignKey(
         'users.User',
         on_delete=models.CASCADE,
@@ -114,6 +126,7 @@ class Rating(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(5)],
         verbose_name='امتیاز',
     )
+    comment = models.TextField(blank=True, verbose_name='نظر')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
 
     class Meta:

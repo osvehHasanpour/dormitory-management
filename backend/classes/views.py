@@ -231,6 +231,7 @@ class ClassRateView(EnvelopedAPIViewMixin, APIView):
                 user=request.user,
                 class_id=pk,
                 score=serializer.validated_data['score'],
+                comment=serializer.validated_data.get('comment', ''),
             )
         except ClassServiceError as exc:
             return error_response(exc.message, exc.errors, exc.status_code)

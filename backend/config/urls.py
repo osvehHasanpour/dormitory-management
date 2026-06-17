@@ -36,6 +36,10 @@ urlpatterns = [
         include(('classes.urls', 'classes'), namespace='classes'),
     ),
     path(
+        'api/v1/supervisor/classes/',
+        include(('classes.urls_supervisor', 'supervisor_classes'), namespace='supervisor_classes'),
+    ),
+    path(
         'api/v1/ideas/',
         include(('ideas.urls', 'ideas'), namespace='ideas'),
     ),
