@@ -172,6 +172,9 @@ SPECTACULAR_SETTINGS = {
         {'name': 'Authentication', 'description': 'ورود، خروج و مدیریت توکن'},
         {'name': 'Requests', 'description': 'درخواست‌های خوابگاه'},
         {'name': 'Classes', 'description': 'ثبت‌نام و امتیازدهی کلاس‌ها'},
+        {'name': 'Ideas', 'description': 'ثبت و رأی‌دهی به ایده‌ها'},
+        {'name': 'Complaints', 'description': 'ثبت و پیگیری شکایات'},
+        {'name': 'Suggestions', 'description': 'ثبت و پیگیری پیشنهادات'},
     ],
 }
 
