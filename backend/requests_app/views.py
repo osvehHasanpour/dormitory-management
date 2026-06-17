@@ -2,6 +2,7 @@ from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_
 from rest_framework import mixins, status, viewsets
 from rest_framework.views import APIView
 
+from core.api.permissions import IsStudent
 from core.api.responses import EnvelopedAPIViewMixin, error_response, success_response
 from requests_app.exceptions import RequestServiceError
 from requests_app.models import (
@@ -10,7 +11,7 @@ from requests_app.models import (
     ItemRequest,
     MaintenanceRequest,
 )
-from requests_app.permissions import CanAccessRequests, IsStudent
+from requests_app.permissions import CanAccessRequests
 from requests_app.selectors.request_selectors import RequestSelector
 from requests_app.serializers import (
     BoothRequestCreateSerializer,

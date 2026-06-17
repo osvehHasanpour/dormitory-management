@@ -4,10 +4,10 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 
 from classes.exceptions import ClassServiceError
-from classes.permissions import IsStudent
 from classes.selectors.class_selectors import ClassSelector
 from classes.serializers import ClassDetailSerializer, RatingCreateSerializer
 from classes.services.class_service import ClassService
+from core.api.permissions import IsStudent
 from core.api.responses import EnvelopedAPIViewMixin, error_response, success_response
 
 

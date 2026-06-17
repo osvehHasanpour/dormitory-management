@@ -4,7 +4,6 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 
 from announcements.exceptions import AnnouncementServiceError
-from announcements.permissions import IsSupervisorOrAdmin
 from announcements.selectors.announcement_selectors import AnnouncementSelector
 from announcements.serializers import (
     AnnouncementCreateSerializer,
@@ -12,6 +11,7 @@ from announcements.serializers import (
     AnnouncementUpdateSerializer,
 )
 from announcements.services.announcement_service import AnnouncementService
+from core.api.permissions import IsSupervisorOrAdmin, is_supervisor_or_admin
 from core.api.responses import EnvelopedAPIViewMixin, error_response, success_response
 
 
@@ -149,7 +149,6 @@ class AnnouncementDetailView(EnvelopedAPIViewMixin, APIView):
             return error_response(exc.message, exc.errors, exc.status_code)
 
         if not announcement.is_active:
-            from core.api.permissions import is_supervisor_or_admin
             if not is_supervisor_or_admin(request.user):
                 return error_response(
                     'اطلاعیه مورد نظر یافت نشد.',
