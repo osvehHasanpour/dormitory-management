@@ -38,6 +38,12 @@ class ClassService:
                 {'class': ['این کلاس به پایان رسیده است.']},
             )
 
+        if class_obj.status != Class.Status.ACTIVE:
+            raise ClassServiceError(
+                'ثبت‌نام در این کلاس امکان‌پذیر نیست.',
+                {'class': ['این کلاس فعال نیست.']},
+            )
+
         active_count = ClassRegistration.objects.filter(
             class_instance=class_obj,
             is_cancelled=False,
@@ -116,7 +122,7 @@ class ClassService:
 
     @classmethod
     @transaction.atomic
-    def submit_rating(cls, *, user, class_id, score):
+    def submit_rating(cls, *, user, class_id, score, comment=''):
         cls._ensure_student(user)
 
         try:
@@ -154,5 +160,6 @@ class ClassService:
             user=user,
             class_instance=class_obj,
             score=score,
+            comment=comment,
         )
         return ClassSelector.get_class_detail(user, class_id), rating

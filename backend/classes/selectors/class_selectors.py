@@ -20,13 +20,13 @@ class ClassSelector:
     @classmethod
     def annotate_capacity_and_ratings(cls, queryset):
         return queryset.annotate(
-            registered_count=Count(
+            active_registered_count=Count(
                 'registrations',
                 filter=Q(registrations__is_cancelled=False),
             ),
             average_rating=Avg('ratings__score'),
         ).annotate(
-            remaining_capacity=F('capacity') - F('registered_count'),
+            active_remaining_capacity=F('capacity') - F('active_registered_count'),
         )
 
     @classmethod
@@ -49,7 +49,10 @@ class ClassSelector:
 
     @classmethod
     def get_active_classes(cls, user):
-        queryset = cls._base_queryset().filter(end_datetime__gt=timezone.now())
+        queryset = cls._base_queryset().filter(
+            status=Class.Status.ACTIVE,
+            end_datetime__gt=timezone.now(),
+        )
         queryset = cls.annotate_capacity_and_ratings(queryset)
         queryset = cls.annotate_user_flags(queryset, user)
         return queryset.order_by('start_datetime')
@@ -122,13 +125,13 @@ class ClassSelector:
         has_rating = getattr(class_obj, 'has_rating', False)
         registered_count = getattr(
             class_obj,
-            'registered_count',
-            class_obj.registrations.filter(is_cancelled=False).count(),
+            'active_registered_count',
+            class_obj.registered_count,
         )
         remaining_capacity = getattr(
             class_obj,
-            'remaining_capacity',
-            class_obj.capacity - registered_count,
+            'active_remaining_capacity',
+            class_obj.remaining_capacity,
         )
         average_rating = getattr(class_obj, 'average_rating', None)
         user_rating_obj = cls.get_user_rating(user, class_obj) if user else None
@@ -140,6 +143,7 @@ class ClassSelector:
             'id': class_obj.id,
             'title': class_obj.title,
             'description': class_obj.description,
+            'location': class_obj.location,
             'category': class_obj.category,
             'category_display': class_obj.get_category_display(),
             'capacity': class_obj.capacity,

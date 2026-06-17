@@ -17,8 +17,8 @@ class RatingInline(admin.TabularInline):
 
 @admin.register(Class)
 class ClassAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'capacity', 'start_datetime', 'teacher', 'created_by')
-    list_filter = ('category',)
+    list_display = ('title', 'category', 'status', 'capacity', 'location', 'start_datetime', 'teacher', 'created_by')
+    list_filter = ('category', 'status')
     search_fields = ('title',)
     inlines = [ClassRegistrationInline, RatingInline]
 
@@ -31,5 +31,5 @@ class ClassRegistrationAdmin(admin.ModelAdmin):
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'class_instance', 'score', 'created_at')
+    list_display = ('user', 'class_instance', 'score', 'comment', 'created_at')
     list_filter = ('score',)
