@@ -7,7 +7,22 @@ from requests_app.models import (
     ItemRequest,
     MaintenanceRequest,
     RequestBase,
+    RequestStatusHistory,
 )
+
+
+class RequestStatusHistoryInline(admin.TabularInline):
+    model = RequestStatusHistory
+    extra = 0
+    readonly_fields = (
+        'previous_status',
+        'new_status',
+        'acting_supervisor',
+        'comment',
+        'rejection_reason',
+        'created_at',
+    )
+    can_delete = False
 
 
 @admin.register(InventoryItem)
@@ -19,10 +34,41 @@ class InventoryItemAdmin(admin.ModelAdmin):
 
 @admin.register(RequestBase)
 class RequestBaseAdmin(admin.ModelAdmin):
-    list_display = ('id', 'request_type', 'status', 'user', 'handled_by', 'created_at')
+    list_display = (
+        'id',
+        'request_type',
+        'status',
+        'user',
+        'handled_by',
+        'assigned_staff',
+        'created_at',
+    )
     list_filter = ('request_type', 'status')
     search_fields = ('user__personnel_code', 'description')
-    readonly_fields = ('created_at', 'updated_at')
+    readonly_fields = ('created_at', 'updated_at', 'rejection_reason')
+    inlines = [RequestStatusHistoryInline]
+
+
+@admin.register(RequestStatusHistory)
+class RequestStatusHistoryAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'request',
+        'previous_status',
+        'new_status',
+        'acting_supervisor',
+        'created_at',
+    )
+    list_filter = ('new_status',)
+    readonly_fields = (
+        'request',
+        'previous_status',
+        'new_status',
+        'acting_supervisor',
+        'comment',
+        'rejection_reason',
+        'created_at',
+    )
 
 
 @admin.register(MaintenanceRequest)

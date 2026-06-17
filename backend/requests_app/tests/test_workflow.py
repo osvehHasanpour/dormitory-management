@@ -1,8 +1,12 @@
 from django.test import TestCase
 
-from ideas.models import IdeaComplaint, Vote
+from ideas.models import IdeaComplaint
 from requests_app.exceptions import RequestServiceError
-from requests_app.models import MaintenanceRequest, RequestBase
+from requests_app.models import (
+    MaintenanceRequest,
+    RequestBase,
+    RequestStatusHistory,
+)
 from requests_app.services.complaint_service import ComplaintService
 from requests_app.services.request_service import RequestService
 from requests_app.services.state_machine import validate_transition
@@ -95,6 +99,100 @@ class RequestWorkflowTests(TestCase):
                 request_id=request_obj.pk,
                 new_status=RequestBase.Status.IN_PROGRESS,
             )
+
+    def test_rejection_reason_required_in_service(self):
+        request_obj = MaintenanceRequest.objects.create(
+            user=self.student,
+            request_type=RequestBase.RequestType.MAINTENANCE,
+            description='خرابی لوله',
+            location='بلوک الف',
+        )
+
+        with self.assertRaises(RequestServiceError) as ctx:
+            RequestService.change_status(
+                actor=self.supervisor,
+                request_id=request_obj.pk,
+                new_status=RequestBase.Status.REJECTED,
+                rejection_reason='',
+            )
+
+        self.assertIn('rejection_reason', ctx.exception.errors)
+
+    def test_record_status_history_on_change_status(self):
+        request_obj = MaintenanceRequest.objects.create(
+            user=self.student,
+            request_type=RequestBase.RequestType.MAINTENANCE,
+            description='خرابی لوله',
+            location='بلوک الف',
+        )
+
+        RequestService.change_status(
+            actor=self.supervisor,
+            request_id=request_obj.pk,
+            new_status=RequestBase.Status.IN_PROGRESS,
+            comment='بررسی اولیه',
+        )
+
+        history = RequestStatusHistory.objects.filter(request_id=request_obj.pk)
+        self.assertEqual(history.count(), 1)
+        entry = history.first()
+        self.assertEqual(entry.previous_status, RequestBase.Status.PENDING)
+        self.assertEqual(entry.new_status, RequestBase.Status.IN_PROGRESS)
+        self.assertEqual(entry.acting_supervisor_id, self.supervisor.id)
+        self.assertEqual(entry.comment, 'بررسی اولیه')
+
+    def test_pending_to_approved_allowed_for_cleaning(self):
+        validate_transition(
+            RequestBase.Status.PENDING,
+            RequestBase.Status.APPROVED,
+            request_type=RequestBase.RequestType.CLEANING,
+        )
+
+    def test_pending_to_approved_blocked_for_maintenance(self):
+        with self.assertRaises(RequestServiceError):
+            validate_transition(
+                RequestBase.Status.PENDING,
+                RequestBase.Status.APPROVED,
+                request_type=RequestBase.RequestType.MAINTENANCE,
+            )
+
+    def test_create_cleaning_records_initial_history(self):
+        request_obj = RequestService.create_cleaning(
+            user=self.student,
+            data={
+                'description': 'نظافت راهرو',
+                'location': 'بلوک ب',
+                'preferred_date': '2026-06-20',
+            },
+        )
+
+        history = RequestStatusHistory.objects.filter(request_id=request_obj.pk)
+        self.assertEqual(history.count(), 1)
+        self.assertIsNone(history.first().previous_status)
+        self.assertEqual(history.first().new_status, RequestBase.Status.PENDING)
+
+    def test_cleaning_active_limit_enforced_in_service(self):
+        for index in range(3):
+            RequestService.create_cleaning(
+                user=self.student,
+                data={
+                    'description': f'نظافت {index + 1}',
+                    'location': f'بلوک {index + 1}',
+                    'preferred_date': f'2026-07-{index + 1:02d}',
+                },
+            )
+
+        with self.assertRaises(RequestServiceError) as ctx:
+            RequestService.create_cleaning(
+                user=self.student,
+                data={
+                    'description': 'نظافت چهارم',
+                    'location': 'بلوک ۴',
+                    'preferred_date': '2026-07-10',
+                },
+            )
+
+        self.assertIn('limit', ctx.exception.errors)
 
 
 class FeedbackWorkflowTests(TestCase):
