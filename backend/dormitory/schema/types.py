@@ -11,6 +11,18 @@ class UserSummaryType(graphene.ObjectType):
     role_name = graphene.String()
 
 
+class RequestStatusHistoryType(graphene.ObjectType):
+    id = graphene.Int()
+    previous_status = graphene.String()
+    previous_status_display = graphene.String()
+    new_status = graphene.String()
+    new_status_display = graphene.String()
+    acting_supervisor = graphene.Field(UserSummaryType)
+    comment = graphene.String()
+    rejection_reason = graphene.String()
+    created_at = graphene.DateTime()
+
+
 class RequestType(graphene.ObjectType):
     id = graphene.Int()
     request_type = graphene.String()
@@ -23,6 +35,9 @@ class RequestType(graphene.ObjectType):
     ai_content_flag = graphene.Boolean()
     user = graphene.Field(UserSummaryType)
     handled_by = graphene.Field(UserSummaryType)
+    assigned_staff = graphene.Field(UserSummaryType)
+    rejection_reason = graphene.String()
+    status_timeline = graphene.List(RequestStatusHistoryType)
     location = graphene.String()
     extra_description = graphene.String()
     photo_url = graphene.String()
@@ -74,9 +89,34 @@ def map_user(user):
     )
 
 
+def map_status_history(entry):
+    previous_display = None
+    if entry.previous_status:
+        from requests_app.models import RequestBase
+        previous_display = RequestBase.Status(entry.previous_status).label
+
+    new_display = None
+    if entry.new_status:
+        from requests_app.models import RequestBase
+        new_display = RequestBase.Status(entry.new_status).label
+
+    return RequestStatusHistoryType(
+        id=entry.id,
+        previous_status=entry.previous_status,
+        previous_status_display=previous_display,
+        new_status=entry.new_status,
+        new_status_display=new_display,
+        acting_supervisor=map_user(entry.acting_supervisor),
+        comment=entry.comment,
+        rejection_reason=entry.rejection_reason,
+        created_at=entry.created_at,
+    )
+
+
 def map_request(request_obj):
     payload = build_request_payload(request_obj)
     child_fields = get_child_specific_fields(request_obj)
+    timeline = [map_status_history(entry) for entry in request_obj.status_history.all()]
     return RequestType(
         id=payload['id'],
         request_type=payload['request_type'],
@@ -89,6 +129,9 @@ def map_request(request_obj):
         ai_content_flag=payload.get('ai_content_flag'),
         user=map_user(request_obj.user),
         handled_by=map_user(request_obj.handled_by),
+        assigned_staff=map_user(request_obj.assigned_staff),
+        rejection_reason=payload.get('rejection_reason', ''),
+        status_timeline=timeline,
         location=child_fields.get('location'),
         extra_description=child_fields.get('extra_description'),
         photo_url=child_fields.get('photo_url'),

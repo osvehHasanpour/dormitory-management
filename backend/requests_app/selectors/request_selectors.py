@@ -1,4 +1,5 @@
 from django.core.paginator import Paginator
+from django.db.models import Prefetch
 
 from core.api.permissions import is_student, is_supervisor_or_admin
 from requests_app.exceptions import RequestServiceError
@@ -9,14 +10,36 @@ from requests_app.models import (
     ItemRequest,
     MaintenanceRequest,
     RequestBase,
+    RequestStatusHistory,
 )
 from rest_framework import status
+from users.models import Role, User
 
+
+ACTIVE_REQUEST_STATUSES = (
+    RequestBase.Status.PENDING,
+    RequestBase.Status.IN_PROGRESS,
+    RequestBase.Status.APPROVED,
+)
+
+MAX_ACTIVE_CLEANING_REQUESTS = 3
+MAX_ACTIVE_ITEM_REQUESTS = 3
+MAX_ACTIVE_REQUESTS_COMBINED = 10
+MAX_ITEM_QUANTITY = 3
+MIN_ITEM_QUANTITY = 1
+
+STATUS_HISTORY_SELECT_RELATED = (
+    'acting_supervisor',
+    'acting_supervisor__role',
+)
 
 REQUEST_DETAIL_SELECT_RELATED = (
     'user',
     'user__role',
     'handled_by',
+    'handled_by__role',
+    'assigned_staff',
+    'assigned_staff__role',
     'maintenancerequest',
     'cleaningrequest',
     'itemrequest',
@@ -27,8 +50,19 @@ REQUEST_DETAIL_SELECT_RELATED = (
 
 class RequestSelector:
     @staticmethod
-    def _base_queryset():
-        return RequestBase.objects.select_related(*REQUEST_DETAIL_SELECT_RELATED)
+    def _status_history_prefetch():
+        return Prefetch(
+            'status_history',
+            queryset=RequestStatusHistory.objects.select_related(
+                *STATUS_HISTORY_SELECT_RELATED,
+            ).order_by('created_at'),
+        )
+
+    @classmethod
+    def _base_queryset(cls):
+        return RequestBase.objects.select_related(
+            *REQUEST_DETAIL_SELECT_RELATED,
+        ).prefetch_related(cls._status_history_prefetch())
 
     @classmethod
     def get_student_queryset(cls, user, *, request_type=None):
@@ -62,7 +96,11 @@ class RequestSelector:
                 'user',
                 'user__role',
                 'handled_by',
+                'handled_by__role',
+                'assigned_staff',
+                'assigned_staff__role',
             )
+            .prefetch_related(cls._status_history_prefetch())
             .filter(user=user)
             .order_by('-created_at')
         )
@@ -77,7 +115,11 @@ class RequestSelector:
                 'user',
                 'user__role',
                 'handled_by',
+                'handled_by__role',
+                'assigned_staff',
+                'assigned_staff__role',
             )
+            .prefetch_related(cls._status_history_prefetch())
             .order_by('-created_at')
         )
 
@@ -122,14 +164,7 @@ class RequestSelector:
     @classmethod
     def get_request_for_update(cls, request_id):
         try:
-            return (
-                RequestBase.objects.select_for_update()
-                .select_related(
-                    'boothrequest',
-                    'itemrequest',
-                )
-                .get(pk=request_id)
-            )
+            return RequestBase.objects.select_for_update().get(pk=request_id)
         except RequestBase.DoesNotExist as exc:
             raise RequestServiceError(
                 'درخواست مورد نظر یافت نشد.',
@@ -143,7 +178,10 @@ class RequestSelector:
             'user',
             'user__role',
             'handled_by',
-        )
+            'handled_by__role',
+            'assigned_staff',
+            'assigned_staff__role',
+        ).prefetch_related(cls._status_history_prefetch())
         if model_class is ItemRequest:
             queryset = queryset.select_related('item')
 
@@ -205,3 +243,47 @@ class RequestSelector:
             RequestBase.RequestType.ITEM: ItemRequest,
             RequestBase.RequestType.BOOTH: BoothRequest,
         }
+
+    @classmethod
+    def count_active_requests(cls, user, *, request_type=None):
+        queryset = RequestBase.objects.filter(
+            user=user,
+            status__in=ACTIVE_REQUEST_STATUSES,
+        )
+        if request_type:
+            queryset = queryset.filter(request_type=request_type)
+        return queryset.count()
+
+    @classmethod
+    def count_active_booth_for_event(cls, user, event_date):
+        return BoothRequest.objects.filter(
+            user=user,
+            event_date=event_date,
+            status__in=ACTIVE_REQUEST_STATUSES,
+        ).count()
+
+    @classmethod
+    def get_status_history(cls, request_id):
+        return (
+            RequestStatusHistory.objects.filter(request_id=request_id)
+            .select_related(*STATUS_HISTORY_SELECT_RELATED)
+            .order_by('created_at')
+        )
+
+    @classmethod
+    def get_assignable_staff_queryset(cls):
+        return User.objects.filter(
+            role__name__in=(Role.Name.SUPERVISOR, Role.Name.ADMIN),
+            is_active=True,
+        )
+
+    @classmethod
+    def get_assignable_staff(cls, staff_id):
+        try:
+            return cls.get_assignable_staff_queryset().get(pk=staff_id)
+        except User.DoesNotExist as exc:
+            raise RequestServiceError(
+                'کارمند انتخاب‌شده یافت نشد.',
+                {'assigned_staff': ['کاربر محول‌شده معتبر نیست.']},
+                status.HTTP_400_BAD_REQUEST,
+            ) from exc

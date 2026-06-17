@@ -13,10 +13,21 @@ class ChangeRequestStatus(graphene.Mutation):
     class Arguments:
         request_id = graphene.Int(required=True)
         new_status = graphene.String(required=True)
+        comment = graphene.String()
+        rejection_reason = graphene.String()
+        assigned_staff_id = graphene.Int()
 
     Output = ChangeRequestStatusResponseType
 
-    def mutate(self, info, request_id, new_status):
+    def mutate(
+        self,
+        info,
+        request_id,
+        new_status,
+        comment='',
+        rejection_reason='',
+        assigned_staff_id=None,
+    ):
         user = info.context.user
         if not user or not user.is_authenticated:
             return ChangeRequestStatusResponseType(
@@ -31,6 +42,9 @@ class ChangeRequestStatus(graphene.Mutation):
                 actor=user,
                 request_id=request_id,
                 new_status=new_status,
+                comment=comment or '',
+                rejection_reason=rejection_reason or '',
+                assigned_staff_id=assigned_staff_id,
             )
         except RequestServiceError as exc:
             return ChangeRequestStatusResponseType(

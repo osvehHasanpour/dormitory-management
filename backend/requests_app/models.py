@@ -58,6 +58,15 @@ class RequestBase(models.Model):
         related_name='handled_requests',
         verbose_name='سرپرست رسیدگی‌کننده',
     )
+    assigned_staff = models.ForeignKey(
+        'users.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='assigned_requests',
+        verbose_name='کارمند محول‌شده',
+    )
+    rejection_reason = models.TextField(blank=True, verbose_name='دلیل رد')
     ai_content_flag = models.BooleanField(
         null=True,
         blank=True,
@@ -73,10 +82,55 @@ class RequestBase(models.Model):
             models.Index(fields=['status']),
             models.Index(fields=['created_at']),
             models.Index(fields=['handled_by']),
+            models.Index(fields=['assigned_staff']),
         ]
 
     def __str__(self):
         return f'{self.get_request_type_display()} - {self.get_status_display()}'
+
+
+class RequestStatusHistory(models.Model):
+    request = models.ForeignKey(
+        RequestBase,
+        on_delete=models.CASCADE,
+        related_name='status_history',
+        verbose_name='درخواست',
+    )
+    previous_status = models.CharField(
+        max_length=20,
+        choices=RequestBase.Status.choices,
+        null=True,
+        blank=True,
+        verbose_name='وضعیت قبلی',
+    )
+    new_status = models.CharField(
+        max_length=20,
+        choices=RequestBase.Status.choices,
+        verbose_name='وضعیت جدید',
+    )
+    acting_supervisor = models.ForeignKey(
+        'users.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='request_status_actions',
+        verbose_name='سرپرست اقدام‌کننده',
+    )
+    comment = models.TextField(blank=True, verbose_name='توضیح / یادداشت')
+    rejection_reason = models.TextField(blank=True, verbose_name='دلیل رد')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='زمان تغییر')
+
+    class Meta:
+        verbose_name = 'تاریخچه وضعیت درخواست'
+        verbose_name_plural = 'تاریخچه وضعیت درخواست‌ها'
+        ordering = ['created_at']
+        indexes = [
+            models.Index(fields=['request', 'created_at']),
+            models.Index(fields=['acting_supervisor']),
+        ]
+
+    def __str__(self):
+        return f'درخواست {self.request_id}: {self.previous_status} → {self.new_status}'
 
 
 class MaintenanceRequest(RequestBase):

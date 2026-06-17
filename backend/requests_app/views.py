@@ -1,5 +1,6 @@
 from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
 from rest_framework import mixins, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 
 from core.api.permissions import IsStudent
@@ -11,7 +12,7 @@ from requests_app.models import (
     ItemRequest,
     MaintenanceRequest,
 )
-from requests_app.permissions import CanAccessRequests
+from requests_app.permissions import CanAccessRequests, CanSuperviseRequests
 from requests_app.selectors.request_selectors import RequestSelector
 from requests_app.serializers import (
     BoothRequestCreateSerializer,
@@ -23,6 +24,8 @@ from requests_app.serializers import (
     ItemRequestDetailSerializer,
     MaintenanceRequestCreateSerializer,
     MaintenanceRequestDetailSerializer,
+    RequestStatusChangeSerializer,
+    RequestStatusHistorySerializer,
 )
 from requests_app.services.request_service import RequestService
 
@@ -35,7 +38,7 @@ class BaseRequestViewSet(
     viewsets.GenericViewSet,
 ):
     permission_classes = [CanAccessRequests]
-    http_method_names = ['get', 'post', 'head', 'options']
+    http_method_names = ['get', 'post', 'patch', 'head', 'options']
 
     model_class = None
     create_serializer_class = None
@@ -108,6 +111,75 @@ class BaseRequestViewSet(
             self.create_message,
             output,
             status.HTTP_201_CREATED,
+        )
+
+    @extend_schema(
+        tags=['Requests'],
+        summary='تغییر وضعیت درخواست (سرپرست/مدیر)',
+        request=RequestStatusChangeSerializer,
+        responses={
+            200: OpenApiResponse(description='وضعیت با موفقیت به‌روزرسانی شد'),
+            400: OpenApiResponse(description='خطای اعتبارسنجی'),
+            403: OpenApiResponse(description='عدم دسترسی'),
+            404: OpenApiResponse(description='درخواست یافت نشد'),
+        },
+    )
+    @action(
+        detail=True,
+        methods=['patch'],
+        url_path='status',
+        permission_classes=[CanSuperviseRequests],
+    )
+    def change_status(self, request, pk=None):
+        serializer = RequestStatusChangeSerializer(data=request.data)
+        if not serializer.is_valid():
+            return error_response(
+                'اطلاعات ارسال‌شده نامعتبر است.',
+                serializer.errors,
+                status.HTTP_400_BAD_REQUEST,
+            )
+
+        assigned_staff = serializer.validated_data.get('assigned_staff')
+        try:
+            instance = RequestService.change_status(
+                actor=request.user,
+                request_id=pk,
+                new_status=serializer.validated_data['status'],
+                comment=serializer.validated_data.get('comment', ''),
+                rejection_reason=serializer.validated_data.get('rejection_reason', ''),
+                assigned_staff_id=assigned_staff.pk if assigned_staff else None,
+            )
+        except RequestServiceError as exc:
+            return error_response(exc.message, exc.errors, exc.status_code)
+
+        output = self.detail_serializer_class(instance).data
+        return success_response('وضعیت درخواست با موفقیت به‌روزرسانی شد.', output)
+
+    @extend_schema(
+        tags=['Requests'],
+        summary='تاریخچه وضعیت درخواست',
+        responses={
+            200: OpenApiResponse(description='تاریخچه با موفقیت دریافت شد'),
+            403: OpenApiResponse(description='عدم دسترسی'),
+            404: OpenApiResponse(description='درخواست یافت نشد'),
+        },
+    )
+    @action(detail=True, methods=['get'], url_path='timeline')
+    def timeline(self, request, pk=None):
+        try:
+            RequestSelector.get_typed_instance_for_user(
+                request.user,
+                self.model_class,
+                pk,
+            )
+        except RequestServiceError as exc:
+            return error_response(exc.message, exc.errors, exc.status_code)
+
+        history = RequestSelector.get_status_history(pk)
+        data = RequestStatusHistorySerializer(history, many=True).data
+        return success_response(
+            'تاریخچه وضعیت درخواست با موفقیت دریافت شد.',
+            {'results': data},
         )
 
 
