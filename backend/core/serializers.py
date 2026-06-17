@@ -7,3 +7,4 @@ class NotificationDetailSerializer(serializers.Serializer):
     is_read = serializers.BooleanField()
     created_at = serializers.DateTimeField()
     related_request_id = serializers.IntegerField(allow_null=True)
+    related_idea_complaint_id = serializers.IntegerField(allow_null=True)

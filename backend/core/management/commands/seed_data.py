@@ -318,22 +318,41 @@ class Command(BaseCommand):
         supervisor = users['supervisors'][0]
 
         ideas_data = [
-            (IdeaComplaint.Type.SUGGESTION, 'نصب اینverter در لاندری', 'پیشنهاد نصب اینverter برای صرفه‌جویی برق', IdeaComplaint.Status.PENDING),
-            (IdeaComplaint.Type.IDEA, 'شب فیلم در سالن', 'برگزاری شب فیلم هر دو هفته یک‌بار', IdeaComplaint.Status.REVIEWED),
-            (IdeaComplaint.Type.COMPLAINT, 'سر و صدای شبانه', 'سر و صدای زیاد در بلوک ب پس از ساعت ۲۳', IdeaComplaint.Status.ANSWERED),
-            (IdeaComplaint.Type.SUGGESTION, 'کلاس زبان انگلیسی', 'راه‌اندازی کلاس مکالمه انگلیسی', IdeaComplaint.Status.PENDING),
-            (IdeaComplaint.Type.IDEA, 'باغچه مشترک', 'ایجاد فضای سبز در حیاط پشتی', IdeaComplaint.Status.REVIEWED),
-            (IdeaComplaint.Type.COMPLAINT, 'گرمای اتاق', 'سیستم گرمایشی اتاق ۱۰۳ ضعیف است', IdeaComplaint.Status.REJECTED),
+            (IdeaComplaint.Type.SUGGESTION, IdeaComplaint.Category.WELFARE, 'نصب اینverter در لاندری', 'پیشنهاد نصب اینverter برای صرفه‌جویی برق', IdeaComplaint.Status.PENDING),
+            (IdeaComplaint.Type.IDEA, '', 'شب فیلم در سالن', 'برگزاری شب فیلم هر دو هفته یک‌بار', IdeaComplaint.Status.REVIEWED),
+            (IdeaComplaint.Type.COMPLAINT, IdeaComplaint.Category.SECURITY, 'سر و صدای شبانه', 'سر و صدای زیاد در بلوک ب پس از ساعت ۲۳', IdeaComplaint.Status.ANSWERED),
+            (IdeaComplaint.Type.SUGGESTION, IdeaComplaint.Category.EDUCATION, 'کلاس زبان انگلیسی', 'راه‌اندازی کلاس مکالمه انگلیسی', IdeaComplaint.Status.PENDING),
+            (IdeaComplaint.Type.IDEA, '', 'باغچه مشترک', 'ایجاد فضای سبز در حیاط پشتی', IdeaComplaint.Status.REVIEWED),
+            (IdeaComplaint.Type.COMPLAINT, IdeaComplaint.Category.MAINTENANCE, 'گرمای اتاق', 'سیستم گرمایشی اتاق ۱۰۳ ضعیف است', IdeaComplaint.Status.REJECTED),
         ]
         ideas = []
-        for i, (itype, title, desc, status) in enumerate(ideas_data):
+        for i, (itype, category, title, desc, status) in enumerate(ideas_data):
+            responded_at = None
+            responded_within_sla = None
+            supervisor_response = ''
+            responded_by = None
+            if status == IdeaComplaint.Status.ANSWERED:
+                supervisor_response = 'در حال بررسی است.'
+                responded_at = timezone.now()
+                responded_by = supervisor
+                responded_within_sla = True
+            elif status == IdeaComplaint.Status.REJECTED:
+                supervisor_response = 'درخواست تکراری است.'
+                responded_at = timezone.now()
+                responded_by = supervisor
+                responded_within_sla = True
+
             idea = IdeaComplaint.objects.create(
                 user=students[i % len(students)],
                 type=itype,
+                category=category,
                 title=title,
                 description=desc,
                 status=status,
-                supervisor_response='در حال بررسی است.' if status == IdeaComplaint.Status.ANSWERED else '',
+                supervisor_response=supervisor_response,
+                responded_by=responded_by,
+                responded_at=responded_at,
+                responded_within_sla=responded_within_sla,
                 upvotes=i * 2,
             )
             ideas.append(idea)

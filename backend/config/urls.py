@@ -40,6 +40,10 @@ urlpatterns = [
         include(('ideas.urls', 'ideas'), namespace='ideas'),
     ),
     path(
+        'api/v1/supervisor/feedback/',
+        include(('ideas.urls_supervisor', 'supervisor_feedback'), namespace='supervisor_feedback'),
+    ),
+    path(
         'api/v1/complaints/',
         include(('requests_app.urls_complaints', 'complaints'), namespace='complaints'),
     ),

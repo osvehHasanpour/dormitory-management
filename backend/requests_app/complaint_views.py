@@ -80,14 +80,22 @@ class MyComplaintsView(EnvelopedAPIViewMixin, APIView):
                 required=False,
                 type=str,
             ),
+            OpenApiParameter(
+                name='category',
+                description='فیلتر دسته‌بندی: cleaning، facilities، welfare، security، education، maintenance، other',
+                required=False,
+                type=str,
+            ),
         ],
         responses={200: OpenApiResponse(FeedbackListResponseSerializer)},
     )
     def get(self, request):
         status_filter = request.query_params.get('status')
+        category_filter = request.query_params.get('category')
         queryset = ComplaintSelector.get_my_complaints(
             request.user,
             status=status_filter,
+            category=category_filter,
         )
 
         paginator = self.pagination_class()

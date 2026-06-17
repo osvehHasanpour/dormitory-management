@@ -46,6 +46,7 @@ class ComplaintRESTAPITests(FeedbackAPITestBase):
             {
                 'title': 'سر و صدای شبانه در راهرو',
                 'description': 'از ساعت ۲۳ تا ۱ بامداد موسیقی بلند پخش می‌شود.',
+                'category': IdeaComplaint.Category.SECURITY,
             },
             format='json',
         )
@@ -95,6 +96,7 @@ class SuggestionRESTAPITests(FeedbackAPITestBase):
             {
                 'title': 'برنامه فیلم‌برداری فرهنگی',
                 'description': 'هر ماه یک شب فیلم مستند دانشجویی نمایش داده شود.',
+                'category': IdeaComplaint.Category.EDUCATION,
             },
             format='json',
         )

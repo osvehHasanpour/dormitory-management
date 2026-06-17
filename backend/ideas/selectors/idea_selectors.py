@@ -2,6 +2,7 @@ from django.db.models import Case, CharField, Count, Exists, OuterRef, Q, Value,
 
 from ideas.exceptions import IdeaServiceError
 from ideas.models import IdeaComplaint, Vote
+from ideas.selectors.supervisor_feedback_selectors import SupervisorFeedbackSelector
 from rest_framework import status
 
 
@@ -109,7 +110,7 @@ class IdeaSelector:
     def build_idea_payload(cls, idea, user):
         user_vote = getattr(idea, 'user_vote', None)
         is_owner = user and idea.user_id == user.id
-        return {
+        payload = {
             'id': idea.id,
             'title': idea.title,
             'description': idea.description,
@@ -129,3 +130,6 @@ class IdeaSelector:
                 'last_name': idea.user.last_name,
             },
         }
+        if is_owner:
+            payload.update(SupervisorFeedbackSelector.build_student_feedback_fields(idea))
+        return payload
