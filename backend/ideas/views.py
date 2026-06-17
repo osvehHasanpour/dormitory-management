@@ -3,9 +3,9 @@ from rest_framework import permissions, serializers, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 
+from core.api.permissions import IsStudent
 from core.api.responses import EnvelopedAPIViewMixin, error_response, success_response
 from ideas.exceptions import IdeaServiceError
-from ideas.permissions import IsStudent
 from ideas.selectors.idea_selectors import IdeaSelector
 from ideas.serializers import IdeaCreateSerializer, IdeaDetailSerializer, VoteActionSerializer
 from ideas.services.idea_service import IdeaService

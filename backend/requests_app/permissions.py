@@ -1,28 +1,11 @@
-from rest_framework.permissions import BasePermission, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 
-from core.api.permissions import is_student, is_supervisor_or_admin
-
-
-class IsStudent(BasePermission):
-    message = 'این عملیات فقط برای دانشجویان مجاز است.'
-
-    def has_permission(self, request, view):
-        return bool(
-            request.user
-            and request.user.is_authenticated
-            and is_student(request.user)
-        )
-
-
-class IsSupervisorOrAdmin(BasePermission):
-    message = 'این عملیات فقط برای سرپرست یا مدیر مجاز است.'
-
-    def has_permission(self, request, view):
-        return bool(
-            request.user
-            and request.user.is_authenticated
-            and is_supervisor_or_admin(request.user)
-        )
+from core.api.permissions import (
+    IsStudent,
+    IsSupervisorOrAdmin,
+    is_student,
+    is_supervisor_or_admin,
+)
 
 
 class CanAccessRequests(IsAuthenticated):
@@ -32,3 +15,10 @@ class CanAccessRequests(IsAuthenticated):
         if not super().has_permission(request, view):
             return False
         return is_student(request.user) or is_supervisor_or_admin(request.user)
+
+
+__all__ = [
+    'CanAccessRequests',
+    'IsStudent',
+    'IsSupervisorOrAdmin',
+]

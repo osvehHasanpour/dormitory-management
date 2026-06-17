@@ -3,9 +3,9 @@ from rest_framework import permissions, serializers, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 
+from core.api.permissions import IsStudent
 from core.api.responses import EnvelopedAPIViewMixin, error_response, success_response
 from requests_app.exceptions import RequestServiceError
-from requests_app.permissions import IsStudent
 from requests_app.selectors.complaint_selectors import ComplaintSelector
 from requests_app.serializers import FeedbackCreateSerializer, FeedbackDetailSerializer
 from requests_app.services.complaint_service import ComplaintService
