@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { LoginPage } from './pages/auth/LoginPage'
 import { DashboardPage } from './pages/student/DashboardPage'
 import { MaintenanceReportPage } from './pages/student/MaintenanceReportPage'
+import { RoomSuppliesRequestPage } from './pages/student/RoomSuppliesRequestPage'
 
 function PagePlaceholder({ title }: { title: string }) {
   return (
@@ -19,7 +20,7 @@ function App() {
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/maintenance-request" element={<MaintenanceReportPage />} />
       <Route path="/cleaning-request" element={<PagePlaceholder title="درخواست نظافت" />} />
-      <Route path="/item-request" element={<PagePlaceholder title="درخواست لوازم اتاق" />} />
+      <Route path="/item-request" element={<RoomSuppliesRequestPage />} />
       <Route path="/announcements" element={<PagePlaceholder title="اطلاعیه‌ها" />} />
       <Route path="/booth-request" element={<PagePlaceholder title="درخواست غرفه" />} />
       <Route path="/class-registration" element={<PagePlaceholder title="ثبت نام کلاس" />} />
