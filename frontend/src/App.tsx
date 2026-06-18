@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { LoginPage } from './pages/auth/LoginPage'
 import { DashboardPage } from './pages/student/DashboardPage'
+import { CleaningRequestPage } from './pages/student/CleaningRequestPage'
 import { MaintenanceReportPage } from './pages/student/MaintenanceReportPage'
 import { RoomSuppliesRequestPage } from './pages/student/RoomSuppliesRequestPage'
 
@@ -19,7 +20,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/maintenance-request" element={<MaintenanceReportPage />} />
-      <Route path="/cleaning-request" element={<PagePlaceholder title="درخواست نظافت" />} />
+      <Route path="/cleaning-request" element={<CleaningRequestPage />} />
       <Route path="/item-request" element={<RoomSuppliesRequestPage />} />
       <Route path="/announcements" element={<PagePlaceholder title="اطلاعیه‌ها" />} />
       <Route path="/booth-request" element={<PagePlaceholder title="درخواست غرفه" />} />
