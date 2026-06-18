@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { LoginPage } from './pages/auth/LoginPage'
 import { DashboardPage } from './pages/student/DashboardPage'
+import { MaintenanceReportPage } from './pages/student/MaintenanceReportPage'
 
 function PagePlaceholder({ title }: { title: string }) {
   return (
@@ -16,7 +17,7 @@ function App() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
-      <Route path="/maintenance-request" element={<PagePlaceholder title="گزارش خرابی" />} />
+      <Route path="/maintenance-request" element={<MaintenanceReportPage />} />
       <Route path="/cleaning-request" element={<PagePlaceholder title="درخواست نظافت" />} />
       <Route path="/item-request" element={<PagePlaceholder title="درخواست لوازم اتاق" />} />
       <Route path="/announcements" element={<PagePlaceholder title="اطلاعیه‌ها" />} />
