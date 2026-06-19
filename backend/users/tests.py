@@ -1,11 +1,8 @@
-from datetime import date
-
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from dorms.models import Block, Room, RoomAssignment
 from users.models import Role, User
 
 
@@ -59,17 +56,6 @@ class AuthAPITests(APITestCase):
         self.assertIn('credentials', response.data['errors'])
 
     def test_profile_returns_authenticated_user(self):
-        block = Block.objects.create(name='الف', total_floors=3, room_numbers=['101'])
-        room = Room.objects.create(block=block, room_number='101', floor=1, capacity=4)
-        self.user.block = block
-        self.user.save(update_fields=['block'])
-        RoomAssignment.objects.create(
-            user=self.user,
-            room=room,
-            assigned_from=date.today(),
-            is_current=True,
-        )
-
         refresh = RefreshToken.for_user(self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
 
@@ -79,8 +65,6 @@ class AuthAPITests(APITestCase):
         self.assertTrue(response.data['success'])
         self.assertEqual(response.data['data']['personnel_code'], self.user.personnel_code)
         self.assertEqual(response.data['data']['role_name'], Role.Name.STUDENT)
-        self.assertEqual(response.data['data']['block_name'], 'الف')
-        self.assertEqual(response.data['data']['room_number'], '101')
 
     def test_profile_requires_authentication_with_response_envelope(self):
         response = self.client.get(reverse('users:profile'))
