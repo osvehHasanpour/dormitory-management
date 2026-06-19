@@ -1,16 +1,19 @@
-from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
+from drf_spectacular.utils import OpenApiParameter, OpenApiResponse, extend_schema, extend_schema_view
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 
 from core.api.permissions import IsStudent
 from core.api.responses import EnvelopedAPIViewMixin, error_response, success_response
+from requests_app.exceptions import RequestServiceError
 from requests_app.exceptions import RequestServiceError
 from requests_app.models import (
     BoothRequest,
     CleaningRequest,
     ItemRequest,
     MaintenanceRequest,
+    RequestBase,
 )
 from requests_app.permissions import CanAccessRequests, CanSuperviseRequests
 from requests_app.selectors.request_selectors import RequestSelector
@@ -24,8 +27,10 @@ from requests_app.serializers import (
     ItemRequestDetailSerializer,
     MaintenanceRequestCreateSerializer,
     MaintenanceRequestDetailSerializer,
+    RequestBaseSerializer,
     RequestStatusChangeSerializer,
     RequestStatusHistorySerializer,
+    serialize_request_detail,
 )
 from requests_app.services.request_service import RequestService
 
@@ -261,6 +266,89 @@ class BoothRequestViewSet(BaseRequestViewSet):
         if self.action == 'create':
             return [IsStudent()]
         return [CanAccessRequests()]
+
+
+class RequestPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
+class MyRequestsView(EnvelopedAPIViewMixin, APIView):
+    permission_classes = [IsStudent]
+    pagination_class = RequestPagination
+
+    @extend_schema(
+        tags=['Requests'],
+        summary='لیست یکپارچه درخواست‌های دانشجو',
+        parameters=[
+            OpenApiParameter(
+                name='request_type',
+                type=str,
+                location=OpenApiParameter.QUERY,
+                required=False,
+                description='فیلتر نوع: maintenance | cleaning | item | booth',
+            ),
+        ],
+        responses={200: OpenApiResponse(description='لیست درخواست‌ها')},
+    )
+    def get(self, request):
+        request_type = request.query_params.get('request_type')
+        valid_types = {choice.value for choice in RequestBase.RequestType}
+        if request_type and request_type not in valid_types:
+            return error_response(
+                'فیلتر نوع درخواست نامعتبر است.',
+                {'request_type': ['نوع درخواست معتبر نیست.']},
+                status.HTTP_400_BAD_REQUEST,
+            )
+
+        queryset = RequestSelector.get_student_queryset(
+            request.user,
+            request_type=request_type,
+        )
+        paginator = self.pagination_class()
+        page = paginator.paginate_queryset(queryset, request)
+        items = page if page is not None else queryset
+        results = RequestBaseSerializer(items, many=True).data
+
+        if page is not None:
+            return success_response(
+                'لیست درخواست‌های شما با موفقیت دریافت شد.',
+                {
+                    'count': paginator.page.paginator.count,
+                    'next': paginator.get_next_link(),
+                    'previous': paginator.get_previous_link(),
+                    'results': results,
+                },
+            )
+
+        return success_response(
+            'لیست درخواست‌های شما با موفقیت دریافت شد.',
+            {'results': results},
+        )
+
+
+class StudentRequestDetailView(EnvelopedAPIViewMixin, APIView):
+    permission_classes = [IsStudent]
+
+    @extend_schema(
+        tags=['Requests'],
+        summary='جزئیات درخواست دانشجو',
+        responses={
+            200: OpenApiResponse(description='جزئیات درخواست'),
+            403: OpenApiResponse(description='عدم دسترسی'),
+            404: OpenApiResponse(description='درخواست یافت نشد'),
+        },
+    )
+    def get(self, request, pk):
+        try:
+            request_obj = RequestSelector.get_request_for_user(request.user, pk)
+            typed_request = RequestSelector.resolve_typed_request(request_obj)
+        except RequestServiceError as exc:
+            return error_response(exc.message, exc.errors, exc.status_code)
+
+        data = serialize_request_detail(typed_request)
+        return success_response('جزئیات درخواست با موفقیت دریافت شد.', data)
 
 
 class InventoryItemListView(EnvelopedAPIViewMixin, APIView):

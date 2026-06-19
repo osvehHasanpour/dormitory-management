@@ -58,6 +58,14 @@
   --text-caption-sm--line-height: 1.4;
   --text-caption-sm--font-weight: 400;
 
+  --text-caption-md: 12px;
+  --text-caption-md--line-height: 1.5;
+  --text-caption-md--font-weight: 500;
+
+  --text-heading-md: 17px;
+  --text-heading-md--line-height: 1.4;
+  --text-heading-md--font-weight: 600;
+
   --text-button-md: 14px;
   --text-button-md--line-height: 1;
   --text-button-md--font-weight: 700;
@@ -151,4 +159,44 @@
   font-size: var(--text-button-md);
   line-height: var(--text-button-md--line-height);
   font-weight: var(--text-button-md--font-weight);
+}
+
+@utility text-caption-md {
+  font-size: var(--text-caption-md);
+  line-height: var(--text-caption-md--line-height);
+  font-weight: var(--text-caption-md--font-weight);
+}
+
+@utility text-heading-md {
+  font-size: var(--text-heading-md);
+  line-height: var(--text-heading-md--line-height);
+  font-weight: var(--text-heading-md--font-weight);
+}
+
+@keyframes sheet-scrim-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sheet-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@utility animate-sheet-scrim {
+  animation: sheet-scrim-in 220ms ease-out both;
+}
+
+@utility animate-sheet-panel {
+  animation: sheet-panel-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }

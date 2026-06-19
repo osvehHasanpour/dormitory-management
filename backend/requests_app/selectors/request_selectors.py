@@ -287,3 +287,16 @@ class RequestSelector:
                 {'assigned_staff': ['کاربر محول‌شده معتبر نیست.']},
                 status.HTTP_400_BAD_REQUEST,
             ) from exc
+
+    @classmethod
+    def resolve_typed_request(cls, request_obj):
+        model_class = cls.get_child_model_map().get(request_obj.request_type)
+        if model_class is None:
+            return request_obj
+
+        queryset = model_class.objects.select_related(
+            *REQUEST_DETAIL_SELECT_RELATED,
+        ).prefetch_related(cls._status_history_prefetch())
+        if model_class is ItemRequest:
+            queryset = queryset.select_related('item')
+        return queryset.get(pk=request_obj.pk)
