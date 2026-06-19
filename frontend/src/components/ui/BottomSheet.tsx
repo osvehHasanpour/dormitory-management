@@ -47,7 +47,7 @@ export function BottomSheet({ isOpen, onClose, title, children }: BottomSheetPro
         role="dialog"
         aria-modal="true"
         aria-labelledby="request-detail-title"
-        className="relative z-10 w-full max-w-lg animate-sheet-panel rounded-t-lg bg-canvas px-5 pb-8 pt-5 shadow-[0_16px_48px_rgba(46,17,69,0.18)] sm:rounded-lg sm:px-7 sm:pb-7 sm:pt-6"
+        className="relative z-10 w-full max-w-lg animate-sheet-panel glass-card-modal rounded-t-lg px-5 pb-8 pt-5 sm:rounded-lg sm:px-7 sm:pb-7 sm:pt-6"
       >
         <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-hairline sm:hidden" aria-hidden="true" />
 

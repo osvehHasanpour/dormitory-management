@@ -26,7 +26,7 @@ export function PhotoUploader({ file, error, onChange }: PhotoUploaderProps) {
   }
 
   return (
-    <section className="rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+    <section className="glass-card p-4">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
           <h3 className="text-body-sm-strong text-ink">افزودن عکس خرابی</h3>

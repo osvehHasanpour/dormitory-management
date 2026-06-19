@@ -92,7 +92,7 @@ export function MaintenanceReportForm() {
         />
       ) : null}
 
-      <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+      <label className="block glass-card p-4">
         <span className="mb-3 block text-body-sm-strong text-ink">توضیحات تکمیلی</span>
         <textarea
           rows={5}

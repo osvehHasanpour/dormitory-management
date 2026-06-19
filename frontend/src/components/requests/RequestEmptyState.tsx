@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom'
 
 export function RequestEmptyState() {
   return (
-    <div className="flex flex-col items-center rounded-md border border-dashed border-hairline bg-canvas px-6 py-12 text-center">
+    <div className="flex flex-col items-center glass-card border-dashed px-6 py-12 text-center">
       <p className="text-heading-md text-ink">هنوز درخواستی ثبت نکرده‌اید</p>
-      <p className="mt-2 max-w-sm text-body-sm text-mute">
+      <p className="mt-2 max-w-sm text-body-sm text-body-text">
         از صفحه اصلی می‌توانید درخواست خرابی، نظافت، لوازم یا غرفه ثبت کنید.
       </p>
       <Link

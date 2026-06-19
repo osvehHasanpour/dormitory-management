@@ -18,7 +18,7 @@ export function BoothRequestForm() {
 
   return (
     <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit(submitRequest)}>
-      <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+      <label className="block glass-card p-4">
         <span className="mb-3 block text-body-sm-strong text-ink">عنوان غرفه</span>
         <input
           type="text"
@@ -38,7 +38,7 @@ export function BoothRequestForm() {
         control={control}
         name="category"
         render={({ field }) => (
-          <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+          <label className="block glass-card p-4">
             <span className="mb-3 block text-body-sm-strong text-ink">دسته‌بندی محصولات</span>
             <select
               value={field.value}
@@ -67,7 +67,7 @@ export function BoothRequestForm() {
         control={control}
         name="tableCount"
         render={({ field }) => (
-          <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+          <label className="block glass-card p-4">
             <span className="mb-3 block text-body-sm-strong text-ink">تعداد میز</span>
             <select
               value={field.value}
@@ -92,7 +92,7 @@ export function BoothRequestForm() {
         )}
       />
 
-      <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+      <label className="block glass-card p-4">
         <span className="mb-3 block text-body-sm-strong text-ink">توضیحات تکمیلی (اختیاری)</span>
         <textarea
           rows={5}

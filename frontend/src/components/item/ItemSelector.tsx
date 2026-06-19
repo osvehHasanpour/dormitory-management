@@ -106,7 +106,7 @@ export function ItemSelector({
 
   return (
     <div className="flex flex-col gap-4">
-      <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+      <label className="block glass-card p-4">
         <span className="mb-3 block text-body-sm-strong text-ink">لیست اقلام</span>
         {authError ? (
           <p className="text-body-sm text-error">{authError}</p>
@@ -134,7 +134,7 @@ export function ItemSelector({
         {itemError ? <p className="mt-2 text-body-sm text-error">{itemError}</p> : null}
       </label>
 
-      <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+      <label className="block glass-card p-4">
         <span className="mb-3 block text-body-sm-strong text-ink">تعداد</span>
         <select
           value={quantity}

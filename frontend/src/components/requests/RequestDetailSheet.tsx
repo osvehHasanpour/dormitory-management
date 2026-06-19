@@ -46,7 +46,7 @@ export function RequestDetailSheet({ request, isLoading }: RequestDetailSheetPro
 
       <div>
         <p className="text-body-sm-strong text-mute">توضیحات</p>
-        <p className="mt-1 whitespace-pre-wrap text-body-md text-body">{request.description}</p>
+        <p className="mt-1 whitespace-pre-wrap text-body-md text-body-text">{request.description}</p>
       </div>
 
       {request.rejection_reason ? (

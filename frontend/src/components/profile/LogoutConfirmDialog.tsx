@@ -79,7 +79,7 @@ export function LogoutConfirmDialog({
         aria-labelledby="logout-confirm-title"
         aria-describedby="logout-confirm-description"
         style={panelStyle}
-        className="relative z-10 w-full max-w-sm animate-modal-pop rounded-lg bg-canvas px-7 py-7 text-center shadow-[0_16px_48px_rgba(46,17,69,0.18)]"
+        className="relative z-10 w-full max-w-sm animate-modal-pop glass-card-modal rounded-lg px-7 py-7 text-center"
       >
         <h2 id="logout-confirm-title" className="text-heading-lg text-ink">
           آیا مطمئن هستید؟

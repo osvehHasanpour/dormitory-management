@@ -25,7 +25,7 @@ export function ReadOnlyLocationFields({
   return (
     <>
       {showBlock ? (
-      <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+      <label className="block glass-card p-4">
         <span className="mb-3 block text-body-sm-strong text-ink">بلوک</span>
         {isLoading ? (
           <p className="text-body-sm text-mute">در حال بارگذاری اطلاعات اتاق...</p>
@@ -45,7 +45,7 @@ export function ReadOnlyLocationFields({
       ) : null}
 
       {showRoom ? (
-      <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+      <label className="block glass-card p-4">
         <span className="mb-3 block text-body-sm-strong text-ink">شماره اتاق</span>
         {isLoading ? (
           <p className="text-body-sm text-mute">در حال بارگذاری اطلاعات اتاق...</p>

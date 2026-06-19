@@ -16,7 +16,7 @@ export function RequestCard({ request, onClick }: RequestCardProps) {
     <button
       type="button"
       onClick={() => onClick(request.id)}
-      className="flex w-full items-center gap-3 rounded-md border border-hairline bg-canvas p-4 text-right transition-colors hover:bg-surface-soft active:bg-surface-card"
+      className="flex w-full items-center gap-3 glass-card p-4 text-right transition-colors hover:bg-white/55 active:bg-white/65"
     >
       <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-surface-card">
         <img
@@ -28,7 +28,7 @@ export function RequestCard({ request, onClick }: RequestCardProps) {
 
       <div className="min-w-0 flex-1">
         <p className="text-heading-md text-ink">{typeConfig.label}</p>
-        <p className="mt-1 line-clamp-2 text-body-sm text-mute">{request.description}</p>
+        <p className="mt-1 line-clamp-2 text-body-sm text-body-text">{request.description}</p>
       </div>
 
       <div className="flex shrink-0 flex-col items-end gap-2">
