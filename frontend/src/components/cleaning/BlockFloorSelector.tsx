@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { useAuth } from '../../hooks/useAuth'
-import { fetchBlocks, fetchFloors } from '../../services/cleaningService'
+import { fetchBlocks, fetchFloors } from '../../services/blockService'
 import type { Block, Floor } from '../../types/cleaning'
 
 interface BlockFloorSelectorProps {

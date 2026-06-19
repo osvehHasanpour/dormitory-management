@@ -133,14 +133,14 @@ class RequestStatusChangeSerializer(serializers.Serializer):
 
 class MaintenanceRequestDetailSerializer(RequestBaseSerializer):
     location = serializers.CharField(read_only=True)
-    extra_description = serializers.CharField(read_only=True)
+    category = serializers.CharField(read_only=True)
     photo_url = serializers.ImageField(read_only=True)
 
     class Meta(RequestBaseSerializer.Meta):
         model = MaintenanceRequest
         fields = RequestBaseSerializer.Meta.fields + (
             'location',
-            'extra_description',
+            'category',
             'photo_url',
         )
 
@@ -161,12 +161,19 @@ class MaintenanceRequestCreateSerializer(serializers.ModelSerializer):
             'blank': PERSIAN_BLANK_MESSAGE,
         },
     )
-    extra_description = serializers.CharField(required=False, allow_blank=True)
+    category = serializers.ChoiceField(
+        choices=MaintenanceRequest.Category.choices,
+        required=True,
+        error_messages={
+            'required': PERSIAN_REQUIRED_MESSAGE,
+            'invalid_choice': 'دسته\u200cبندی معتبر نیست.',
+        },
+    )
     photo_url = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = MaintenanceRequest
-        fields = ('description', 'location', 'extra_description', 'photo_url')
+        fields = ('description', 'location', 'category', 'photo_url')
 
 
 class CleaningRequestDetailSerializer(RequestBaseSerializer):
@@ -203,7 +210,7 @@ class CleaningRequestCreateSerializer(serializers.ModelSerializer):
         required=True,
         error_messages={'required': PERSIAN_REQUIRED_MESSAGE},
     )
-    extra_description = serializers.CharField(required=False, allow_blank=True)
+    extra_description = serializers.CharField(required=False, allow_blank=True, default='')
 
     class Meta:
         model = CleaningRequest

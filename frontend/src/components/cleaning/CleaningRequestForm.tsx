@@ -141,7 +141,7 @@ export function CleaningRequestForm() {
       />
 
       <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
-        <span className="mb-3 block text-body-sm-strong text-ink">توضیحات تکمیلی (اختیاری)</span>
+        <span className="mb-3 block text-body-sm-strong text-ink">توضیحات تکمیلی</span>
         <textarea
           rows={5}
           placeholder="در صورت نیاز، توضیحات بیشتری بنویسید..."

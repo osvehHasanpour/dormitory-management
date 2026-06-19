@@ -250,6 +250,7 @@ class Command(BaseCommand):
                 user=students[i % len(students)],
                 handled_by=supervisors[i % len(supervisors)] if status != RequestBase.Status.PENDING else None,
                 location=location,
+                category='facilities',
             )
             req.save()
 

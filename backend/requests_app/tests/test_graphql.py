@@ -84,6 +84,7 @@ class GraphQLRequestsTests(APITestCase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='نشتی آب',
             location='بلوک الف',
+            category='facilities',
         )
         self.cleaning_request = CleaningRequest.objects.create(
             user=self.student,

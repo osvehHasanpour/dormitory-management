@@ -3,6 +3,7 @@ import axios from 'axios'
 import apiClient from './apiClient'
 import type { ApiSuccessResponse } from '../types/auth'
 import type { MaintenanceReportFormValues, MaintenanceReportResponse } from '../types/maintenance'
+import { isRoomCategory } from '../types/maintenance'
 
 function extractApiError(error: unknown): string {
   if (axios.isAxiosError(error)) {
@@ -18,14 +19,16 @@ function extractApiError(error: unknown): string {
 export async function submitMaintenanceReport(
   values: MaintenanceReportFormValues,
   accessToken: string,
+  blockName: string,
 ): Promise<MaintenanceReportResponse> {
   const formData = new FormData()
-  const categoryLabel = values.category
-  const location = `${values.block} - اتاق ${values.roomNumber}`
+  const location = isRoomCategory(values.category)
+    ? `${blockName} - اتاق ${values.roomNumber}`
+    : blockName
 
   formData.append('location', location)
   formData.append('description', values.description)
-  formData.append('extra_description', `دسته‌بندی خرابی: ${categoryLabel}`)
+  formData.append('category', values.category)
 
   if (values.photo) {
     formData.append('photo_url', values.photo)

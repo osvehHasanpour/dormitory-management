@@ -49,6 +49,7 @@ export interface StudentRequestListItem {
 export interface StudentRequestDetail extends StudentRequestListItem {
   location?: string
   extra_description?: string
+  category?: string
   photo_url?: string | null
   preferred_date?: string
   item?: {
@@ -61,7 +62,6 @@ export interface StudentRequestDetail extends StudentRequestListItem {
   quantity?: number
   delivery_status?: string
   name?: string
-  category?: string
   event_date?: string
   approval_date?: string | null
 }

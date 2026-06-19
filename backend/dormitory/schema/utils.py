@@ -21,7 +21,7 @@ def get_child_specific_fields(request_obj):
         child = request_obj.maintenancerequest
         return {
             'location': child.location,
-            'extra_description': child.extra_description,
+            'category': child.category,
             'photo_url': child.photo_url.url if child.photo_url else None,
         }
     if request_obj.request_type == RequestBase.RequestType.CLEANING:

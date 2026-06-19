@@ -1,5 +1,5 @@
 export interface MaintenanceReportFormValues {
-  block: string
+  blockId: string
   roomNumber: string
   category: string
   description: string
@@ -17,23 +17,25 @@ export interface MaintenanceReportResponse {
   status: string
   description: string
   location: string
-  extra_description: string
+  category: string
   photo_url: string | null
   created_at: string
 }
 
-export const maintenanceBlocks: MaintenanceOption[] = [
-  { value: 'بلوک الف', label: 'بلوک الف' },
-  { value: 'بلوک ب', label: 'بلوک ب' },
-  { value: 'بلوک ج', label: 'بلوک ج' },
-  { value: 'بلوک د', label: 'بلوک د' },
-  { value: 'بلوک ه', label: 'بلوک ه' },
-]
+export const ROOM_CATEGORY = 'room'
+
+export function isRoomCategory(category: string): boolean {
+  return category === ROOM_CATEGORY
+}
 
 export const maintenanceCategories: MaintenanceOption[] = [
   { value: 'bathroom', label: 'سرویس بهداشتی' },
   { value: 'bath', label: 'حمام' },
   { value: 'kitchen', label: 'آشپزخانه' },
-  { value: 'room', label: 'اتاق' },
+  { value: ROOM_CATEGORY, label: 'اتاق' },
   { value: 'facilities', label: 'تأسیسات' },
 ]
+
+export function getMaintenanceCategoryLabel(value: string): string {
+  return maintenanceCategories.find((category) => category.value === value)?.label ?? value
+}

@@ -73,8 +73,8 @@ class RequestStatusHistoryAdmin(admin.ModelAdmin):
 
 @admin.register(MaintenanceRequest)
 class MaintenanceRequestAdmin(admin.ModelAdmin):
-    list_display = ('id', 'location', 'status', 'user', 'created_at')
-    list_filter = ('status',)
+    list_display = ('id', 'location', 'category', 'status', 'user', 'created_at')
+    list_filter = ('status', 'category')
     search_fields = ('location', 'description')
 
 

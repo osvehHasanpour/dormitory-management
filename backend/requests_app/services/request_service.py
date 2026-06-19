@@ -173,7 +173,7 @@ class RequestService:
             status=RequestBase.Status.PENDING,
             description=data['description'],
             location=data['location'],
-            extra_description=data.get('extra_description', ''),
+            category=data['category'],
             photo_url=data.get('photo_url'),
         )
         cls._record_status_history(

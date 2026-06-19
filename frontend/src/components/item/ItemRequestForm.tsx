@@ -1,54 +1,42 @@
 import { Controller } from 'react-hook-form'
 
-import { BlockSelector } from './BlockSelector'
+import { ReadOnlyLocationFields } from '../shared/ReadOnlyLocationFields'
 import { ItemSelector } from './ItemSelector'
 import { useItemRequest } from '../../hooks/useItemRequest'
 import { MIN_ITEM_QUANTITY } from '../../types/item'
 
 export function ItemRequestForm() {
-  const { form, isSubmitting, error, successMessage, submitRequest, clearMessages } =
-    useItemRequest()
+  const {
+    form,
+    isSubmitting,
+    error,
+    successMessage,
+    profileError,
+    isProfileLoading,
+    submitRequest,
+    clearMessages,
+  } = useItemRequest()
   const {
     control,
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = form
 
+  const blockName = watch('block')
+  const roomNumber = watch('roomNumber')
+
   return (
     <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit(submitRequest)}>
-      <Controller
-        control={control}
-        name="block"
-        render={({ field }) => (
-          <BlockSelector
-            value={field.value}
-            error={errors.block?.message}
-            onChange={(value) => {
-              clearMessages()
-              field.onChange(value)
-            }}
-            onBlur={field.onBlur}
-          />
-        )}
+      <ReadOnlyLocationFields
+        blockName={blockName}
+        roomNumber={roomNumber}
+        blockError={errors.block?.message}
+        roomError={errors.roomNumber?.message}
+        isLoading={isProfileLoading}
+        loadError={profileError}
       />
-
-      <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
-        <span className="mb-3 block text-body-sm-strong text-ink">شماره اتاق</span>
-        <input
-          type="text"
-          inputMode="numeric"
-          autoComplete="off"
-          placeholder="شماره اتاق را وارد کنید"
-          className="h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30"
-          {...register('roomNumber', {
-            onChange: clearMessages,
-          })}
-        />
-        {errors.roomNumber?.message ? (
-          <p className="mt-2 text-body-sm text-error">{errors.roomNumber.message}</p>
-        ) : null}
-      </label>
 
       <Controller
         control={control}
@@ -115,7 +103,7 @@ export function ItemRequestForm() {
 
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={isSubmitting || isProfileLoading}
         className="mt-1 flex h-11 w-full items-center justify-center rounded-md bg-primary text-button-md text-on-primary transition-colors hover:bg-primary-pressed disabled:cursor-not-allowed disabled:bg-surface-card disabled:text-ash"
       >
         {isSubmitting ? 'در حال ثبت...' : 'ارسال درخواست لوازم'}
