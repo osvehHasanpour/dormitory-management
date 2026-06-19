@@ -4,6 +4,7 @@ from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated, Pe
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from users.models import User
 from users.serializers import LoginSerializer, UserProfileSerializer
 from users.services.auth_service import AuthService, AuthServiceError
 
@@ -223,9 +224,14 @@ class ProfileView(AuthAPIView):
         },
     )
     def get(self, request):
+        user = (
+            User.objects.select_related('block', 'role')
+            .prefetch_related('room_assignments__room__block')
+            .get(pk=request.user.pk)
+        )
         return _success_response(
             'پروفایل کاربر با موفقیت دریافت شد.',
-            UserProfileSerializer(request.user).data,
+            UserProfileSerializer(user).data,
         )
 
 

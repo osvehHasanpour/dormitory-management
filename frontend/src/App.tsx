@@ -4,6 +4,7 @@ import { LoginPage } from './pages/auth/LoginPage'
 import { DashboardPage } from './pages/student/DashboardPage'
 import { CleaningRequestPage } from './pages/student/CleaningRequestPage'
 import { MaintenanceReportPage } from './pages/student/MaintenanceReportPage'
+import { ProfilePage } from './pages/student/ProfilePage'
 import { RoomSuppliesRequestPage } from './pages/student/RoomSuppliesRequestPage'
 
 function PagePlaceholder({ title }: { title: string }) {
@@ -28,7 +29,7 @@ function App() {
       <Route path="/ideas" element={<PagePlaceholder title="ایده‌ها و پیشنهادات" />} />
       <Route path="/complaints" element={<PagePlaceholder title="پیشنهادات و شکایات" />} />
       <Route path="/my-requests" element={<PagePlaceholder title="پیگیری درخواست" />} />
-      <Route path="/profile" element={<PagePlaceholder title="پروفایل" />} />
+      <Route path="/profile" element={<ProfilePage />} />
       <Route
         path="/supervisor/dashboard"
         element={<PagePlaceholder title="داشبورد سرپرست" />}
