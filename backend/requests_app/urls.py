@@ -7,6 +7,8 @@ from requests_app.views import (
     InventoryItemListView,
     ItemRequestViewSet,
     MaintenanceRequestViewSet,
+    MyRequestsView,
+    StudentRequestDetailView,
 )
 
 
@@ -19,6 +21,8 @@ router.register('items', ItemRequestViewSet, basename='item-request')
 router.register('booths', BoothRequestViewSet, basename='booth-request')
 
 urlpatterns = [
+    path('my/', MyRequestsView.as_view(), name='my-requests'),
+    path('<int:pk>/', StudentRequestDetailView.as_view(), name='student-request-detail'),
     path('inventory-items/', InventoryItemListView.as_view(), name='inventory-items'),
     path('', include(router.urls)),
 ]

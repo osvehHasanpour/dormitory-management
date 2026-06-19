@@ -5,6 +5,7 @@ import { DashboardPage } from './pages/student/DashboardPage'
 import { CleaningRequestPage } from './pages/student/CleaningRequestPage'
 import { MaintenanceReportPage } from './pages/student/MaintenanceReportPage'
 import { BoothRequestPage } from './pages/student/BoothRequestPage'
+import { MyRequestsPage } from './pages/student/MyRequestsPage'
 import { RoomSuppliesRequestPage } from './pages/student/RoomSuppliesRequestPage'
 
 function PagePlaceholder({ title }: { title: string }) {
@@ -28,7 +29,7 @@ function App() {
       <Route path="/class-registration" element={<PagePlaceholder title="ثبت نام کلاس" />} />
       <Route path="/ideas" element={<PagePlaceholder title="ایده‌ها و پیشنهادات" />} />
       <Route path="/complaints" element={<PagePlaceholder title="پیشنهادات و شکایات" />} />
-      <Route path="/my-requests" element={<PagePlaceholder title="پیگیری درخواست" />} />
+      <Route path="/my-requests" element={<MyRequestsPage />} />
       <Route path="/profile" element={<PagePlaceholder title="پروفایل" />} />
       <Route
         path="/supervisor/dashboard"
