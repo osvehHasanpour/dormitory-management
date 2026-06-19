@@ -63,9 +63,11 @@ function extractProfileErrorMessage(error: unknown): string {
   return 'دریافت پروفایل ناموفق بود. لطفاً دوباره تلاش کنید.'
 }
 
-export async function getProfile(): Promise<ApiUserProfile> {
+export async function getProfile(accessToken: string): Promise<ApiUserProfile> {
   try {
-    const response = await apiClient.get<ApiSuccessResponse<ApiUserProfile>>('/v1/auth/profile/')
+    const response = await apiClient.get<ApiSuccessResponse<ApiUserProfile>>('/v1/auth/profile/', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
     return response.data.data
   } catch (error) {
     throw new Error(extractProfileErrorMessage(error), { cause: error })
