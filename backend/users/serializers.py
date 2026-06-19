@@ -32,8 +32,6 @@ class LoginSerializer(serializers.Serializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     role_name = serializers.SerializerMethodField()
-    block_name = serializers.SerializerMethodField()
-    room_number = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -43,8 +41,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'role_name',
-            'block_name',
-            'room_number',
             'is_active',
         )
         read_only_fields = fields
@@ -55,32 +51,3 @@ class UserProfileSerializer(serializers.ModelSerializer):
             return None
 
         return obj.role.name
-
-    def _get_current_assignment(self, obj):
-        prefetched = getattr(obj, '_prefetched_objects_cache', {}).get('room_assignments')
-        if prefetched is not None:
-            for assignment in prefetched:
-                if assignment.is_current:
-                    return assignment
-            return None
-
-        return obj.room_assignments.filter(is_current=True).select_related('room__block').first()
-
-    @extend_schema_field(serializers.CharField(allow_null=True))
-    def get_block_name(self, obj):
-        if obj.block_id:
-            return obj.block.name
-
-        assignment = self._get_current_assignment(obj)
-        if assignment and assignment.room.block_id:
-            return assignment.room.block.name
-
-        return None
-
-    @extend_schema_field(serializers.CharField(allow_null=True))
-    def get_room_number(self, obj):
-        assignment = self._get_current_assignment(obj)
-        if assignment:
-            return assignment.room.room_number
-
-        return None

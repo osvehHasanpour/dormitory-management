@@ -26,8 +26,6 @@ export interface ApiUserProfile {
   first_name: string
   last_name: string
   role_name: UserRole | null
-  block_name: string | null
-  room_number: string | null
   is_active: boolean
 }
 
