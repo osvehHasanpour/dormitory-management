@@ -71,7 +71,7 @@ export function BlockDropdown({
     'h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30'
 
   return (
-    <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+    <label className="block glass-card p-4">
       <span className="mb-3 block text-body-sm-strong text-ink">انتخاب بلوک</span>
       {authError ? (
         <p className="text-body-sm text-error">{authError}</p>

@@ -9,10 +9,10 @@ export function DashboardPage() {
   const culturalSecondRow = culturalSection.items.slice(3)
 
   return (
-    <div className="min-h-screen bg-surface-soft pb-24">
+    <div className="page-gradient min-h-screen pb-24">
       <DashboardBanner />
 
-      <main className="relative -mt-4 rounded-t-lg bg-canvas px-4 pb-8 pt-6 sm:px-6 md:-mt-6 md:px-8 md:pt-8 lg:mx-auto lg:max-w-5xl lg:px-10">
+      <main className="relative -mt-4 px-4 pb-8 pt-6 sm:px-6 md:-mt-6 md:px-8 md:pt-8 lg:mx-auto lg:max-w-5xl lg:px-10">
         <section className="mb-8 md:mb-12">
           <SectionHeader title={serviceSection.title} />
           <div className="mt-6 grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 md:grid-cols-3 md:gap-6">

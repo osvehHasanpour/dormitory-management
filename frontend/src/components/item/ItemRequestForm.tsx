@@ -68,7 +68,7 @@ export function ItemRequestForm() {
         )}
       />
 
-      <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+      <label className="block glass-card p-4">
         <span className="mb-3 block text-body-sm-strong text-ink">توضیحات تکمیلی (اختیاری)</span>
         <textarea
           rows={5}

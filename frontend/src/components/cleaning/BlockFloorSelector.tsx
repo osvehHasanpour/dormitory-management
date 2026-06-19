@@ -141,7 +141,7 @@ export function BlockFloorSelector({
 
   return (
     <>
-      <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+      <label className="block glass-card p-4">
         <span className="mb-3 block text-body-sm-strong text-ink">انتخاب بلوک</span>
         {authError ? (
             <p className="text-body-sm text-error">{authError}</p>
@@ -176,7 +176,7 @@ export function BlockFloorSelector({
         {blockError ? <p className="mt-2 text-body-sm text-error">{blockError}</p> : null}
       </label>
 
-      <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+      <label className="block glass-card p-4">
         <span className="mb-3 block text-body-sm-strong text-ink">انتخاب طبقه</span>
         {!blockId ? (
           <p className="text-body-sm text-mute">ابتدا بلوک را انتخاب کنید.</p>

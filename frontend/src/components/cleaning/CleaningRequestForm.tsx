@@ -86,7 +86,7 @@ export function CleaningRequestForm() {
         control={control}
         name="line"
         render={({ field }) => (
-          <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+          <label className="block glass-card p-4">
             <span className="mb-3 block text-body-sm-strong text-ink">انتخاب لاین</span>
             <select
               value={field.value}
@@ -115,7 +115,7 @@ export function CleaningRequestForm() {
         control={control}
         name="spaceType"
         render={({ field }) => (
-          <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+          <label className="block glass-card p-4">
             <span className="mb-3 block text-body-sm-strong text-ink">انتخاب فضا</span>
             <select
               value={field.value}
@@ -140,7 +140,7 @@ export function CleaningRequestForm() {
         )}
       />
 
-      <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
+      <label className="block glass-card p-4">
         <span className="mb-3 block text-body-sm-strong text-ink">توضیحات تکمیلی</span>
         <textarea
           rows={5}

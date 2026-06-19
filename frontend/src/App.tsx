@@ -11,7 +11,7 @@ import { RoomSuppliesRequestPage } from './pages/student/RoomSuppliesRequestPage
 
 function PagePlaceholder({ title }: { title: string }) {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-surface-soft px-4 pb-24">
+    <main className="page-gradient flex min-h-screen items-center justify-center px-4 pb-24">
       <p className="text-heading-xl text-ink">{title}</p>
     </main>
   )
