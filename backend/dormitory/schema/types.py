@@ -141,7 +141,7 @@ def map_request(request_obj):
         quantity=child_fields.get('quantity'),
         delivery_status=child_fields.get('delivery_status'),
         name=child_fields.get('name'),
-        category=child_fields.get('category'),
+        category=child_fields.get('category') or payload.get('category'),
         event_date=child_fields.get('event_date'),
         approval_date=child_fields.get('approval_date'),
     )

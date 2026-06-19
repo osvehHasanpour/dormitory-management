@@ -1,19 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 import { useAuth } from './useAuth'
+import { useRoomAssignment } from './useRoomAssignment'
 import { submitItemRequest } from '../services/itemService'
 import { MAX_ITEM_QUANTITY, MIN_ITEM_QUANTITY } from '../types/item'
 import type { ItemRequestFormValues } from '../types/item'
 
 const itemRequestSchema = z.object({
-  block: z.string().min(1, 'انتخاب بلوک الزامی است.'),
+  block: z.string().min(1, 'اطلاعات بلوک یافت نشد.'),
   roomNumber: z
     .string()
-    .min(1, 'شماره اتاق الزامی است.')
+    .min(1, 'اطلاعات اتاق یافت نشد.')
     .max(20, 'شماره اتاق نمی‌تواند بیش از ۲۰ کاراکتر باشد.'),
   itemId: z.string().min(1, 'انتخاب کالا الزامی است.'),
   quantity: z
@@ -30,6 +31,8 @@ interface UseItemRequestResult {
   isSubmitting: boolean
   error: string | null
   successMessage: string | null
+  profileError: string | null
+  isProfileLoading: boolean
   submitRequest: (values: ItemRequestFormValues) => Promise<void>
   clearMessages: () => void
 }
@@ -37,6 +40,8 @@ interface UseItemRequestResult {
 export function useItemRequest(): UseItemRequestResult {
   const navigate = useNavigate()
   const { tokens, isAuthenticated } = useAuth()
+  const { blockName, roomNumber, isLoading: isProfileLoading, error: profileError } =
+    useRoomAssignment()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
@@ -53,6 +58,15 @@ export function useItemRequest(): UseItemRequestResult {
     mode: 'onTouched',
   })
 
+  useEffect(() => {
+    if (blockName) {
+      form.setValue('block', blockName, { shouldValidate: true })
+    }
+    if (roomNumber) {
+      form.setValue('roomNumber', roomNumber, { shouldValidate: true })
+    }
+  }, [blockName, roomNumber, form])
+
   const clearMessages = () => {
     setError(null)
     setSuccessMessage(null)
@@ -66,12 +80,23 @@ export function useItemRequest(): UseItemRequestResult {
       return
     }
 
+    if (!values.block || !values.roomNumber) {
+      setError('اطلاعات بلوک و اتاق شما یافت نشد. لطفاً با پشتیبانی تماس بگیرید.')
+      return
+    }
+
     setIsSubmitting(true)
 
     try {
       await submitItemRequest(values, tokens.access)
       setSuccessMessage('درخواست لوازم با موفقیت ثبت شد.')
-      form.reset()
+      form.reset({
+        block: blockName ?? '',
+        roomNumber: roomNumber ?? '',
+        itemId: '',
+        quantity: MIN_ITEM_QUANTITY,
+        description: '',
+      })
       window.setTimeout(() => {
         navigate('/my-requests', { replace: true })
       }, 900)
@@ -91,6 +116,8 @@ export function useItemRequest(): UseItemRequestResult {
     isSubmitting,
     error,
     successMessage,
+    profileError,
+    isProfileLoading,
     submitRequest,
     clearMessages,
   }

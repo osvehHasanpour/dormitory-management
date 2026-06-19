@@ -69,8 +69,8 @@ class MaintenanceRESTAPITests(RequestsAPITestBase):
             reverse('requests:maintenance-request-list'),
             {
                 'description': 'نشتی شیر آب در آشپزخانه',
-                'location': 'بلوک الف - طبقه ۲',
-                'extra_description': 'از دیشب آب جمع می‌شود.',
+                'location': 'بلوک الف',
+                'category': 'kitchen',
             },
             format='json',
         )
@@ -87,12 +87,14 @@ class MaintenanceRESTAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='خرابی خود دانشجو',
             location='اتاق ۱۰۱',
+            category='facilities',
         )
         MaintenanceRequest.objects.create(
             user=self.other_student,
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='خرابی دانشجوی دیگر',
             location='اتاق ۲۰۲',
+            category='facilities',
         )
 
         self.auth_as(self.student)
@@ -113,6 +115,7 @@ class MaintenanceRESTAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='درخواست خصوصی',
             location='اتاق ۲۰۲',
+            category='facilities',
         )
 
         self.auth_as(self.student)
@@ -132,12 +135,14 @@ class MaintenanceRESTAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='درخواست اول',
             location='اتاق ۱۰۱',
+            category='facilities',
         )
         MaintenanceRequest.objects.create(
             user=self.other_student,
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='درخواست دوم',
             location='اتاق ۲۰۲',
+            category='facilities',
         )
 
         self.auth_as(self.supervisor)
@@ -153,6 +158,7 @@ class MaintenanceRESTAPITests(RequestsAPITestBase):
             {
                 'description': 'درخواست سرپرست',
                 'location': 'بلوک ب',
+                'category': 'facilities',
             },
             format='json',
         )
@@ -193,8 +199,8 @@ class CleaningRESTAPITests(RequestsAPITestBase):
         response = self.client.post(
             reverse('requests:cleaning-request-list'),
             {
-                'description': 'نظافت سرویس بهداشتی',
-                'location': 'بلوک الف - طبقه ۱',
+                'description': 'سرویس بهداشتی نیاز به نظافت دارد',
+                'location': 'بلوک الف - طبقه ۱ - لاین الف - سرویس بهداشتی',
                 'preferred_date': (date.today() + timedelta(days=2)).isoformat(),
             },
             format='json',

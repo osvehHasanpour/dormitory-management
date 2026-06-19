@@ -126,7 +126,7 @@ export function ItemSelector({
             <option value="">انتخاب اقلام مورد نظر</option>
             {items.map((item) => (
               <option key={item.id} value={String(item.id)} disabled={item.quantity < MIN_ITEM_QUANTITY}>
-                {item.item_name} ({item.category}) — موجودی: {item.quantity}
+                {item.item_name} ({item.category})
               </option>
             ))}
           </select>

@@ -3,12 +3,8 @@ import axios from 'axios'
 import apiClient from './apiClient'
 import type { ApiSuccessResponse } from '../types/auth'
 import type {
-  Block,
-  BlocksResponse,
   CleaningRequestFormValues,
   CleaningRequestResponse,
-  Floor,
-  FloorsResponse,
 } from '../types/cleaning'
 import { cleaningLines, cleaningSpaceTypes } from '../types/cleaning'
 
@@ -21,52 +17,6 @@ function extractApiError(error: unknown, fallback: string): string {
   }
 
   return fallback
-}
-
-function unwrapResults<T>(data: T[] | { results: T[] }): T[] {
-  if (Array.isArray(data)) {
-    return data
-  }
-
-  return data.results ?? []
-}
-
-export async function fetchBlocks(accessToken: string): Promise<Block[]> {
-  try {
-    const response = await apiClient.get<ApiSuccessResponse<Block[] | BlocksResponse>>(
-      '/v1/blocks/',
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    )
-
-    return unwrapResults(response.data.data)
-  } catch (error) {
-    throw new Error(extractApiError(error, 'دریافت لیست بلوک‌ها ناموفق بود. لطفاً دوباره تلاش کنید.'), {
-      cause: error,
-    })
-  }
-}
-
-export async function fetchFloors(blockId: string, accessToken: string): Promise<Floor[]> {
-  try {
-    const response = await apiClient.get<ApiSuccessResponse<Floor[] | FloorsResponse>>(
-      `/v1/blocks/${blockId}/floors/`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    )
-
-    return unwrapResults(response.data.data)
-  } catch (error) {
-    throw new Error(extractApiError(error, 'دریافت لیست طبقات ناموفق بود. لطفاً دوباره تلاش کنید.'), {
-      cause: error,
-    })
-  }
 }
 
 function resolveLabel(options: { value: string; label: string }[], value: string): string {
@@ -95,12 +45,11 @@ export async function submitCleaningRequest(
 
   try {
     const response = await apiClient.post<ApiSuccessResponse<CleaningRequestResponse>>(
-      '/v1/cleaning/requests/',
+      '/v1/requests/cleaning/',
       {
-        description: spaceLabel,
+        description: values.description.trim(),
         location,
         preferred_date: preferredDate,
-        extra_description: values.description.trim(),
       },
       {
         headers: {
@@ -116,3 +65,5 @@ export async function submitCleaningRequest(
     })
   }
 }
+
+export { fetchBlocks, fetchFloors } from './blockService'

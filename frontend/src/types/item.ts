@@ -1,8 +1,3 @@
-export interface ItemOption {
-  value: string
-  label: string
-}
-
 export interface ItemRequestFormValues {
   block: string
   roomNumber: string
@@ -39,14 +34,6 @@ export interface ItemRequestResponse {
   delivery_status: string
   created_at: string
 }
-
-export const itemBlocks: ItemOption[] = [
-  { value: 'بلوک الف', label: 'بلوک الف' },
-  { value: 'بلوک ب', label: 'بلوک ب' },
-  { value: 'بلوک ج', label: 'بلوک ج' },
-  { value: 'بلوک د', label: 'بلوک د' },
-  { value: 'بلوک ه', label: 'بلوک ه' },
-]
 
 export const MIN_ITEM_QUANTITY = 1
 export const MAX_ITEM_QUANTITY = 3

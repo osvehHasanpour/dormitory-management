@@ -16,6 +16,7 @@ class SupervisorRequestAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='نشتی آب',
             location='بلوک الف',
+            category='facilities',
         )
 
         self.auth_as(self.supervisor)
@@ -61,6 +62,7 @@ class SupervisorRequestAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='نشتی آب',
             location='بلوک الف',
+            category='facilities',
         )
 
         self.auth_as(self.supervisor)
@@ -86,6 +88,7 @@ class SupervisorRequestAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='نشتی آب',
             location='بلوک الف',
+            category='facilities',
         )
 
         self.auth_as(self.student)
@@ -111,6 +114,7 @@ class SupervisorRequestAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='نشتی آب',
             location='بلوک الف',
+            category='facilities',
         )
 
         self.auth_as(self.supervisor)
@@ -148,6 +152,7 @@ class SupervisorRequestAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='نشتی آب',
             location='بلوک الف',
+            category='facilities',
         )
         RequestStatusHistory.objects.create(
             request=request_obj,
@@ -177,6 +182,7 @@ class SupervisorRequestAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='نشتی آب',
             location='بلوک الف',
+            category='facilities',
         )
 
         self.auth_as(self.supervisor)
@@ -208,6 +214,7 @@ class SupervisorRequestAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='نشتی آب',
             location='بلوک الف',
+            category='facilities',
         )
 
         self.auth_as(self.supervisor)
@@ -231,6 +238,7 @@ class SupervisorRequestAPITests(RequestsAPITestBase):
             {
                 'description': 'خرابی لوله',
                 'location': 'بلوک الف',
+                'category': 'facilities',
             },
             format='json',
         )

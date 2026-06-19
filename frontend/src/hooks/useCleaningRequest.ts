@@ -13,7 +13,10 @@ const cleaningRequestSchema = z.object({
   floorId: z.string().min(1, 'انتخاب طبقه الزامی است.'),
   line: z.string().min(1, 'انتخاب لاین الزامی است.'),
   spaceType: z.string().min(1, 'انتخاب فضا الزامی است.'),
-  description: z.string().max(1000, 'توضیحات نمی‌تواند بیش از ۱۰۰۰ کاراکتر باشد.'),
+  description: z
+    .string()
+    .min(1, 'توضیحات الزامی است.')
+    .max(1000, 'توضیحات نمی‌تواند بیش از ۱۰۰۰ کاراکتر باشد.'),
 })
 
 interface CleaningSubmitContext {

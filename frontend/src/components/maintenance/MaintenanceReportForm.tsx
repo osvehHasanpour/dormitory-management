@@ -1,13 +1,25 @@
+import { useCallback, useState } from 'react'
 import { Controller } from 'react-hook-form'
 
-import { BlockSelector } from './BlockSelector'
+import { BlockDropdown } from '../shared/BlockDropdown'
+import { ReadOnlyLocationFields } from '../shared/ReadOnlyLocationFields'
 import { CategorySelector } from './CategorySelector'
 import { PhotoUploader } from './PhotoUploader'
 import { useMaintenanceReport } from '../../hooks/useMaintenanceReport'
+import type { Block } from '../../services/blockService'
+import { isRoomCategory } from '../../types/maintenance'
 
 export function MaintenanceReportForm() {
-  const { form, isSubmitting, error, successMessage, submitReport, clearMessages } =
-    useMaintenanceReport()
+  const {
+    form,
+    isSubmitting,
+    error,
+    successMessage,
+    profileError,
+    isProfileLoading,
+    submitReport,
+    clearMessages,
+  } = useMaintenanceReport()
   const {
     control,
     register,
@@ -17,41 +29,42 @@ export function MaintenanceReportForm() {
     formState: { errors },
   } = form
   const selectedPhoto = watch('photo')
+  const selectedCategory = watch('category')
+  const roomNumber = watch('roomNumber')
+  const showRoomField = isRoomCategory(selectedCategory)
+
+  const [selectedBlock, setSelectedBlock] = useState<Block | null>(null)
+
+  const handleBlockSelect = useCallback((block: Block | null) => {
+    setSelectedBlock(block)
+  }, [])
+
+  const onSubmit = handleSubmit(async (values) => {
+    if (!selectedBlock) {
+      return
+    }
+
+    await submitReport(values, { blockName: selectedBlock.name })
+  })
 
   return (
-    <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit(submitReport)}>
+    <form className="flex w-full flex-col gap-4" onSubmit={onSubmit}>
       <Controller
         control={control}
-        name="block"
+        name="blockId"
         render={({ field }) => (
-          <BlockSelector
-            value={field.value}
-            error={errors.block?.message}
+          <BlockDropdown
+            blockId={field.value}
+            error={errors.blockId?.message}
             onChange={(value) => {
               clearMessages()
               field.onChange(value)
             }}
             onBlur={field.onBlur}
+            onBlockSelect={handleBlockSelect}
           />
         )}
       />
-
-      <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
-        <span className="mb-3 block text-body-sm-strong text-ink">شماره اتاق</span>
-        <input
-          type="text"
-          inputMode="numeric"
-          autoComplete="off"
-          placeholder="شماره اتاق را وارد کنید"
-          className="h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30"
-          {...register('roomNumber', {
-            onChange: clearMessages,
-          })}
-        />
-        {errors.roomNumber?.message ? (
-          <p className="mt-2 text-body-sm text-error">{errors.roomNumber.message}</p>
-        ) : null}
-      </label>
 
       <Controller
         control={control}
@@ -68,6 +81,16 @@ export function MaintenanceReportForm() {
           />
         )}
       />
+
+      {showRoomField ? (
+        <ReadOnlyLocationFields
+          showBlock={false}
+          roomNumber={roomNumber}
+          roomError={errors.roomNumber?.message}
+          isLoading={isProfileLoading}
+          loadError={profileError}
+        />
+      ) : null}
 
       <label className="block rounded-md border border-hairline bg-canvas p-4 shadow-elevated">
         <span className="mb-3 block text-body-sm-strong text-ink">توضیحات تکمیلی</span>

@@ -18,6 +18,7 @@ class StudentMyRequestsAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='خرابی لوله',
             location='بلوک الف',
+            category='facilities',
         )
         CleaningRequest.objects.create(
             user=self.student,
@@ -48,6 +49,7 @@ class StudentMyRequestsAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='خرابی',
             location='بلوک الف',
+            category='facilities',
         )
         CleaningRequest.objects.create(
             user=self.student,
@@ -86,6 +88,7 @@ class StudentMyRequestsAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='نشتی آب',
             location='بلوک الف',
+            category='facilities',
         )
 
         self.auth_as(self.student)
@@ -105,6 +108,7 @@ class StudentMyRequestsAPITests(RequestsAPITestBase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='درخواست خصوصی',
             location='بلوک ج',
+            category='facilities',
         )
 
         self.auth_as(self.student)

@@ -134,14 +134,25 @@ class RequestStatusHistory(models.Model):
 
 
 class MaintenanceRequest(RequestBase):
+    class Category(models.TextChoices):
+        BATHROOM = 'bathroom', 'سرویس بهداشتی'
+        BATH = 'bath', 'حمام'
+        KITCHEN = 'kitchen', 'آشپزخانه'
+        ROOM = 'room', 'اتاق'
+        FACILITIES = 'facilities', 'تأسیسات'
+
     location = models.CharField(max_length=200, verbose_name='محل')
+    category = models.CharField(
+        max_length=100,
+        choices=Category.choices,
+        verbose_name='دسته‌بندی',
+    )
     photo_url = models.ImageField(
         upload_to='maintenance/',
         null=True,
         blank=True,
         verbose_name='تصویر',
     )
-    extra_description = models.TextField(blank=True, verbose_name='توضیحات تکمیلی')
 
     class Meta:
         verbose_name = 'درخواست تعمیرات'

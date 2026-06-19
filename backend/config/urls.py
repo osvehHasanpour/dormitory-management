@@ -28,6 +28,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/auth/', include(('users.urls', 'users'), namespace='users')),
     path(
+        'api/v1/blocks/',
+        include(('dorms.urls', 'dorms'), namespace='dorms'),
+    ),
+    path(
         'api/v1/requests/',
         include(('requests_app.urls', 'requests_app'), namespace='requests'),
     ),

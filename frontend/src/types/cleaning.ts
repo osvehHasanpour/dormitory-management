@@ -1,3 +1,7 @@
+import type { Block, Floor } from '../services/blockService'
+
+export type { Block, Floor }
+
 export interface CleaningOption {
   value: string
   label: string
@@ -9,18 +13,6 @@ export interface CleaningRequestFormValues {
   line: string
   spaceType: string
   description: string
-}
-
-export interface Block {
-  id: number
-  name: string
-  total_floors?: number
-}
-
-export interface Floor {
-  id: number
-  floor: number
-  label: string
 }
 
 export interface BlocksResponse {
@@ -38,7 +30,7 @@ export interface CleaningRequestResponse {
   description: string
   location: string
   preferred_date: string
-  extra_description: string
+  extra_description?: string
   created_at: string
 }
 

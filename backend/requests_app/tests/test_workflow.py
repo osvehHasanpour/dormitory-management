@@ -56,6 +56,7 @@ class RequestWorkflowTests(TestCase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='خرابی لوله',
             location='بلوک الف',
+            category='facilities',
         )
 
         updated = RequestService.change_status(
@@ -73,6 +74,7 @@ class RequestWorkflowTests(TestCase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='خرابی لوله',
             location='بلوک الف',
+            category='facilities',
         )
 
         with self.assertRaises(RequestServiceError) as ctx:
@@ -91,6 +93,7 @@ class RequestWorkflowTests(TestCase):
             status=RequestBase.Status.REJECTED,
             description='خرابی لوله',
             location='بلوک الف',
+            category='facilities',
         )
 
         with self.assertRaises(RequestServiceError):
@@ -106,6 +109,7 @@ class RequestWorkflowTests(TestCase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='خرابی لوله',
             location='بلوک الف',
+            category='facilities',
         )
 
         with self.assertRaises(RequestServiceError) as ctx:
@@ -124,6 +128,7 @@ class RequestWorkflowTests(TestCase):
             request_type=RequestBase.RequestType.MAINTENANCE,
             description='خرابی لوله',
             location='بلوک الف',
+            category='facilities',
         )
 
         RequestService.change_status(

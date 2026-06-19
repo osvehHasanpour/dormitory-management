@@ -19,7 +19,7 @@ export function CategorySelector({ value, error, onChange, onBlur }: CategorySel
       >
         <option value="">انتخاب دسته‌بندی</option>
         {maintenanceCategories.map((category) => (
-          <option key={category.value} value={category.label}>
+          <option key={category.value} value={category.value}>
             {category.label}
           </option>
         ))}
