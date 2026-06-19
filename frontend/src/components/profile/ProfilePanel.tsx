@@ -1,9 +1,10 @@
-import { useProfile } from '../../hooks/useProfile'
-import { ProfileInfoRow } from './ProfileInfoRow'
+import { ProfileAvatar } from './ProfileAvatar'
+import { ProfileInfoCard } from './ProfileInfoCard'
 import { ProfileSkeleton } from './ProfileSkeleton'
+import { useProfile } from '../../hooks/useProfile'
 
 export function ProfilePanel() {
-  const { fields, isLoading, error, retry } = useProfile()
+  const { profile, fields, isLoading, error, retry } = useProfile()
 
   if (isLoading) {
     return <ProfileSkeleton />
@@ -19,7 +20,7 @@ export function ProfilePanel() {
         <button
           type="button"
           onClick={retry}
-          className="mt-3 rounded-md bg-secondary-bg px-4 py-2 text-button-sm text-on-secondary transition-colors hover:bg-secondary-pressed"
+          className="mt-3 rounded-md bg-secondary-bg px-4 py-2 text-button-md text-on-secondary transition-colors hover:bg-secondary-pressed"
         >
           تلاش مجدد
         </button>
@@ -29,8 +30,14 @@ export function ProfilePanel() {
 
   return (
     <div className="flex flex-col gap-4">
+      <ProfileAvatar fullName={profile?.fullName ?? ''} />
       {fields.map((field) => (
-        <ProfileInfoRow key={field.id} label={field.label} value={field.value} />
+        <ProfileInfoCard
+          key={field.id}
+          label={field.label}
+          value={field.value}
+          icon={field.icon}
+        />
       ))}
     </div>
   )
