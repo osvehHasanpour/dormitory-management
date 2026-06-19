@@ -5,10 +5,10 @@ import { useAuth } from '../../hooks/useAuth'
 import type { BottomNavTab } from '../../types/dashboard'
 
 interface BottomNavProps {
-  activeTab: BottomNavTab
+  activeTab?: BottomNavTab | null
 }
 
-export function BottomNav({ activeTab }: BottomNavProps) {
+export function BottomNav({ activeTab = null }: BottomNavProps) {
   const navigate = useNavigate()
   const { logout } = useAuth()
 
@@ -31,7 +31,7 @@ export function BottomNav({ activeTab }: BottomNavProps) {
     >
       <ul className="mx-auto flex max-w-lg items-end justify-around">
         {bottomNavItems.map((item) => {
-          const isActive = item.id === activeTab
+          const isActive = activeTab != null && item.id === activeTab
 
           return (
             <li key={item.id}>
