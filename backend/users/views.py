@@ -1,11 +1,26 @@
 from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema, inline_serializer
+from django.db.models import Prefetch
 from rest_framework import permissions, serializers, status
 from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated, PermissionDenied
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from dorms.models import RoomAssignment
+from users.models import User
 from users.serializers import LoginSerializer, UserProfileSerializer
 from users.services.auth_service import AuthService, AuthServiceError
+
+
+def get_profile_user_queryset():
+    return User.objects.select_related('role', 'block').prefetch_related(
+        Prefetch(
+            'room_assignments',
+            queryset=RoomAssignment.objects.filter(is_current=True).select_related(
+                'room',
+                'room__block',
+            ),
+        ),
+    )
 
 
 def _normalize_errors(errors):
@@ -181,7 +196,8 @@ class LoginView(AuthAPIView):
         except AuthServiceError as exc:
             return _error_response(exc.message, exc.errors, exc.status_code)
 
-        user_data = UserProfileSerializer(result.user).data
+        user = get_profile_user_queryset().get(pk=result.user.pk)
+        user_data = UserProfileSerializer(user).data
         return _success_response(
             'ورود با موفقیت انجام شد.',
             {
@@ -223,9 +239,10 @@ class ProfileView(AuthAPIView):
         },
     )
     def get(self, request):
+        user = get_profile_user_queryset().get(pk=request.user.pk)
         return _success_response(
             'پروفایل کاربر با موفقیت دریافت شد.',
-            UserProfileSerializer(request.user).data,
+            UserProfileSerializer(user).data,
         )
 
 

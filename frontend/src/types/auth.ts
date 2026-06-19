@@ -26,7 +26,23 @@ export interface ApiUserProfile {
   first_name: string
   last_name: string
   role_name: UserRole | null
+  block_name: string | null
+  room_number: string | null
+  profile_image: string | null
   is_active: boolean
+}
+
+export function formatProfileValue(value: string | null | undefined): string {
+  if (value == null || value.trim() === '') {
+    return 'ثبت نشده'
+  }
+
+  return value
+}
+
+export function getProfileFullName(profile: Pick<ApiUserProfile, 'first_name' | 'last_name'>): string {
+  const fullName = `${profile.first_name} ${profile.last_name}`.trim()
+  return fullName || 'ثبت نشده'
 }
 
 export interface LoginResponseData {

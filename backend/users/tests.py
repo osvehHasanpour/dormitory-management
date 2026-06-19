@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from dorms.models import Block, Room, RoomAssignment
 from users.models import Role, User
 
 
@@ -12,15 +13,33 @@ class AuthAPITests(APITestCase):
             name=Role.Name.STUDENT,
             description='دانشجوی ساکن خوابگاه',
         )
+        self.block = Block.objects.create(
+            name='بلوک الف',
+            total_floors=4,
+            room_numbers=['101', '102'],
+        )
+        self.room = Room.objects.create(
+            block=self.block,
+            room_number='101',
+            floor=1,
+            capacity=4,
+        )
         self.user = User.objects.create(
             personnel_code='401234567',
             national_code='3456789012',
             first_name='علی',
             last_name='رضایی',
             role=self.role,
+            block=self.block,
         )
         self.user.set_password('secure-pass-123')
         self.user.save()
+        RoomAssignment.objects.create(
+            user=self.user,
+            room=self.room,
+            assigned_from='2025-01-01',
+            is_current=True,
+        )
 
     def test_login_returns_jwt_tokens_and_profile(self):
         response = self.client.post(
@@ -38,7 +57,9 @@ class AuthAPITests(APITestCase):
         self.assertIn('access', response.data['data'])
         self.assertIn('refresh', response.data['data'])
         self.assertEqual(response.data['data']['user']['role_name'], Role.Name.STUDENT)
-        self.assertNotIn('national_code', response.data['data']['user'])
+        self.assertEqual(response.data['data']['user']['block_name'], 'بلوک الف')
+        self.assertEqual(response.data['data']['user']['room_number'], '101')
+        self.assertIsNone(response.data['data']['user']['profile_image'])
 
     def test_login_rejects_invalid_credentials_with_persian_error(self):
         response = self.client.post(
@@ -65,6 +86,9 @@ class AuthAPITests(APITestCase):
         self.assertTrue(response.data['success'])
         self.assertEqual(response.data['data']['personnel_code'], self.user.personnel_code)
         self.assertEqual(response.data['data']['role_name'], Role.Name.STUDENT)
+        self.assertEqual(response.data['data']['block_name'], 'بلوک الف')
+        self.assertEqual(response.data['data']['room_number'], '101')
+        self.assertIsNone(response.data['data']['profile_image'])
 
     def test_profile_requires_authentication_with_response_envelope(self):
         response = self.client.get(reverse('users:profile'))
