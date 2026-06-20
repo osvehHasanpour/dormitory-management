@@ -51,13 +51,9 @@ export interface StudentRequestDetail extends StudentRequestListItem {
   extra_description?: string
   category?: string
   photo_url?: string | null
-  preferred_date?: string
   item?: {
     id: number
     item_name: string
-    category: string
-    quantity: number
-    description: string
   }
   quantity?: number
   delivery_status?: string
@@ -73,11 +69,12 @@ export interface PaginatedRequestsData {
   results: StudentRequestListItem[]
 }
 
-export type TimelineStepState = 'pending' | 'active' | 'completed' | 'rejected'
+export type TimelineStepState = 'pending' | 'active' | 'completed' | 'rejected' | 'approved'
 
 export interface TimelineStep {
   id: string
   label: string
   state: TimelineStepState
   date: string | null
+  note?: string
 }

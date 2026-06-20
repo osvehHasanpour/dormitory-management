@@ -42,3 +42,16 @@ export function formatAbsoluteDate(isoDate: string): string {
     minute: '2-digit',
   }).format(date)
 }
+
+export function formatPersianDateShort(isoDate: string): string {
+  const date = new Date(isoDate)
+  if (Number.isNaN(date.getTime())) {
+    return '—'
+  }
+
+  return new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date)
+}

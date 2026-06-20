@@ -2,14 +2,15 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { useAuth } from './useAuth'
 import { fetchRequestDetail } from '../services/requestService'
-import type { StudentRequestDetail } from '../types/request'
+import type { StudentRequestDetail, StudentRequestListItem } from '../types/request'
 
 interface UseRequestDetailResult {
   detail: StudentRequestDetail | null
+  preview: StudentRequestListItem | null
   isLoading: boolean
   error: string | null
   selectedId: number | null
-  openDetail: (requestId: number) => void
+  openDetail: (request: StudentRequestListItem) => void
   closeDetail: () => void
   retry: () => void
 }
@@ -17,6 +18,7 @@ interface UseRequestDetailResult {
 export function useRequestDetail(): UseRequestDetailResult {
   const { tokens, isAuthenticated } = useAuth()
   const [selectedId, setSelectedId] = useState<number | null>(null)
+  const [preview, setPreview] = useState<StudentRequestListItem | null>(null)
   const [detail, setDetail] = useState<StudentRequestDetail | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -24,15 +26,18 @@ export function useRequestDetail(): UseRequestDetailResult {
 
   const closeDetail = useCallback(() => {
     setSelectedId(null)
+    setPreview(null)
     setDetail(null)
     setError(null)
     setIsLoading(false)
   }, [])
 
-  const openDetail = useCallback((requestId: number) => {
-    setSelectedId(requestId)
+  const openDetail = useCallback((request: StudentRequestListItem) => {
+    setSelectedId(request.id)
+    setPreview(request)
     setDetail(null)
     setError(null)
+    setIsLoading(true)
   }, [])
 
   const retry = useCallback(() => {
@@ -46,6 +51,7 @@ export function useRequestDetail(): UseRequestDetailResult {
 
     if (!isAuthenticated || !tokens?.access) {
       setError('برای مشاهده جزئیات باید وارد سامانه شوید.')
+      setIsLoading(false)
       return undefined
     }
 
@@ -81,6 +87,7 @@ export function useRequestDetail(): UseRequestDetailResult {
 
   return {
     detail,
+    preview,
     isLoading,
     error,
     selectedId,
