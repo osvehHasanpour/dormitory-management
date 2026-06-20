@@ -8,15 +8,16 @@ import { RequestEmptyState } from '../../components/requests/RequestEmptyState'
 import { RequestFilterTabs } from '../../components/requests/RequestFilterTabs'
 import { BottomSheet } from '../../components/ui/BottomSheet'
 import { Toast } from '../../components/ui/Toast'
-import { getRequestTypeConfig } from '../../data/requestItems'
 import { useMyRequests } from '../../hooks/useMyRequests'
 import { useRequestDetail } from '../../hooks/useRequestDetail'
+import { getRequestDetailTitle, getRequestDetailSubtitle } from '../../utils/requestHelpers'
 
 export function MyRequestsPage() {
   const navigate = useNavigate()
   const { requests, isLoading, error, activeFilter, setActiveFilter, retry } = useMyRequests()
   const {
     detail,
+    preview,
     isLoading: isDetailLoading,
     error: detailError,
     selectedId,
@@ -25,12 +26,9 @@ export function MyRequestsPage() {
     retry: retryDetail,
   } = useRequestDetail()
 
-  const sheetTitle =
-    detail != null
-      ? getRequestTypeConfig(detail.request_type).label
-      : selectedId != null
-        ? 'جزئیات درخواست'
-        : 'جزئیات درخواست'
+  const displaySource = detail ?? preview
+  const sheetTitle = displaySource ? getRequestDetailTitle(displaySource) : 'جزئیات درخواست'
+  const sheetSubtitle = displaySource ? getRequestDetailSubtitle(displaySource) : null
 
   return (
     <div className="page-gradient min-h-screen pb-28">
@@ -78,8 +76,15 @@ export function MyRequestsPage() {
         isOpen={selectedId !== null}
         onClose={closeDetail}
         title={sheetTitle}
+        subtitle={sheetSubtitle}
       >
-        <RequestDetailSheet request={detail} isLoading={isDetailLoading} />
+        <RequestDetailSheet
+          request={detail}
+          preview={preview}
+          isLoading={isDetailLoading}
+          error={detailError}
+          onRetry={retryDetail}
+        />
       </BottomSheet>
 
       <BottomNav activeTab="requests" />

@@ -6,7 +6,7 @@ import { StatusBadge } from '../ui/StatusBadge'
 
 interface RequestCardProps {
   request: StudentRequestListItem
-  onClick: (requestId: number) => void
+  onClick: (request: StudentRequestListItem) => void
 }
 
 export function RequestCard({ request, onClick }: RequestCardProps) {
@@ -15,7 +15,7 @@ export function RequestCard({ request, onClick }: RequestCardProps) {
   return (
     <button
       type="button"
-      onClick={() => onClick(request.id)}
+      onClick={() => onClick(request)}
       className="flex w-full items-center gap-3 glass-card p-4 text-right transition-colors hover:bg-white/55 active:bg-white/65"
     >
       <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-surface-card">

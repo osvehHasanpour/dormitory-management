@@ -1,13 +1,15 @@
+import { X } from 'lucide-react'
 import { useEffect, type ReactNode } from 'react'
 
 interface BottomSheetProps {
   isOpen: boolean
   onClose: () => void
   title: string
+  subtitle?: string | null
   children: ReactNode
 }
 
-export function BottomSheet({ isOpen, onClose, title, children }: BottomSheetProps) {
+export function BottomSheet({ isOpen, onClose, title, subtitle, children }: BottomSheetProps) {
   useEffect(() => {
     if (!isOpen) {
       return undefined
@@ -39,7 +41,7 @@ export function BottomSheet({ isOpen, onClose, title, children }: BottomSheetPro
       <button
         type="button"
         aria-label="بستن"
-        className="absolute inset-0 bg-ink/40 backdrop-blur-[1px] animate-sheet-scrim"
+        className="absolute inset-0 bg-ink/55 backdrop-blur-[2px] animate-sheet-scrim"
         onClick={onClose}
       />
 
@@ -47,24 +49,42 @@ export function BottomSheet({ isOpen, onClose, title, children }: BottomSheetPro
         role="dialog"
         aria-modal="true"
         aria-labelledby="request-detail-title"
-        className="relative z-10 w-full max-w-lg animate-sheet-panel glass-card-modal rounded-t-lg px-5 pb-8 pt-5 sm:rounded-lg sm:px-7 sm:pb-7 sm:pt-6"
+        className="relative z-10 flex max-h-[92vh] w-full max-w-lg flex-col animate-sheet-panel overflow-hidden rounded-t-lg sm:max-h-[88vh] sm:rounded-lg"
       >
-        <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-hairline sm:hidden" aria-hidden="true" />
+        <div className="glass-card-modal flex min-h-0 flex-1 flex-col rounded-t-lg sm:rounded-lg">
+          <div className="mx-auto mt-3 h-1 w-10 shrink-0 rounded-full bg-hairline sm:hidden" aria-hidden="true" />
 
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <h2 id="request-detail-title" className="text-heading-lg text-ink">
-            {title}
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-md px-3 py-1.5 text-caption-md font-bold text-primary transition-colors hover:bg-surface-card"
-          >
-            بستن
-          </button>
+          <header className="flex shrink-0 items-center gap-3 bg-surface-dark px-5 py-4 sm:px-7">
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="بستن"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-on-dark transition-colors hover:bg-white/20"
+            >
+              <X className="h-4 w-4" strokeWidth={2.25} />
+            </button>
+            <div className="min-w-0 flex-1 text-right">
+              <h2 id="request-detail-title" className="text-heading-lg text-on-dark">
+                {title}
+              </h2>
+              {subtitle ? (
+                <p className="mt-1 line-clamp-2 text-body-sm text-on-dark/75">{subtitle}</p>
+              ) : null}
+            </div>
+          </header>
+
+          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-7">{children}</div>
+
+          <footer className="shrink-0 border-t border-white/35 px-5 py-4 sm:px-7 sm:pb-6">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex h-11 w-full items-center justify-center rounded-md bg-primary text-button-md text-on-primary transition-colors hover:bg-primary-pressed"
+            >
+              بستن
+            </button>
+          </footer>
         </div>
-
-        {children}
       </div>
     </div>
   )

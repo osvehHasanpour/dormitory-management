@@ -47,6 +47,15 @@ REQUEST_DETAIL_SELECT_RELATED = (
     'boothrequest',
 )
 
+TYPED_REQUEST_SELECT_RELATED = (
+    'user',
+    'user__role',
+    'handled_by',
+    'handled_by__role',
+    'assigned_staff',
+    'assigned_staff__role',
+)
+
 
 class RequestSelector:
     @staticmethod
@@ -295,7 +304,7 @@ class RequestSelector:
             return request_obj
 
         queryset = model_class.objects.select_related(
-            *REQUEST_DETAIL_SELECT_RELATED,
+            *TYPED_REQUEST_SELECT_RELATED,
         ).prefetch_related(cls._status_history_prefetch())
         if model_class is ItemRequest:
             queryset = queryset.select_related('item')

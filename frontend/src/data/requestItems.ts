@@ -24,7 +24,7 @@ export const requestTypeConfigs: RequestTypeConfig[] = [
   },
   {
     type: 'item',
-    label: 'درخواست لوازم',
+    label: 'درخواست لوازم اتاق',
     image: serviceRoomSupplies,
   },
   {
