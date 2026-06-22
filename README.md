@@ -1,26 +1,42 @@
+<div align="center">
 
- 🏠 Integrated Dormitory Management System
+# 🏠 Integrated Dormitory Management System
 
-![Version](https://img.shields.io/badge/Version-1.0.0-blue)
-![Status](https://img.shields.io/badge/Status-Active%20Development-green)
-![Django](https://img.shields.io/badge/Django-5.x-%23092E20)
-![React](https://img.shields.io/badge/React-18.x-%2361DAFB)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-%233178C6)
-![Docker](https://img.shields.io/badge/Docker-%230db7ed)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-%23316192)
+<p align="center">
+  <img src="https://img.shields.io/badge/Version-1.0.0-blue?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Status-Active%20Development-brightgreen?style=for-the-badge" />
+</p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Django-5.x-%23092E20?style=for-the-badge&logo=django&logoColor=white" />
+  <img src="https://img.shields.io/badge/React-18.x-%2361DAFB?style=for-the-badge&logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/TypeScript-5.x-%233178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/Docker-%230db7ed?style=for-the-badge&logo=docker&logoColor=white" />
+  <img src="https://img.shields.io/badge/PostgreSQL-16-%23316192?style=for-the-badge&logo=postgresql&logoColor=white" />
+</p>
+
+<p align="center">
+  <i>A full-stack SOA-based platform that digitizes dormitory management — connecting students, supervisors, and admins with transparent, efficient digital workflows.</i>
+</p>
+
+</div>
+
+---
 
 ## ✨ Project Description
 
 A **full-stack SOA-based** web platform that digitizes dormitory management. It connects **students**, **supervisors**, and **admins** with transparent, efficient digital workflows — replacing paper-based processes.
 
 **Key Features** (aligned with SRS):
-- Maintenance reports, cleaning & supply requests
-- Class/event registration & rating
-- Idea submission, voting & complaint handling
-- Marketplace booth requests
-- Announcements & notifications
-- AI content moderation (in progress)
+
+| Feature | Description |
+|---|---|
+| 🔧 Maintenance | Maintenance reports, cleaning & supply requests |
+| 📅 Classes & Events | Class/event registration & rating |
+| 💡 Ideas & Feedback | Idea submission, voting & complaint handling |
+| 🏪 Marketplace | Marketplace booth requests |
+| 📢 Announcements | Announcements & notifications |
+| 🤖 AI Moderation | AI content moderation *(in progress)* |
 
 ---
 
@@ -34,32 +50,37 @@ graph TD
     style A fill:#61DAFB
     style B fill:#092E20,color:white
     style C fill:#316192,color:white
-Architecture Pattern: Service-Oriented Architecture (SOA)
-API Protocols: RESTful + GraphQL
-API Docs: Swagger (/swagger/) + GraphQL Playground (/graphql/)
+```
 
-🛠️ Tech Stack
+| | |
+|---|---|
+| **Architecture Pattern** | Service-Oriented Architecture (SOA) |
+| **API Protocols** | RESTful + GraphQL |
+| **API Docs** | Swagger (`/swagger/`) + GraphQL Playground (`/graphql/`) |
 
+---
 
+## 🛠️ Tech Stack
 
+| Layer | Technology |
+|---|---|
+| **Frontend** | React 18 + TypeScript + Vite |
+| **State Mgmt** | Redux Toolkit |
+| **UI** | Tailwind CSS |
+| **Backend** | Python + Django + DRF |
+| **API** | REST + GraphQL (Graphene) |
+| **Auth** | JWT (SimpleJWT) |
+| **Database** | PostgreSQL 16 |
+| **Docs** | Swagger (drf-yasg) |
+| **Container** | Docker + Docker Compose |
+| **Other** | CORS, Media Upload, Persian Support |
 
+---
 
+## 📁 Project Structure (Dev Branch)
 
-
-
-
-
-
-
-
-
-
-
-
-LayerTechnologyFrontendReact 18 + TypeScript + ViteState MgmtRedux ToolkitUITailwind CSSBackendPython + Django + DRFAPIREST + GraphQL (Graphene)AuthJWT (SimpleJWT)DatabasePostgreSQL 16DocsSwagger (drf-yasg)ContainerDocker + Docker ComposeOtherCORS, Media Upload, Persian Support
-
-📁 Project Structure (Dev Branch)
-textdormitory-management/
+```text
+dormitory-management/
 ├── backend/                          # Django (Modular)
 │   ├── announcements/                # Announcements & notifications
 │   ├── classes/                      # Class management
@@ -86,29 +107,54 @@ textdormitory-management/
 ├── docker-compose.yml
 ├── .env.example
 └── README.md
+```
 
-⚡ Quick Start
-Prerequisites
+---
 
-Docker Desktop
-Git
+## ⚡ Quick Start
 
-Bashgit clone https://github.com/osvehHasanpour/dormitory-management.git
+### Prerequisites
+
+- 🐳 Docker Desktop
+- 🔧 Git
+
+```bash
+git clone https://github.com/osvehHasanpour/dormitory-management.git
 cd dormitory-management
 git checkout Dev
 
 cp .env.example .env
 docker-compose up -d --build
-First-time Setup
-Bashdocker-compose exec backend python manage.py migrate
+```
+
+### First-time Setup
+
+```bash
+docker-compose exec backend python manage.py migrate
 docker-compose exec backend python manage.py createsuperuser
+```
 
-🌐 Service URLs
-ServiceURLCredentialsFrontendhttp://localhost:3000-Backend APIhttp://localhost:8000/api/-Swaggerhttp://localhost:8000/swagger/-GraphQLhttp://localhost:8000/graphql/-Django Adminhttp://localhost:8000/admin/SuperuserpgAdminhttp://localhost:5050admin@dormitory.com / admin123
+---
 
-📊 UML Diagrams
-1. High-Level Use Case Diagram (Text UML)
-text[Actor] Student          [Actor] Supervisor         [Actor] Admin
+## 🌐 Service URLs
+
+| Service | URL | Credentials |
+|---|---|---|
+| **Frontend** | http://localhost:3000 | — |
+| **Backend API** | http://localhost:8000/api/ | — |
+| **Swagger** | http://localhost:8000/swagger/ | — |
+| **GraphQL** | http://localhost:8000/graphql/ | — |
+| **Django Admin** | http://localhost:8000/admin/ | Superuser |
+| **pgAdmin** | http://localhost:5050 | `admin@dormitory.com` / `admin123` |
+
+---
+
+## 📊 UML Diagrams
+
+### 1. High-Level Use Case Diagram
+
+```text
+[Actor] Student          [Actor] Supervisor         [Actor] Admin
      │                        │                          │
      ├─ Login/Logout ────────┼──────────────────────────┤
      ├─ Submit Request ──────┼─ Manage Requests ────────┤
@@ -116,8 +162,12 @@ text[Actor] Student          [Actor] Supervisor         [Actor] Admin
      ├─ Register Class ──────┼─ Manage Classes ─────────┤
      ├─ Submit Idea/Vote ────┼─ Review Ideas ───────────┤
      └─ Rate Services ───────┴──────────────────────────┘
-2. Simplified Class Diagram (Key Models)
-textUser (Abstract)
+```
+
+### 2. Simplified Class Diagram (Key Models)
+
+```text
+User (Abstract)
 ├── Student
 ├── Supervisor
 └── Admin
@@ -132,44 +182,73 @@ Announcement
 Class/Event
 Idea (with votes)
 Rating
+```
 
-🐳 Docker Commands
-Bashdocker-compose up -d --build
+---
+
+## 🐳 Docker Commands
+
+```bash
+# Start all services
+docker-compose up -d --build
+
+# Stop all services
 docker-compose down
+
+# View backend logs
 docker-compose logs -f backend
+
+# Create migrations
 docker-compose exec backend python manage.py makemigrations
+```
 
-🚀 Development Status
-✅ Completed:
+---
 
-Full Docker setup
-Modular backend (users, requests_app, ideas, classes, etc.)
-JWT Authentication & role-based access
-Request management (recent fixes for "My Requests")
-Announcements & notifications
-Database models & migrations
+## 🚀 Development Status
 
-🔄 In Progress:
+### ✅ Completed
 
-Advanced frontend pages
-Testing & polishing
+- [x] Full Docker setup
+- [x] Modular backend (users, requests_app, ideas, classes, etc.)
+- [x] JWT Authentication & role-based access
+- [x] Request management (recent fixes for "My Requests")
+- [x] Announcements & notifications
+- [x] Database models & migrations
 
+### 🔄 In Progress
 
-👥 Team
+- [ ] Advanced frontend pages
+- [ ] Testing & polishing
 
-Osveh Hasanpour
-Razieh Delvari
-Mahshid Haji Shirmohammadi
-Zeinab Golchin
-Hanieh Tabianian
+---
 
-Supervisor: Dr. Mehran Alidoust Nia
+## 👥 Team
 
-🤝 Contributing
+<div align="center">
 
-Fork & create feature branch
-Follow Clean Code / SOLID
-Submit PR with tests
+| Name | Role |
+|---|---|
+| **Osveh Hasanpour** | Developer |
+| **Razieh Delvari** | Developer |
+| **Mahshid Haji Shirmohammadi** | Developer |
+| **Zeinab Golchin** | Developer |
+| **Hanieh Tabianian** | Developer |
+| **Dr. Mehran Alidoust Nia** | Supervisor |
 
+</div>
 
-⭐ Star this repo if you find it useful!
+---
+
+## 🤝 Contributing
+
+1. Fork & create a feature branch
+2. Follow Clean Code / SOLID principles
+3. Submit a PR with tests
+
+---
+
+<div align="center">
+
+⭐ **Star this repo if you find it useful!**
+
+</div>
