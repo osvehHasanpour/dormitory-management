@@ -229,10 +229,11 @@ docker-compose exec backend python manage.py makemigrations
 | Name | Role |
 |---|---|
 | **Osveh Hasanpour** | Developer |
-| **Razieh Delvari** | Developer |
+| **Razieh Delvari** | Scrum master |
 | **Mahshid Haji Shirmohammadi** | Developer |
 | **Zeinab Golchin** | Developer |
-| **Hanieh Tabianian** | Developer |
+| **Hanieh Tebianian** | Developer |
+| **Mohammad Saeed Zare** | Mentor |
 | **Dr. Mehran Alidoust Nia** | Supervisor |
 
 </div>
