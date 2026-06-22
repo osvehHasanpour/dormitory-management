@@ -1,5 +1,5 @@
 
-Markdown# 🏠 Integrated Dormitory Management System
+ 🏠 Integrated Dormitory Management System
 
 ![Version](https://img.shields.io/badge/Version-1.0.0-blue)
 ![Status](https://img.shields.io/badge/Status-Active%20Development-green)
