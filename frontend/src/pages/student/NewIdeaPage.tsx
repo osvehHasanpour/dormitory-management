@@ -1,4 +1,4 @@
-import newIdeaHero from '@media/new-idea-icon.jpg'
+import newIdeaHero from '@media/idea.png'
 import { useNavigate } from 'react-router-dom'
 
 import { IdeaRequestForm } from '../../components/idea/IdeaRequestForm'

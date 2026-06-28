@@ -1,4 +1,4 @@
-import complaintHero from '@media/complaint-submission.jpg'
+import complaintHero from '@media/complaint.png'
 import { useNavigate } from 'react-router-dom'
 
 import { ComplaintRequestForm } from '../../components/complaint/ComplaintRequestForm'
