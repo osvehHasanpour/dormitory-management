@@ -5,6 +5,7 @@ import { DashboardPage } from './pages/student/DashboardPage'
 import { CleaningRequestPage } from './pages/student/CleaningRequestPage'
 import { MaintenanceReportPage } from './pages/student/MaintenanceReportPage'
 import { BoothRequestPage } from './pages/student/BoothRequestPage'
+import { ClassRegistrationPage } from './pages/student/ClassRegistrationPage'
 import { MyRequestsPage } from './pages/student/MyRequestsPage'
 import { ProfilePage } from './pages/student/ProfilePage'
 import { RoomSuppliesRequestPage } from './pages/student/RoomSuppliesRequestPage'
@@ -27,7 +28,7 @@ function App() {
       <Route path="/item-request" element={<RoomSuppliesRequestPage />} />
       <Route path="/announcements" element={<PagePlaceholder title="اطلاعیه‌ها" />} />
       <Route path="/booth-request" element={<BoothRequestPage />} />
-      <Route path="/class-registration" element={<PagePlaceholder title="ثبت نام کلاس" />} />
+      <Route path="/class-registration" element={<ClassRegistrationPage />} />
       <Route path="/ideas" element={<PagePlaceholder title="ایده‌ها و پیشنهادات" />} />
       <Route path="/complaints" element={<PagePlaceholder title="پیشنهادات و شکایات" />} />
       <Route path="/my-requests" element={<MyRequestsPage />} />
