@@ -12,7 +12,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      '@media': path.resolve(__dirname, '../media'),
+      '@media': path.resolve(__dirname, './media'),
     },
   },
   server: {
