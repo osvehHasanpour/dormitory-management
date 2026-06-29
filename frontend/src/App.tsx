@@ -12,6 +12,7 @@ import { RoomSuppliesRequestPage } from './pages/student/RoomSuppliesRequestPage
 import { NewIdeaPage } from './pages/student/NewIdeaPage'
 import { NewComplaintPage } from './pages/student/NewComplaintPage'
 import { IdeasComplaintsMenuPage } from './pages/student/IdeasComplaintsMenuPage'
+import { ViewIdeasPage } from './pages/student/ViewIdeasPage'
 
 function PagePlaceholder({ title }: { title: string }) {
   return (
@@ -33,6 +34,7 @@ function App() {
       <Route path="/booth-request" element={<BoothRequestPage />} />
       <Route path="/class-registration" element={<ClassRegistrationPage />} />
       <Route path="/ideas-complaints" element={<IdeasComplaintsMenuPage />} />
+      <Route path="/view-ideas" element={<ViewIdeasPage />} />
       <Route path="/ideas" element={<NewIdeaPage />} />
       <Route path="/complaints" element={<NewComplaintPage />} />
       <Route path="/my-requests" element={<MyRequestsPage />} />

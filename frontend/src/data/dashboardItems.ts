@@ -64,7 +64,7 @@ export const culturalSection: DashboardSection = {
       id: 'ideas',
       label: 'ایده‌ها و پیشنهادات',
       image: ideasProposals,
-      route: '/ideas-complaints',
+      route: '/view-ideas',
     },
     {
       id: 'complaints',
