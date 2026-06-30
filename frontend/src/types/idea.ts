@@ -3,6 +3,8 @@ export interface IdeaRequestFormValues {
   description: string
 }
 
+export type IdeaVoteType = 'up' | 'down'
+
 export interface IdeaAuthorSummary {
   id: number
   personnel_code: string
@@ -20,7 +22,7 @@ export interface IdeaRequestResponse {
   type_display: string
   likes_count: number
   dislikes_count: number
-  user_vote?: 'up' | 'down' | null
+  user_vote?: IdeaVoteType | null
   is_owner: boolean
   supervisor_response?: string
   response_text?: string
@@ -30,4 +32,13 @@ export interface IdeaRequestResponse {
   responded_at?: string | null
   responded_within_sla?: boolean | null
   author: IdeaAuthorSummary
+}
+
+export type IdeaFeedItem = IdeaRequestResponse
+
+export interface IdeaListResponse {
+  count?: number
+  next?: string | null
+  previous?: string | null
+  results: IdeaFeedItem[]
 }

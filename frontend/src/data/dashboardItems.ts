@@ -64,13 +64,13 @@ export const culturalSection: DashboardSection = {
       id: 'ideas',
       label: 'ایده‌ها و پیشنهادات',
       image: ideasProposals,
-      route: '/ideas',
+      route: '/view-ideas',
     },
     {
       id: 'complaints',
       label: 'پیشنهادات و شکایات',
       image: suggestionsFeedback,
-      route: '/complaints',
+      route: '/ideas-complaints',
     },
   ],
 }
