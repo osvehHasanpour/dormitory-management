@@ -14,16 +14,21 @@ interface VoteButtonProps {
   count: number
   isActive: boolean
   isVoting: boolean
-  isProminent?: boolean
   isPopping: boolean
   onClick: () => void
 }
 
-function LikeIcon({ className = '' }: { className?: string }) {
+function LikeIcon({
+  className = '',
+  filled = false,
+}: {
+  className?: string
+  filled?: boolean
+}) {
   return (
     <svg
       viewBox="0 0 24 24"
-      fill="none"
+      fill={filled ? 'currentColor' : 'none'}
       className={className}
       aria-hidden="true"
     >
@@ -33,16 +38,23 @@ function LikeIcon({ className = '' }: { className?: string }) {
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
+        fill={filled ? 'currentColor' : 'none'}
       />
     </svg>
   )
 }
 
-function DislikeIcon({ className = '' }: { className?: string }) {
+function DislikeIcon({
+  className = '',
+  filled = false,
+}: {
+  className?: string
+  filled?: boolean
+}) {
   return (
     <svg
       viewBox="0 0 24 24"
-      fill="none"
+      fill={filled ? 'currentColor' : 'none'}
       className={className}
       aria-hidden="true"
     >
@@ -52,6 +64,7 @@ function DislikeIcon({ className = '' }: { className?: string }) {
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
+        fill={filled ? 'currentColor' : 'none'}
       />
     </svg>
   )
@@ -62,7 +75,6 @@ function VoteButton({
   count,
   isActive,
   isVoting,
-  isProminent = false,
   isPopping,
   onClick,
 }: VoteButtonProps) {
@@ -77,18 +89,15 @@ function VoteButton({
       disabled={isVoting}
       aria-label={label}
       aria-pressed={isActive}
-      className={`inline-flex items-center justify-center gap-2 rounded-full border transition-colors ${
-        isProminent ? 'px-4 py-2.5 text-body-strong' : 'px-3 py-1.5 text-caption-md'
-      } ${
-        isActive
-          ? 'border-primary bg-primary/35 text-ink'
-          : 'border-hairline bg-surface-card text-ink hover:bg-primary/15'
+      className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-body-md text-[#2E1145] transition-colors duration-500 ${
+        isActive ? 'bg-primary/30' : 'bg-transparent hover:bg-primary/15'
       } ${isVoting ? 'cursor-not-allowed opacity-60' : 'active:bg-primary/25'}`}
     >
       <Icon
-        className={`h-5 w-5 text-[#2E1145] transition-transform duration-300 ease-out ${
-          isProminent ? 'sm:h-6 sm:w-6' : ''
-        } ${isPopping ? `scale-125 ${popRotation}` : 'scale-100 rotate-0'}`}
+        className={`h-6 w-6 transition-transform duration-500 ease-out ${
+          isPopping ? `scale-125 ${popRotation}` : 'scale-100 rotate-0'
+        }`}
+        filled={isActive}
       />
       <span>{count.toLocaleString('fa-IR')}</span>
     </button>
@@ -119,13 +128,12 @@ export function IdeaCard({ idea, isVoting, onVote }: IdeaCardProps) {
     }
     popTimeoutRef.current = window.setTimeout(() => {
       setPoppingVote(null)
-    }, 300)
+    }, 500)
 
     onVote(idea.id, voteType)
   }
 
   const relativeDate = idea.created_at ? formatRelativeDate(idea.created_at) : ''
-  const authorName = [idea.author?.first_name, idea.author?.last_name].filter(Boolean).join(' ')
 
   return (
     <article className="glass-card overflow-hidden p-4 text-right">
@@ -145,12 +153,12 @@ export function IdeaCard({ idea, isVoting, onVote }: IdeaCardProps) {
         <button
           type="button"
           onClick={() => setIsExpanded((value) => !value)}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-card text-heading-lg text-ink transition-transform duration-300 ease-out"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-card text-heading-lg text-ink transition-transform duration-500 ease-out"
           aria-label={isExpanded ? 'بستن جزئیات ایده' : 'نمایش جزئیات ایده'}
         >
           <span
             aria-hidden="true"
-            className={`transition-transform duration-300 ease-out ${
+            className={`transition-transform duration-500 ease-out ${
               isExpanded ? 'rotate-90' : '-rotate-90'
             }`}
           >
@@ -160,60 +168,41 @@ export function IdeaCard({ idea, isVoting, onVote }: IdeaCardProps) {
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <VoteButton
-          type="up"
-          count={idea.likes_count}
-          isActive={idea.user_vote === 'up'}
-          isVoting={isVoting}
-          isPopping={poppingVote === 'up'}
-          onClick={() => triggerVote('up')}
-        />
-        <VoteButton
-          type="down"
-          count={idea.dislikes_count}
-          isActive={idea.user_vote === 'down'}
-          isVoting={isVoting}
-          isPopping={poppingVote === 'down'}
-          onClick={() => triggerVote('down')}
-        />
+        {!isExpanded ? (
+          <>
+            <VoteButton
+              type="up"
+              count={idea.likes_count}
+              isActive={idea.user_vote === 'up'}
+              isVoting={isVoting}
+              isPopping={poppingVote === 'up'}
+              onClick={() => triggerVote('up')}
+            />
+            <VoteButton
+              type="down"
+              count={idea.dislikes_count}
+              isActive={idea.user_vote === 'down'}
+              isVoting={isVoting}
+              isPopping={poppingVote === 'down'}
+              onClick={() => triggerVote('down')}
+            />
+          </>
+        ) : null}
         {relativeDate ? (
           <span className="mr-auto text-caption-sm text-mute">{relativeDate}</span>
         ) : null}
       </div>
 
       <div
-        className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+        className={`grid transition-[grid-template-rows] duration-500 ease-out ${
           isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
         }`}
       >
         <div className="overflow-hidden">
           <div className="mt-4 border-t border-hairline pt-4">
             <p className="whitespace-pre-line text-body-md text-body-text">{idea.description}</p>
-
-            <div className="mt-4 flex flex-wrap items-center gap-3">
-              <VoteButton
-                type="up"
-                count={idea.likes_count}
-                isActive={idea.user_vote === 'up'}
-                isVoting={isVoting}
-                isProminent
-                isPopping={poppingVote === 'up'}
-                onClick={() => triggerVote('up')}
-              />
-              <VoteButton
-                type="down"
-                count={idea.dislikes_count}
-                isActive={idea.user_vote === 'down'}
-                isVoting={isVoting}
-                isProminent
-                isPopping={poppingVote === 'down'}
-                onClick={() => triggerVote('down')}
-              />
-            </div>
-
-            {(authorName || idea.category_display || relativeDate) ? (
+            {(idea.category_display || relativeDate) ? (
               <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-caption-md text-mute">
-                {authorName ? <span>ثبت‌کننده: {authorName}</span> : null}
                 {idea.category_display ? <span>دسته‌بندی: {idea.category_display}</span> : null}
                 {relativeDate ? <span>زمان ثبت: {relativeDate}</span> : null}
               </div>
