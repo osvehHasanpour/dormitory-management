@@ -13,6 +13,7 @@ import { NewIdeaPage } from './pages/student/NewIdeaPage'
 import { NewComplaintPage } from './pages/student/NewComplaintPage'
 import { IdeasComplaintsMenuPage } from './pages/student/IdeasComplaintsMenuPage'
 import { ViewIdeasPage } from './pages/student/ViewIdeasPage'
+import { AnnouncementsPage } from './pages/student/AnnouncementsPage'
 
 function PagePlaceholder({ title }: { title: string }) {
   return (
@@ -30,7 +31,7 @@ function App() {
       <Route path="/maintenance-request" element={<MaintenanceReportPage />} />
       <Route path="/cleaning-request" element={<CleaningRequestPage />} />
       <Route path="/item-request" element={<RoomSuppliesRequestPage />} />
-      <Route path="/announcements" element={<PagePlaceholder title="اطلاعیه‌ها" />} />
+      <Route path="/announcements" element={<AnnouncementsPage />} />
       <Route path="/booth-request" element={<BoothRequestPage />} />
       <Route path="/class-registration" element={<ClassRegistrationPage />} />
       <Route path="/ideas-complaints" element={<IdeasComplaintsMenuPage />} />
