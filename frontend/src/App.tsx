@@ -14,6 +14,7 @@ import { NewComplaintPage } from './pages/student/NewComplaintPage'
 import { IdeasComplaintsMenuPage } from './pages/student/IdeasComplaintsMenuPage'
 import { ViewIdeasPage } from './pages/student/ViewIdeasPage'
 import { AnnouncementsPage } from './pages/student/AnnouncementsPage'
+import { SupervisorDashboardPage } from './pages/supervisor/SupervisorDashboardPage'
 
 function PagePlaceholder({ title }: { title: string }) {
   return (
@@ -40,9 +41,22 @@ function App() {
       <Route path="/complaints" element={<NewComplaintPage />} />
       <Route path="/my-requests" element={<MyRequestsPage />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/supervisor/dashboard" element={<SupervisorDashboardPage />} />
       <Route
-        path="/supervisor/dashboard"
-        element={<PagePlaceholder title="داشبورد سرپرست" />}
+        path="/supervisor/announcements"
+        element={<PagePlaceholder title="اطلاعیه‌های خوابگاه" />}
+      />
+      <Route
+        path="/supervisor/requests"
+        element={<PagePlaceholder title="پیگیری درخواست‌ها" />}
+      />
+      <Route
+        path="/supervisor/classes"
+        element={<PagePlaceholder title="مدیریت کلاس‌ها" />}
+      />
+      <Route
+        path="/supervisor/ideas-complaints"
+        element={<PagePlaceholder title="ایده‌ها و شکایات" />}
       />
       <Route path="/admin/dashboard" element={<PagePlaceholder title="داشبورد مدیر" />} />
       <Route path="/" element={<Navigate to="/login" replace />} />
