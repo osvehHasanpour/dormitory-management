@@ -15,6 +15,7 @@ import { IdeasComplaintsMenuPage } from './pages/student/IdeasComplaintsMenuPage
 import { ViewIdeasPage } from './pages/student/ViewIdeasPage'
 import { AnnouncementsPage } from './pages/student/AnnouncementsPage'
 import { SupervisorDashboardPage } from './pages/supervisor/SupervisorDashboardPage'
+import { SupervisorProfilePage } from './pages/supervisor/SupervisorProfilePage'
 
 function PagePlaceholder({ title }: { title: string }) {
   return (
@@ -42,6 +43,7 @@ function App() {
       <Route path="/my-requests" element={<MyRequestsPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/supervisor/dashboard" element={<SupervisorDashboardPage />} />
+      <Route path="/supervisor/profile" element={<SupervisorProfilePage />} />
       <Route
         path="/supervisor/announcements"
         element={<PagePlaceholder title="اطلاعیه‌های خوابگاه" />}

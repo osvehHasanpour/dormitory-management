@@ -37,6 +37,6 @@ export const supervisorDashboardItems: DashboardItem[] = [
 
 export const supervisorBottomNavItems: BottomNavItem[] = [
   { id: 'exit', label: 'خروج', image: navExit },
-  { id: 'profile', label: 'پروفایل', image: navProfile, route: '/profile' },
+  { id: 'profile', label: 'پروفایل', image: navProfile, route: '/supervisor/profile' },
   { id: 'home', label: 'خانه', image: navHome, route: '/supervisor/dashboard' },
 ]
