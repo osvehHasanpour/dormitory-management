@@ -14,6 +14,8 @@ import { NewComplaintPage } from './pages/student/NewComplaintPage'
 import { IdeasComplaintsMenuPage } from './pages/student/IdeasComplaintsMenuPage'
 import { ViewIdeasPage } from './pages/student/ViewIdeasPage'
 import { AnnouncementsPage } from './pages/student/AnnouncementsPage'
+import { CreateAnnouncementPage } from './pages/supervisor/CreateAnnouncementPage'
+import { SupervisorAnnouncementsPage } from './pages/supervisor/SupervisorAnnouncementsPage'
 import { SupervisorDashboardPage } from './pages/supervisor/SupervisorDashboardPage'
 import { SupervisorProfilePage } from './pages/supervisor/SupervisorProfilePage'
 
@@ -44,10 +46,8 @@ function App() {
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/supervisor/dashboard" element={<SupervisorDashboardPage />} />
       <Route path="/supervisor/profile" element={<SupervisorProfilePage />} />
-      <Route
-        path="/supervisor/announcements"
-        element={<PagePlaceholder title="اطلاعیه‌های خوابگاه" />}
-      />
+      <Route path="/supervisor/announcements" element={<SupervisorAnnouncementsPage />} />
+      <Route path="/supervisor/announcements/new" element={<CreateAnnouncementPage />} />
       <Route
         path="/supervisor/requests"
         element={<PagePlaceholder title="پیگیری درخواست‌ها" />}

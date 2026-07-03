@@ -22,3 +22,8 @@ export interface AnnouncementListResponse {
   previous?: string | null
   results: AnnouncementListItem[]
 }
+
+export interface AnnouncementCreateFormValues {
+  title: string
+  content: string
+}
