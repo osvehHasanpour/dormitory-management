@@ -18,7 +18,7 @@ export interface RequestDetailRow {
   highlight?: boolean
 }
 
-export type StatusBadgeVariant = 'pending' | 'approved' | 'rejected'
+export type StatusBadgeVariant = 'pending' | 'reviewed' | 'approved' | 'rejected'
 
 const OPEN_STATUSES: RequestStatus[] = ['pending', 'in_progress', 'approved']
 
