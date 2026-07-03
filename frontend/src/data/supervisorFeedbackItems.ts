@@ -26,4 +26,8 @@ export const feedbackTypeBadgeConfig: Record<FeedbackType, FeedbackTypeBadgeConf
     label: 'شکایت',
     className: 'bg-[#fde8e0] text-[#8b3a2a]',
   },
+  suggestion: {
+    label: 'پیشنهاد',
+    className: 'bg-surface-card text-ink',
+  },
 }
