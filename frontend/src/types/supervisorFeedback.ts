@@ -1,4 +1,4 @@
-export type FeedbackType = 'idea' | 'complaint' 
+export type FeedbackType = 'idea' | 'complaint' | 'suggestion'
 
 export type FeedbackStatus = 'pending' | 'reviewed' | 'answered' | 'rejected'
 
