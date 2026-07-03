@@ -14,7 +14,6 @@ import {
   canReject,
   canRejectIdea,
   canRespond,
-  formatFeedbackAuthor,
   getFeedbackStatusBadgeVariant,
   hasAvailableFeedbackActions,
 } from '../../utils/supervisorFeedbackHelpers'
@@ -138,7 +137,6 @@ export function FeedbackDetailSheet({
       <div className="glass-card overflow-hidden">
         <DetailInfoRow label="عنوان" value={source.title} />
         <div className="glass-divider" />
-        <DetailInfoRow label="دانشجو" value={formatFeedbackAuthor(source.author)} />
         {source.category_display ? (
           <>
             <div className="glass-divider" />
