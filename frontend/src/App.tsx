@@ -19,6 +19,7 @@ import { SupervisorAnnouncementsPage } from './pages/supervisor/SupervisorAnnoun
 import { SupervisorDashboardPage } from './pages/supervisor/SupervisorDashboardPage'
 import { SupervisorIdeasComplaintsPage } from './pages/supervisor/SupervisorIdeasComplaintsPage'
 import { SupervisorRequestsPage } from './pages/supervisor/SupervisorRequestsPage'
+import { SupervisorClassesPage } from './pages/supervisor/SupervisorClassesPage'
 import { SupervisorProfilePage } from './pages/supervisor/SupervisorProfilePage'
 
 function PagePlaceholder({ title }: { title: string }) {
@@ -51,10 +52,7 @@ function App() {
       <Route path="/supervisor/announcements" element={<SupervisorAnnouncementsPage />} />
       <Route path="/supervisor/announcements/new" element={<CreateAnnouncementPage />} />
       <Route path="/supervisor/requests" element={<SupervisorRequestsPage />} />
-      <Route
-        path="/supervisor/classes"
-        element={<PagePlaceholder title="مدیریت کلاس‌ها" />}
-      />
+      <Route path="/supervisor/classes" element={<SupervisorClassesPage />} />
       <Route path="/supervisor/ideas-complaints" element={<SupervisorIdeasComplaintsPage />} />
       <Route path="/admin/dashboard" element={<PagePlaceholder title="داشبورد مدیر" />} />
       <Route path="/" element={<Navigate to="/login" replace />} />
