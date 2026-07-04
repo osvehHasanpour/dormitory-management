@@ -67,6 +67,11 @@ class RequestBase(models.Model):
         verbose_name='کارمند محول‌شده',
     )
     rejection_reason = models.TextField(blank=True, verbose_name='دلیل رد')
+    supervisor_response = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name='پاسخ سرپرست',
+    )
     ai_content_flag = models.BooleanField(
         null=True,
         blank=True,

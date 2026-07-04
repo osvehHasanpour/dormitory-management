@@ -278,6 +278,7 @@ class RequestService:
         new_status,
         comment='',
         rejection_reason='',
+        supervisor_response=None,
         assigned_staff_id=None,
     ):
         cls._ensure_supervisor_or_admin(actor)
@@ -304,9 +305,15 @@ class RequestService:
         else:
             request_obj.rejection_reason = ''
 
+        if supervisor_response is not None:
+            cleaned_response = supervisor_response.strip()
+            request_obj.supervisor_response = cleaned_response or None
+
         cls._apply_type_specific_side_effects(request_obj, new_status)
 
         update_fields = ['status', 'handled_by', 'rejection_reason', 'updated_at']
+        if supervisor_response is not None:
+            update_fields.append('supervisor_response')
         if assigned_staff_id is not None:
             update_fields.append('assigned_staff')
 

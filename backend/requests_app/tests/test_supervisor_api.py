@@ -56,6 +56,77 @@ class SupervisorRequestAPITests(RequestsAPITestBase):
         self.assertEqual(last_entry.acting_supervisor_id, self.supervisor.id)
         self.assertEqual(last_entry.comment, 'در حال بررسی')
 
+    def test_supervisor_response_is_saved_and_visible_to_student(self):
+        request_obj = MaintenanceRequest.objects.create(
+            user=self.student,
+            request_type=RequestBase.RequestType.MAINTENANCE,
+            description='نشتی آب',
+            location='بلوک الف',
+            category='facilities',
+        )
+
+        self.auth_as(self.supervisor)
+        response = self.client.patch(
+            reverse(
+                'requests:maintenance-request-change-status',
+                kwargs={'pk': request_obj.pk},
+            ),
+            {
+                'status': RequestBase.Status.IN_PROGRESS,
+                'supervisor_response': 'همکاران تعمیرات در حال بررسی هستند.',
+            },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data['data']['supervisor_response'],
+            'همکاران تعمیرات در حال بررسی هستند.',
+        )
+
+        request_obj.refresh_from_db()
+        self.assertEqual(
+            request_obj.supervisor_response,
+            'همکاران تعمیرات در حال بررسی هستند.',
+        )
+
+        self.auth_as(self.student)
+        student_response = self.client.get(
+            reverse('requests:student-request-detail', kwargs={'pk': request_obj.pk}),
+        )
+
+        self.assertEqual(student_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            student_response.data['data']['supervisor_response'],
+            'همکاران تعمیرات در حال بررسی هستند.',
+        )
+
+    def test_status_change_without_response_keeps_existing_response(self):
+        request_obj = MaintenanceRequest.objects.create(
+            user=self.student,
+            request_type=RequestBase.RequestType.MAINTENANCE,
+            description='نشتی آب',
+            location='بلوک الف',
+            category='facilities',
+            supervisor_response='در حال پیگیری',
+        )
+
+        self.auth_as(self.supervisor)
+        response = self.client.patch(
+            reverse(
+                'requests:maintenance-request-change-status',
+                kwargs={'pk': request_obj.pk},
+            ),
+            {'status': RequestBase.Status.IN_PROGRESS},
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['data']['supervisor_response'], 'در حال پیگیری')
+
+        request_obj.refresh_from_db()
+        self.assertEqual(request_obj.supervisor_response, 'در حال پیگیری')
+
     def test_reject_without_reason_returns_400(self):
         request_obj = MaintenanceRequest.objects.create(
             user=self.student,

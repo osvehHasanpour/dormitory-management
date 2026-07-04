@@ -152,6 +152,7 @@ class BaseRequestViewSet(
                 new_status=serializer.validated_data['status'],
                 comment=serializer.validated_data.get('comment', ''),
                 rejection_reason=serializer.validated_data.get('rejection_reason', ''),
+                supervisor_response=serializer.validated_data.get('supervisor_response'),
                 assigned_staff_id=assigned_staff.pk if assigned_staff else None,
             )
         except RequestServiceError as exc:

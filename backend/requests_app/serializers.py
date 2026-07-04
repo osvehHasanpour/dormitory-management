@@ -67,6 +67,7 @@ class RequestBaseSerializer(serializers.ModelSerializer):
             'handled_by',
             'assigned_staff',
             'rejection_reason',
+            'supervisor_response',
             'status_timeline',
             'ai_content_flag',
         )
@@ -114,6 +115,11 @@ class RequestStatusChangeSerializer(serializers.Serializer):
     )
     comment = serializers.CharField(required=False, allow_blank=True, default='')
     rejection_reason = serializers.CharField(required=False, allow_blank=True, default='')
+    supervisor_response = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        allow_null=True,
+    )
     assigned_staff = serializers.PrimaryKeyRelatedField(
         queryset=RequestSelector.get_assignable_staff_queryset(),
         required=False,

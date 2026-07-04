@@ -18,6 +18,7 @@ import { CreateAnnouncementPage } from './pages/supervisor/CreateAnnouncementPag
 import { SupervisorAnnouncementsPage } from './pages/supervisor/SupervisorAnnouncementsPage'
 import { SupervisorDashboardPage } from './pages/supervisor/SupervisorDashboardPage'
 import { SupervisorIdeasComplaintsPage } from './pages/supervisor/SupervisorIdeasComplaintsPage'
+import { SupervisorRequestsPage } from './pages/supervisor/SupervisorRequestsPage'
 import { SupervisorProfilePage } from './pages/supervisor/SupervisorProfilePage'
 
 function PagePlaceholder({ title }: { title: string }) {
@@ -49,10 +50,7 @@ function App() {
       <Route path="/supervisor/profile" element={<SupervisorProfilePage />} />
       <Route path="/supervisor/announcements" element={<SupervisorAnnouncementsPage />} />
       <Route path="/supervisor/announcements/new" element={<CreateAnnouncementPage />} />
-      <Route
-        path="/supervisor/requests"
-        element={<PagePlaceholder title="پیگیری درخواست‌ها" />}
-      />
+      <Route path="/supervisor/requests" element={<SupervisorRequestsPage />} />
       <Route
         path="/supervisor/classes"
         element={<PagePlaceholder title="مدیریت کلاس‌ها" />}
