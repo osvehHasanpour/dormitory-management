@@ -42,6 +42,7 @@ export interface StudentRequestListItem {
   handled_by: UserSummary | null
   assigned_staff: UserSummary | null
   rejection_reason: string
+  supervisor_response: string | null
   status_timeline: RequestStatusHistoryEntry[]
   ai_content_flag: boolean | null
 }
@@ -67,6 +68,20 @@ export interface PaginatedRequestsData {
   next: string | null
   previous: string | null
   results: StudentRequestListItem[]
+}
+
+export interface SupervisorRequestsData {
+  count?: number
+  next: string | null
+  previous: string | null
+  results: StudentRequestDetail[]
+}
+
+export interface RequestStatusChangePayload {
+  status: RequestStatus
+  supervisor_response?: string
+  rejection_reason?: string
+  comment?: string
 }
 
 export type TimelineStepState = 'pending' | 'active' | 'completed' | 'rejected' | 'approved'

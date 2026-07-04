@@ -107,6 +107,7 @@ export function RequestDetailSheet({
 
   const typeLabel = getRequestTypeLabel(displayRequest.request_type)
   const effectiveStatus = getEffectiveRequestStatus(displayRequest)
+  const supervisorResponse = displayRequest.supervisor_response?.trim()
   const infoRows = request ? buildRequestDetailRows(request) : buildPreviewRows(displayRequest)
   const timelineSteps = buildTimelineSteps(displayRequest)
 
@@ -121,6 +122,19 @@ export function RequestDetailSheet({
           variant={getStatusBadgeVariant(effectiveStatus)}
         />
       </div>
+
+      <p className="text-caption-sm text-mute">
+        آخرین بروزرسانی: {formatPersianDateShort(displayRequest.updated_at)}
+      </p>
+
+      <section className="glass-card overflow-hidden px-4 py-3.5">
+        <p className="text-body-sm-strong text-mute">پاسخ سرپرست</p>
+        {supervisorResponse ? (
+          <p className="mt-1 whitespace-pre-wrap text-body-md text-ink">{supervisorResponse}</p>
+        ) : (
+          <p className="mt-1 text-body-md text-ash">هنوز پاسخی ثبت نشده است</p>
+        )}
+      </section>
 
       {isLoading ? (
         <p className="text-caption-md text-mute">در حال دریافت جزئیات...</p>

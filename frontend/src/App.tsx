@@ -14,6 +14,12 @@ import { NewComplaintPage } from './pages/student/NewComplaintPage'
 import { IdeasComplaintsMenuPage } from './pages/student/IdeasComplaintsMenuPage'
 import { ViewIdeasPage } from './pages/student/ViewIdeasPage'
 import { AnnouncementsPage } from './pages/student/AnnouncementsPage'
+import { CreateAnnouncementPage } from './pages/supervisor/CreateAnnouncementPage'
+import { SupervisorAnnouncementsPage } from './pages/supervisor/SupervisorAnnouncementsPage'
+import { SupervisorDashboardPage } from './pages/supervisor/SupervisorDashboardPage'
+import { SupervisorIdeasComplaintsPage } from './pages/supervisor/SupervisorIdeasComplaintsPage'
+import { SupervisorRequestsPage } from './pages/supervisor/SupervisorRequestsPage'
+import { SupervisorProfilePage } from './pages/supervisor/SupervisorProfilePage'
 
 function PagePlaceholder({ title }: { title: string }) {
   return (
@@ -40,10 +46,16 @@ function App() {
       <Route path="/complaints" element={<NewComplaintPage />} />
       <Route path="/my-requests" element={<MyRequestsPage />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/supervisor/dashboard" element={<SupervisorDashboardPage />} />
+      <Route path="/supervisor/profile" element={<SupervisorProfilePage />} />
+      <Route path="/supervisor/announcements" element={<SupervisorAnnouncementsPage />} />
+      <Route path="/supervisor/announcements/new" element={<CreateAnnouncementPage />} />
+      <Route path="/supervisor/requests" element={<SupervisorRequestsPage />} />
       <Route
-        path="/supervisor/dashboard"
-        element={<PagePlaceholder title="داشبورد سرپرست" />}
+        path="/supervisor/classes"
+        element={<PagePlaceholder title="مدیریت کلاس‌ها" />}
       />
+      <Route path="/supervisor/ideas-complaints" element={<SupervisorIdeasComplaintsPage />} />
       <Route path="/admin/dashboard" element={<PagePlaceholder title="داشبورد مدیر" />} />
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="*" element={<Navigate to="/login" replace />} />

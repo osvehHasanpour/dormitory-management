@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useCallback, useState } from 'react'
 
 import { bottomNavItems } from '../../data/dashboardItems'
+import { supervisorBottomNavItems } from '../../data/supervisorDashboardItems'
 import { useAuth } from '../../hooks/useAuth'
 import type { BottomNavTab } from '../../types/dashboard'
 import {
@@ -11,9 +12,10 @@ import {
 
 interface BottomNavProps {
   activeTab?: BottomNavTab | null
+  variant?: 'student' | 'supervisor'
 }
 
-export function BottomNav({ activeTab = null }: BottomNavProps) {
+export function BottomNav({ activeTab = null, variant = 'student' }: BottomNavProps) {
   const navigate = useNavigate()
   const { logout } = useAuth()
   const [logoutAnchor, setLogoutAnchor] = useState<DialogAnchor | null>(null)
@@ -34,6 +36,8 @@ export function BottomNav({ activeTab = null }: BottomNavProps) {
     logout()
     navigate('/login', { replace: true })
   }, [closeLogoutDialog, logout, navigate])
+
+  const navItems = variant === 'supervisor' ? supervisorBottomNavItems : bottomNavItems
 
   const handleTabClick = (tab: BottomNavTab, route?: string, button?: HTMLButtonElement | null) => {
     if (tab === 'exit') {
@@ -58,7 +62,7 @@ export function BottomNav({ activeTab = null }: BottomNavProps) {
         aria-label="ناوبری اصلی"
       >
         <ul className="mx-auto flex max-w-lg items-end justify-around">
-          {bottomNavItems.map((item) => {
+          {navItems.map((item) => {
             const isActive = activeTab != null && item.id === activeTab
 
             return (
