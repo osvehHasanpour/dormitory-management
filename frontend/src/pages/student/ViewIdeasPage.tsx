@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { IdeaCard } from '../../components/idea/IdeaCard'
 import { IdeaCardSkeleton } from '../../components/idea/IdeaCardSkeleton'
 import { IdeasEmptyState } from '../../components/idea/IdeasEmptyState'
+import { IdeaSortMenu } from '../../components/idea/IdeaSortMenu'
 import { BottomNav } from '../../components/layout/BottomNav'
 import { Toast } from '../../components/ui/Toast'
 import { useIdeasFeed } from '../../hooks/useIdeasFeed'
 
 export function ViewIdeasPage() {
   const navigate = useNavigate()
-  const { ideas, isLoading, error, votingIds, retry, vote } = useIdeasFeed()
+  const { ideas, isLoading, error, ordering, setOrdering, votingIds, retry, vote } = useIdeasFeed()
 
   return (
     <div className="page-gradient min-h-screen pb-28">
@@ -22,6 +23,8 @@ export function ViewIdeasPage() {
         >
           ‹
         </button>
+
+        <IdeaSortMenu activeOrdering={ordering} onChange={setOrdering} />
       </header>
 
       <main className="mx-auto w-full max-w-lg px-4 sm:px-6">
