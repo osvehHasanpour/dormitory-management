@@ -70,6 +70,21 @@ function DislikeIcon({
   )
 }
 
+function ChevronDownIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path
+        d="M7 10L12 15L17 10"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 function VoteButton({
   type,
   count,
@@ -134,38 +149,36 @@ export function IdeaCard({ idea, isVoting, onVote }: IdeaCardProps) {
   }
 
   const relativeDate = idea.created_at ? formatRelativeDate(idea.created_at) : ''
+  const supervisorResponse = (idea.supervisor_response || idea.response_text || '').trim()
 
   return (
-    <article className="glass-card overflow-hidden p-4 text-right">
-      <div className="flex items-start gap-3">
-        <button
-          type="button"
-          onClick={() => setIsExpanded((value) => !value)}
-          className="min-w-0 flex-1 text-right"
-          aria-expanded={isExpanded}
-        >
-          <span className="block text-heading-md text-ink">{idea.title}</span>
-          <span className="mt-1 block line-clamp-2 text-body-sm text-body-text">
-            {idea.description}
-          </span>
-        </button>
+    <article className="glass-card overflow-hidden rounded-md border border-hairline p-4 text-right shadow-elevated">
+      <button
+        type="button"
+        onClick={() => setIsExpanded((value) => !value)}
+        aria-expanded={isExpanded}
+        className="w-full text-right"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <span className="block text-heading-md text-ink">{idea.title}</span>
+            <span className="mt-1 block line-clamp-2 text-body-sm text-body-text">
+              {idea.description}
+            </span>
+          </div>
 
-        <button
-          type="button"
-          onClick={() => setIsExpanded((value) => !value)}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-card text-heading-lg text-ink transition-transform duration-500 ease-out"
-          aria-label={isExpanded ? 'بستن جزئیات ایده' : 'نمایش جزئیات ایده'}
-        >
-          <span
-            aria-hidden="true"
-            className={`transition-transform duration-500 ease-out ${
-              isExpanded ? 'rotate-90' : '-rotate-90'
-            }`}
-          >
-            ‹
+          <span className="flex shrink-0 items-center gap-2">
+            {relativeDate && !isExpanded ? (
+              <span className="text-caption-sm text-mute">{relativeDate}</span>
+            ) : null}
+            <ChevronDownIcon
+              className={`h-5 w-5 text-mute transition-transform duration-500 ease-out ${
+                isExpanded ? 'rotate-180' : 'rotate-0'
+              }`}
+            />
           </span>
-        </button>
-      </div>
+        </div>
+      </button>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
         {!isExpanded ? (
@@ -188,9 +201,6 @@ export function IdeaCard({ idea, isVoting, onVote }: IdeaCardProps) {
             />
           </>
         ) : null}
-        {relativeDate ? (
-          <span className="mr-auto text-caption-sm text-mute">{relativeDate}</span>
-        ) : null}
       </div>
 
       <div
@@ -206,6 +216,12 @@ export function IdeaCard({ idea, isVoting, onVote }: IdeaCardProps) {
                 {idea.category_display ? <span>دسته‌بندی: {idea.category_display}</span> : null}
                 {relativeDate ? <span>زمان ثبت: {relativeDate}</span> : null}
               </div>
+            ) : null}
+            {supervisorResponse ? (
+              <section className="mt-4 overflow-hidden rounded-md border border-hairline bg-surface-soft px-4 py-3.5">
+                <p className="text-body-sm-strong text-mute">پاسخ سرپرست</p>
+                <p className="mt-1 whitespace-pre-wrap text-body-md text-ink">{supervisorResponse}</p>
+              </section>
             ) : null}
           </div>
         </div>

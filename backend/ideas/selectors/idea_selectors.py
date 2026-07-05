@@ -110,6 +110,7 @@ class IdeaSelector:
     def build_idea_payload(cls, idea, user):
         user_vote = getattr(idea, 'user_vote', None)
         is_owner = user and idea.user_id == user.id
+        supervisor_response = idea.supervisor_response.strip() if idea.supervisor_response else ''
         payload = {
             'id': idea.id,
             'title': idea.title,
@@ -122,7 +123,9 @@ class IdeaSelector:
             'dislikes_count': getattr(idea, 'dislikes_count', 0),
             'user_vote': user_vote,
             'is_owner': is_owner,
-            'supervisor_response': idea.supervisor_response if is_owner else '',
+            'created_at': idea.created_at,
+            'supervisor_response': supervisor_response,
+            'response_text': supervisor_response,
             'author': {
                 'id': idea.user_id,
                 'personnel_code': idea.user.personnel_code,
@@ -130,6 +133,9 @@ class IdeaSelector:
                 'last_name': idea.user.last_name,
             },
         }
+        if supervisor_response:
+            payload['responded_at'] = idea.responded_at
+            payload['responded_within_sla'] = idea.responded_within_sla
         if is_owner:
             payload.update(SupervisorFeedbackSelector.build_student_feedback_fields(idea))
         return payload
