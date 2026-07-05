@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { IdeaCard } from '../../components/idea/IdeaCard'
 import { IdeaCardSkeleton } from '../../components/idea/IdeaCardSkeleton'
 import { IdeasEmptyState } from '../../components/idea/IdeasEmptyState'
-import { IdeaSortTabs } from '../../components/idea/IdeaSortTabs'
+import { IdeaSortMenu } from '../../components/idea/IdeaSortMenu'
 import { BottomNav } from '../../components/layout/BottomNav'
 import { Toast } from '../../components/ui/Toast'
 import { useIdeasFeed } from '../../hooks/useIdeasFeed'
@@ -23,6 +23,8 @@ export function ViewIdeasPage() {
         >
           ‹
         </button>
+
+        <IdeaSortMenu activeOrdering={ordering} onChange={setOrdering} />
       </header>
 
       <main className="mx-auto w-full max-w-lg px-4 sm:px-6">
@@ -30,9 +32,7 @@ export function ViewIdeasPage() {
           <h1 className="text-heading-xl text-ink">مشاهده ایده‌ها</h1>
         </section>
 
-        <IdeaSortTabs activeOrdering={ordering} onChange={setOrdering} />
-
-        <section className="mt-6 space-y-3">
+        <section className="space-y-3">
           {isLoading
             ? Array.from({ length: 4 }, (_, index) => <IdeaCardSkeleton key={index} />)
             : null}

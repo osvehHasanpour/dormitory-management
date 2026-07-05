@@ -159,48 +159,33 @@ export function IdeaCard({ idea, isVoting, onVote }: IdeaCardProps) {
         aria-expanded={isExpanded}
         className="w-full text-right"
       >
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <span className="block text-heading-md text-ink">{idea.title}</span>
-            <span className="mt-1 block line-clamp-2 text-body-sm text-body-text">
-              {idea.description}
-            </span>
-          </div>
-
-          <span className="flex shrink-0 items-center gap-2">
-            {relativeDate && !isExpanded ? (
-              <span className="text-caption-sm text-mute">{relativeDate}</span>
-            ) : null}
-            <ChevronDownIcon
-              className={`h-5 w-5 text-mute transition-transform duration-500 ease-out ${
-                isExpanded ? 'rotate-180' : 'rotate-0'
-              }`}
-            />
-          </span>
+        <div className="flex items-center justify-between gap-3">
+          <span className="min-w-0 flex-1 text-heading-md text-ink">{idea.title}</span>
+          <ChevronDownIcon
+            className={`h-5 w-5 shrink-0 text-mute transition-transform duration-500 ease-out ${
+              isExpanded ? 'rotate-180' : 'rotate-0'
+            }`}
+          />
         </div>
       </button>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        {!isExpanded ? (
-          <>
-            <VoteButton
-              type="up"
-              count={idea.likes_count}
-              isActive={idea.user_vote === 'up'}
-              isVoting={isVoting}
-              isPopping={poppingVote === 'up'}
-              onClick={() => triggerVote('up')}
-            />
-            <VoteButton
-              type="down"
-              count={idea.dislikes_count}
-              isActive={idea.user_vote === 'down'}
-              isVoting={isVoting}
-              isPopping={poppingVote === 'down'}
-              onClick={() => triggerVote('down')}
-            />
-          </>
-        ) : null}
+        <VoteButton
+          type="up"
+          count={idea.likes_count}
+          isActive={idea.user_vote === 'up'}
+          isVoting={isVoting}
+          isPopping={poppingVote === 'up'}
+          onClick={() => triggerVote('up')}
+        />
+        <VoteButton
+          type="down"
+          count={idea.dislikes_count}
+          isActive={idea.user_vote === 'down'}
+          isVoting={isVoting}
+          isPopping={poppingVote === 'down'}
+          onClick={() => triggerVote('down')}
+        />
       </div>
 
       <div

@@ -12,6 +12,7 @@ IDEA_DETAIL_SELECT_RELATED = ('user', 'user__role')
 class IdeaSelector:
     ORDERING_MAP = {
         'most_votes': '-likes_count',
+        'least_votes': 'likes_count',
         'newest': '-id',
         'oldest': 'id',
     }

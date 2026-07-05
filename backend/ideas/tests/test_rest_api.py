@@ -183,3 +183,31 @@ class IdeasRESTAPITests(IdeasAPITestBase):
         titles = [item['title'] for item in response.data['data']['results']]
         self.assertEqual(titles.index('ایده پررأی'), 0)
         self.assertLess(titles.index('ایده پررأی'), titles.index('ایده کم‌رأی'))
+
+    def test_public_list_ordering_by_least_votes(self):
+        low_votes = IdeaComplaint.objects.create(
+            user=self.other_student,
+            type=IdeaComplaint.Type.IDEA,
+            title='ایده کم‌رأی مرتب',
+            description='توضیحات',
+            status=IdeaComplaint.Status.REVIEWED,
+        )
+        high_votes = IdeaComplaint.objects.create(
+            user=self.other_student,
+            type=IdeaComplaint.Type.IDEA,
+            title='ایده پررأی مرتب',
+            description='توضیحات',
+            status=IdeaComplaint.Status.REVIEWED,
+        )
+        Vote.objects.create(user=self.student, idea=high_votes, vote_type=Vote.VoteType.UP)
+
+        self.auth_as(self.student)
+        response = self.client.get(
+            reverse('ideas:idea-list-create'),
+            {'ordering': 'least_votes'},
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        titles = [item['title'] for item in response.data['data']['results']]
+        self.assertEqual(titles.index('ایده کم‌رأی مرتب'), 0)
+        self.assertLess(titles.index('ایده کم‌رأی مرتب'), titles.index('ایده پررأی مرتب'))
