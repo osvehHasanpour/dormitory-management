@@ -5,7 +5,9 @@ import {
   classItemToFormValues,
   useSupervisorClassForm,
 } from '../../hooks/useSupervisorClassForm'
+import { PERSIAN_WEEKDAYS } from '../../data/supervisorClassItems'
 import type { SupervisorClassItem } from '../../types/supervisorClass'
+import { formatPersianTime } from '../../utils/formatClassSchedule'
 import { BottomSheet } from '../ui/BottomSheet'
 import { Toast } from '../ui/Toast'
 
@@ -33,6 +35,7 @@ export function SupervisorClassFormSheet({
   const {
     register,
     reset,
+    watch,
     formState: { errors },
   } = form
 
@@ -117,6 +120,61 @@ export function SupervisorClassFormSheet({
           />
           {errors.end_datetime?.message ? (
             <p className="mt-2 text-body-sm text-error">{errors.end_datetime.message}</p>
+          ) : null}
+        </label>
+
+        <label className="block">
+          <span className="mb-2 block text-body-sm-strong text-ink">روز برگزاری</span>
+          <select
+            className={fieldClassName}
+            disabled={isSubmitting}
+            {...register('day_of_week', { onChange: clearMessages })}
+          >
+            <option value="">انتخاب روز</option>
+            {PERSIAN_WEEKDAYS.map((day) => (
+              <option key={day.value} value={day.value}>
+                {day.label}
+              </option>
+            ))}
+          </select>
+          {errors.day_of_week?.message ? (
+            <p className="mt-2 text-body-sm text-error">{errors.day_of_week.message}</p>
+          ) : null}
+        </label>
+
+        <label className="block">
+          <span className="mb-2 block text-body-sm-strong text-ink">زمان شروع کلاس</span>
+          <input
+            type="time"
+            className={fieldClassName}
+            disabled={isSubmitting}
+            {...register('start_time', { onChange: clearMessages })}
+          />
+          {watch('start_time') ? (
+            <p className="mt-1 text-caption-md text-mute">
+              {formatPersianTime(watch('start_time'))}
+            </p>
+          ) : null}
+          {errors.start_time?.message ? (
+            <p className="mt-2 text-body-sm text-error">{errors.start_time.message}</p>
+          ) : null}
+        </label>
+
+        <label className="block">
+          <span className="mb-2 block text-body-sm-strong text-ink">زمان پایان کلاس</span>
+          <input
+            type="time"
+            className={fieldClassName}
+            disabled={isSubmitting}
+            {...register('end_time', { onChange: clearMessages })}
+          />
+          {watch('end_time') ? (
+            <p className="mt-1 text-caption-md text-mute">
+              {formatPersianTime(watch('end_time'))}
+            </p>
+          ) : null}
+          {errors.end_time?.message ? (
+            <p className="mt-2 text-body-sm text-error">{errors.end_time.message}</p>
           ) : null}
         </label>
 

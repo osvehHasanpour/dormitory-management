@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import time, timedelta
 
 from django.urls import reverse
 from django.utils import timezone
@@ -105,6 +105,9 @@ class SupervisorClassTestBase(APITestCase):
             'capacity': 15,
             'start_datetime': (now + timedelta(days=3)).isoformat(),
             'end_datetime': (now + timedelta(days=3, hours=2)).isoformat(),
+            'day_of_week': Class.DayOfWeek.SATURDAY,
+            'start_time': '10:00:00',
+            'end_time': '12:00:00',
             'teacher_id': self.supervisor.pk,
         }
         payload.update(overrides)
@@ -170,6 +173,10 @@ class SupervisorClassCRUDTests(SupervisorClassTestBase):
         self.assertEqual(data['title'], 'کارگاه برنامه‌نویسی')
         self.assertEqual(data['status'], Class.Status.ACTIVE)
         self.assertEqual(data['location'], 'اتاق ۱۰۱')
+        self.assertEqual(data['day_of_week'], Class.DayOfWeek.SATURDAY)
+        self.assertEqual(data['day_of_week_display'], 'شنبه')
+        self.assertEqual(data['start_time'], '10:00:00')
+        self.assertEqual(data['end_time'], '12:00:00')
         self.assertEqual(data['created_by']['id'], self.supervisor.pk)
         self.assertEqual(data['teacher']['id'], self.supervisor.pk)
         self.assertTrue(
@@ -211,6 +218,36 @@ class SupervisorClassCRUDTests(SupervisorClassTestBase):
         results = response.data['data']['results']
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0]['id'], self.ended_class.id)
+
+    def test_active_filter_excludes_past_end_datetime(self):
+        now = timezone.now()
+        expired_active = Class.objects.create(
+            title='کلاس منقضی',
+            description='کلاس گذشته',
+            location='اتاق ۲۰۲',
+            capacity=10,
+            start_datetime=now - timedelta(days=2),
+            end_datetime=now - timedelta(hours=1),
+            day_of_week=Class.DayOfWeek.MONDAY,
+            start_time=time(9, 0),
+            end_time=time(11, 0),
+            created_by=self.supervisor,
+            teacher=self.supervisor,
+            category=Class.Category.EDUCATIONAL,
+            status=Class.Status.ACTIVE,
+        )
+
+        self.auth_as(self.supervisor)
+        response = self.client.get(
+            reverse('supervisor_classes:class-list'),
+            {'status': Class.Status.ACTIVE},
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        ids = [item['id'] for item in response.data['data']['results']]
+        self.assertIn(self.active_class.id, ids)
+        self.assertNotIn(expired_active.id, ids)
+        self.assertNotIn(self.ended_class.id, ids)
 
     def test_supervisor_can_get_class_detail(self):
         self.auth_as(self.supervisor)

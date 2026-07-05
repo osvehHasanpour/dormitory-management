@@ -41,6 +41,8 @@ class SupervisorClassSelector:
 
         if status_filter:
             queryset = queryset.filter(status=status_filter)
+            if status_filter == Class.Status.ACTIVE:
+                queryset = queryset.filter(end_datetime__gt=timezone.now())
 
         if category:
             queryset = queryset.filter(category=category)
@@ -113,6 +115,10 @@ class SupervisorClassSelector:
             'is_full': enrolled_count >= class_obj.capacity,
             'start_datetime': class_obj.start_datetime,
             'end_datetime': class_obj.end_datetime,
+            'day_of_week': class_obj.day_of_week,
+            'day_of_week_display': class_obj.get_day_of_week_display() if class_obj.day_of_week else '',
+            'start_time': class_obj.start_time,
+            'end_time': class_obj.end_time,
             'teacher': cls._serialize_user(class_obj.teacher),
             'created_by': cls._serialize_user(class_obj.created_by),
             'average_rating': average_rating,

@@ -5,6 +5,7 @@ import {
   formatAverageRating,
 } from '../../data/supervisorClassItems'
 import type { SupervisorClassItem } from '../../types/supervisorClass'
+import { formatClassSchedule } from '../../utils/formatClassSchedule'
 import { formatPersianDateShort } from '../../utils/formatRelativeDate'
 
 interface SupervisorClassCardProps {
@@ -47,7 +48,12 @@ export function SupervisorClassCard({
       ? Math.min(100, (classItem.enrolled_count / classItem.capacity) * 100)
       : 0
   const statusBadge = getStatusBadge(classItem)
-  const canManage = classItem.status === 'active'
+  const canManage = classItem.status === 'active' && new Date(classItem.end_datetime) > new Date()
+  const scheduleText = formatClassSchedule(
+    classItem.day_of_week_display,
+    classItem.start_time,
+    classItem.end_time,
+  )
 
   return (
     <article className="glass-card p-4">
@@ -58,6 +64,9 @@ export function SupervisorClassCard({
           <p className="mt-1 text-body-sm text-mute">
             تاریخ: {formatPersianDateShort(classItem.start_datetime)}
           </p>
+          {scheduleText !== '—' ? (
+            <p className="mt-1 text-body-sm text-mute">برنامه: {scheduleText}</p>
+          ) : null}
           {classItem.location.trim() ? (
             <p className="mt-1 text-body-sm text-mute">مکان: {classItem.location}</p>
           ) : null}

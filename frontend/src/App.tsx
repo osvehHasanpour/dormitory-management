@@ -1,5 +1,7 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 
+import { useAuth } from './hooks/useAuth'
 import { LoginPage } from './pages/auth/LoginPage'
 import { DashboardPage } from './pages/student/DashboardPage'
 import { CleaningRequestPage } from './pages/student/CleaningRequestPage'
@@ -30,9 +32,25 @@ function PagePlaceholder({ title }: { title: string }) {
   )
 }
 
+function AuthRedirect() {
+  const { isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    if (!isAuthenticated && location.pathname !== '/login') {
+      navigate('/login', { replace: true })
+    }
+  }, [isAuthenticated, location.pathname, navigate])
+
+  return null
+}
+
 function App() {
   return (
-    <Routes>
+    <>
+      <AuthRedirect />
+      <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/maintenance-request" element={<MaintenanceReportPage />} />
@@ -58,6 +76,7 @@ function App() {
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
+    </>
   )
 }
 

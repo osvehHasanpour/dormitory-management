@@ -19,6 +19,10 @@ export interface SupervisorClassItem {
   is_full: boolean
   start_datetime: string
   end_datetime: string
+  day_of_week: string
+  day_of_week_display: string
+  start_time: string | null
+  end_time: string | null
   teacher: ClassUserSummary | null
   created_by: ClassUserSummary | null
   average_rating: number | null
@@ -40,6 +44,9 @@ export interface SupervisorClassCreatePayload {
   category: string
   start_datetime: string
   end_datetime: string
+  day_of_week: string
+  start_time: string
+  end_time: string
 }
 
 export type SupervisorClassUpdatePayload = Omit<SupervisorClassCreatePayload, 'category'>
