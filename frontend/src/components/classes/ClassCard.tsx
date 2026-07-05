@@ -1,5 +1,7 @@
 import type { ClassesTabValue, StudentClassItem } from '../../types/class'
+import { formatClassSchedule } from '../../utils/formatClassSchedule'
 import { formatPersianDateShort } from '../../utils/formatRelativeDate'
+import { formatEnglishNumber } from '../../utils/formatNumber'
 
 type CardActionType = 'register' | 'cancel' | 'rate'
 
@@ -81,7 +83,9 @@ function getActionConfig(
   }
 
   return {
-    label: classItem.user_rating ? `امتیاز: ${classItem.user_rating}/5` : 'امتیاز ثبت شده',
+    label: classItem.user_rating
+      ? `امتیاز: ${formatEnglishNumber(classItem.user_rating, 0)}/5`
+      : 'امتیاز ثبت شده',
     variant: 'secondary',
     isPending: false,
   }
@@ -98,7 +102,14 @@ export function ClassCard({
   const capacityPercent =
     classItem.capacity > 0 ? Math.min(100, (classItem.registered_count / classItem.capacity) * 100) : 0
   const averageRatingText =
-    classItem.average_rating == null ? 'بدون امتیاز' : `${classItem.average_rating.toFixed(1)} از ۵`
+    classItem.average_rating == null
+      ? 'بدون امتیاز'
+      : `${formatEnglishNumber(classItem.average_rating)} از 5`
+  const scheduleText = formatClassSchedule(
+    classItem.day_of_week_display,
+    classItem.start_time,
+    classItem.end_time,
+  )
   const actionConfig = getActionConfig(tab, classItem, onRegister, onCancel, onRate, isActionPending)
   const statusBadgeClass =
     tab === 'ended'
@@ -124,6 +135,9 @@ export function ClassCard({
           <p className="mt-1 text-body-sm text-mute">
             تاریخ: {formatPersianDateShort(classItem.start_datetime)}
           </p>
+          {scheduleText !== '—' ? (
+            <p className="mt-1 text-body-sm text-mute">برنامه: {scheduleText}</p>
+          ) : null}
         </div>
         <span
           className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-caption-md font-medium ${statusBadgeClass}`}

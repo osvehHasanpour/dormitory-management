@@ -10,6 +10,7 @@ import {
 import { DEFAULT_CLASS_CATEGORY } from '../data/supervisorClassItems'
 import { useAuth } from './useAuth'
 import type { SupervisorClassItem } from '../types/supervisorClass'
+import { toTimeInputValue } from '../utils/formatClassSchedule'
 
 const isPositiveInteger = (value: string): boolean => {
   const parsed = Number(value)
@@ -32,6 +33,9 @@ const formSchema = z
       .refine(isPositiveInteger, 'ظرفیت باید حداقل ۱ نفر باشد.'),
     start_datetime: z.string().min(1, 'تاریخ شروع الزامی است.'),
     end_datetime: z.string().min(1, 'تاریخ پایان الزامی است.'),
+    day_of_week: z.string().min(1, 'روز برگزاری الزامی است.'),
+    start_time: z.string().min(1, 'زمان شروع کلاس الزامی است.'),
+    end_time: z.string().min(1, 'زمان پایان کلاس الزامی است.'),
   })
   .refine(
     (data) => new Date(data.end_datetime) > new Date(data.start_datetime),
@@ -40,6 +44,10 @@ const formSchema = z
       message: 'زمان پایان باید بعد از زمان شروع باشد.',
     },
   )
+  .refine((data) => data.end_time > data.start_time, {
+    path: ['end_time'],
+    message: 'زمان پایان کلاس باید بعد از زمان شروع باشد.',
+  })
 
 export type ClassFormValues = z.infer<typeof formSchema>
 
@@ -50,6 +58,9 @@ export const EMPTY_CLASS_FORM: ClassFormValues = {
   capacity: '',
   start_datetime: '',
   end_datetime: '',
+  day_of_week: '',
+  start_time: '',
+  end_time: '',
 }
 
 export function toDatetimeLocalValue(iso: string | null | undefined): string {
@@ -74,6 +85,9 @@ export function classItemToFormValues(item: SupervisorClassItem): ClassFormValue
     capacity: String(item.capacity),
     start_datetime: toDatetimeLocalValue(item.start_datetime),
     end_datetime: toDatetimeLocalValue(item.end_datetime),
+    day_of_week: item.day_of_week ?? '',
+    start_time: toTimeInputValue(item.start_time),
+    end_time: toTimeInputValue(item.end_time),
   }
 }
 
@@ -132,6 +146,9 @@ export function useSupervisorClassForm({
       location: values.location.trim(),
       start_datetime: new Date(values.start_datetime).toISOString(),
       end_datetime: new Date(values.end_datetime).toISOString(),
+      day_of_week: values.day_of_week,
+      start_time: values.start_time,
+      end_time: values.end_time,
     }
 
     setIsSubmitting(true)
