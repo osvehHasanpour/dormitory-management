@@ -14,22 +14,71 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
 )
+from dormitory.graphql_views import JWTGraphQLView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/v1/auth/', include(('users.urls', 'users'), namespace='users')),
+    path(
+        'api/v1/blocks/',
+        include(('dorms.urls', 'dorms'), namespace='dorms'),
+    ),
+    path(
+        'api/v1/requests/',
+        include(('requests_app.urls', 'requests_app'), namespace='requests'),
+    ),
+    path(
+        'api/v1/classes/',
+        include(('classes.urls', 'classes'), namespace='classes'),
+    ),
+    path(
+        'api/v1/supervisor/classes/',
+        include(('classes.urls_supervisor', 'supervisor_classes'), namespace='supervisor_classes'),
+    ),
+    path(
+        'api/v1/ideas/',
+        include(('ideas.urls', 'ideas'), namespace='ideas'),
+    ),
+    path(
+        'api/v1/supervisor/feedback/',
+        include(('ideas.urls_supervisor', 'supervisor_feedback'), namespace='supervisor_feedback'),
+    ),
+    path(
+        'api/v1/complaints/',
+        include(('requests_app.urls_complaints', 'complaints'), namespace='complaints'),
+    ),
+    path(
+        'api/v1/suggestions/',
+        include(('requests_app.urls_suggestions', 'suggestions'), namespace='suggestions'),
+    ),
+    path(
+        'api/v1/announcements/',
+        include(('announcements.urls', 'announcements'), namespace='announcements'),
+    ),
+    path(
+        'api/v1/notifications/',
+        include(('core.urls', 'notifications'), namespace='notifications'),
+    ),
+    path('graphql/', JWTGraphQLView.as_view(graphiql=settings.DEBUG), name='graphql'),
 
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
 
     path(
         'api/docs/',
         SpectacularSwaggerView.as_view(url_name='schema'),
-        name='swagger-ui'
+        name='swagger-ui',
     ),
 ]
+
+if settings.DEBUG:
+    from django.conf.urls.static import static
+
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,36 +1,62 @@
+<div align="center">
+
 # 🏠 Dormitory Management System
 
-A full-stack SOA-based dormitory management platform built with **Django REST Framework**, **React (TypeScript)**, and **PostgreSQL** — fully containerized with Docker.
+<p align="center">
+  <img src="https://img.shields.io/badge/Version-1.0.0-blue?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Status-Active%20Development-brightgreen?style=for-the-badge" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Django-5.x-%23092E20?style=for-the-badge&logo=django&logoColor=white" />
+  <img src="https://img.shields.io/badge/React-18.x-%2361DAFB?style=for-the-badge&logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/TypeScript-5.x-%233178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/Docker-%230db7ed?style=for-the-badge&logo=docker&logoColor=white" />
+  <img src="https://img.shields.io/badge/PostgreSQL-16-%23316192?style=for-the-badge&logo=postgresql&logoColor=white" />
+</p>
+
+<p align="center">
+  <i>A full-stack SOA-based platform that digitizes dormitory management — connecting students, supervisors, and admins with transparent, efficient digital workflows.</i>
+</p>
+
+</div>
+
+---
+
+## ✨ Project Description
+
+A **full-stack SOA-based** web platform that digitizes dormitory management. It connects **students**, **supervisors**, and **admins** with transparent, efficient digital workflows — replacing paper-based processes.
+
+**Key Features** (aligned with SRS):
+
+| Feature | Description |
+|---|---|
+| 🔧 Maintenance | Maintenance reports, cleaning & supply requests |
+| 📅 Classes & Events | Class/event registration & rating |
+| 💡 Ideas & Feedback | Idea submission, voting & complaint handling |
+| 🏪 Marketplace | Marketplace booth requests |
+| 📢 Announcements | Announcements & notifications |
+| 🤖 AI Moderation | AI content moderation *(in progress)* |
 
 ---
 
 ## 📐 Architecture Overview
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                     Docker Network                       │
-│                                                         │
-│  ┌──────────────┐    REST/GraphQL   ┌────────────────┐  │
-│  │   Frontend   │ ◄───────────────► │    Backend     │  │
-│  │  React + TS  │                   │ Django DRF     │  │
-│  │  Port: 3000  │                   │  Port: 8000    │  │
-│  └──────────────┘                   └───────┬────────┘  │
-│                                             │           │
-│                                    ┌────────▼────────┐  │
-│                                    │   PostgreSQL    │  │
-│                                    │  Port: 5432     │  │
-│                                    └────────┬────────┘  │
-│                                             │           │
-│                                    ┌────────▼────────┐  │
-│                                    │    pgAdmin      │  │
-│                                    │  Port: 5050     │  │
-│                                    └─────────────────┘  │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    A[Frontend - React + TS<br/>Port: 3000] <-->|REST + GraphQL| B[Backend - Django DRF<br/>Port: 8000]
+    B <--> C[PostgreSQL<br/>Port: 5432]
+    D[pgAdmin<br/>Port: 5050] <--> C
+    style A fill:#61DAFB
+    style B fill:#092E20,color:white
+    style C fill:#316192,color:white
 ```
 
-**Architecture Pattern:** Service-Oriented Architecture (SOA)
-**API Protocols:** RESTful API + GraphQL
-**API Docs:** Swagger (drf-yasg) at `/swagger/`
+| | |
+|---|---|
+| **Architecture Pattern** | Service-Oriented Architecture (SOA) |
+| **API Protocols** | RESTful + GraphQL |
+| **API Docs** | Swagger (`/swagger/`) + GraphQL Playground (`/graphql/`) |
 
 ---
 
@@ -38,45 +64,48 @@ A full-stack SOA-based dormitory management platform built with **Django REST Fr
 
 | Layer | Technology |
 |---|---|
-| **Frontend** | React.js + TypeScript |
-| **State Management** | Redux Toolkit |
-| **UI Framework** | Tailwind CSS |
-| **Frontend Testing** | Jest + React Testing Library |
-| **Backend** | Python + Django REST Framework |
-| **API** | RESTful + GraphQL |
-| **API Docs** | Swagger (drf-yasg) |
+| **Frontend** | React 18 + TypeScript + Vite |
+| **State Mgmt** | Redux Toolkit |
+| **UI** | Tailwind CSS |
+| **Backend** | Python + Django + DRF |
+| **API** | REST + GraphQL (Graphene) |
+| **Auth** | JWT (SimpleJWT) |
 | **Database** | PostgreSQL 16 |
-| **DB GUI** | pgAdmin 4 |
-| **Containerization** | Docker + Docker Compose |
-| **Version Control** | Git + GitHub |
-| **Design** | Figma |
-| **Project Mgmt** | Jira |
+| **Docs** | Swagger (drf-yasg) |
+| **Container** | Docker + Docker Compose |
+| **Other** | CORS, Media Upload, Persian Support |
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Structure (Dev Branch)
 
-```
+```text
 dormitory-management/
-├── backend/                    # Django project
+├── backend/                          # Django (Modular)
+│   ├── announcements/                # Announcements & notifications
+│   ├── classes/                      # Class management
+│   ├── config/                       # Settings
+│   ├── core/                         # Shared utilities
+│   ├── dorms/                        # Dormitory structure
+│   ├── ideas/                        # Ideas, complaints, voting
+│   ├── requests_app/                 # All requests (most active)
+│   ├── users/                        # Auth & profiles
 │   ├── Dockerfile
-│   ├── requirements.txt
 │   ├── manage.py
-│   └── <your_django_apps>/
-├── frontend/                   # React + TypeScript
+│   └── requirements.txt
+├── frontend/                         # React + TS
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── store/ (Redux)
+│   │   └── services/ (API)
 │   ├── Dockerfile
-│   ├── nginx.conf              # For production builds
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── src/
-│       ├── components/
-│       ├── pages/
-│       ├── store/              # Redux
-│       ├── services/           # API calls
-│       └── App.tsx
-├── docker-compose.yml          # Full stack orchestration
-├── .env.example                # Environment variable template
-├── .gitignore
+│   └── nginx.conf
+├── docs/                             # Documentation
+│   ├── database.md
+│   └── database_v3.md
+├── docker-compose.yml
+├── .env.example
 └── README.md
 ```
 
@@ -86,80 +115,19 @@ dormitory-management/
 
 ### Prerequisites
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
-- [Git](https://git-scm.com/) installed
-
-### 1. Clone the repository
+- 🐳 Docker Desktop
+- 🔧 Git
 
 ```bash
 git clone https://github.com/osvehHasanpour/dormitory-management.git
 cd dormitory-management
-```
+git checkout Dev
 
-### 2. Set up environment variables
-
-```bash
 cp .env.example .env
-# Edit .env with your values if needed (defaults work for local dev)
-```
-
-### 3. Add the Dockerfiles
-
-Copy the files from this README or from the repo:
-
-**`backend/Dockerfile`** — see [Backend Dockerfile](#backend-dockerfile) section below
-
-**`frontend/Dockerfile`** — see [Frontend Dockerfile](#frontend-dockerfile) section below
-
-**`frontend/nginx.conf`** — needed for production builds
-
-### 4. Update Django settings for PostgreSQL
-
-In `backend/settings.py`, replace the `DATABASES` section:
-
-```python
-import os
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB', 'dormitory_db'),
-        'USER': os.environ.get('POSTGRES_USER', 'dormitory_user'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'dormitory_pass'),
-        'HOST': os.environ.get('POSTGRES_HOST', 'db'),
-        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
-    }
-}
-```
-
-### 5. Add required Python packages
-
-Make sure `backend/requirements.txt` includes:
-
-```
-django==6.0.6
-djangorestframework
-django-cors-headers
-psycopg2-binary
-drf-yasg
-graphene-django
-djangorestframework-simplejwt
-python-decouple
-```
-
-### 6. Start all services
-
-```bash
 docker-compose up -d --build
 ```
 
-This starts:
-- 🐘 PostgreSQL on `localhost:5432`
-- 🐍 Django backend on `http://localhost:8000`
-- ⚛️ React frontend on `http://localhost:3000`
-- 🗄️ pgAdmin on `http://localhost:5050`
-
-### 7. Run migrations (first time only)
+### First-time Setup
 
 ```bash
 docker-compose exec backend python manage.py migrate
@@ -172,12 +140,49 @@ docker-compose exec backend python manage.py createsuperuser
 
 | Service | URL | Credentials |
 |---|---|---|
-| Frontend | http://localhost:3000 | — |
-| Backend API | http://localhost:8000/api/ | — |
-| Swagger Docs | http://localhost:8000/swagger/ | — |
-| GraphQL | http://localhost:8000/graphql/ | — |
-| Django Admin | http://localhost:8000/admin/ | superuser credentials |
-| pgAdmin | http://localhost:5050 | admin@dormitory.com / admin123 |
+| **Frontend** | http://localhost:3000 | — |
+| **Backend API** | http://localhost:8000/api/ | — |
+| **Swagger** | http://localhost:8000/swagger/ | — |
+| **GraphQL** | http://localhost:8000/graphql/ | — |
+| **Django Admin** | http://localhost:8000/admin/ | Superuser |
+| **pgAdmin** | http://localhost:5050 | `admin@dormitory.com` / `admin123` |
+
+---
+
+## 📊 UML Diagrams
+
+### 1. High-Level Use Case Diagram
+
+```text
+[Actor] Student          [Actor] Supervisor         [Actor] Admin
+     │                        │                          │
+     ├─ Login/Logout ────────┼──────────────────────────┤
+     ├─ Submit Request ──────┼─ Manage Requests ────────┤
+     ├─ View Announcements ──┼─ Create Announcements ───┤
+     ├─ Register Class ──────┼─ Manage Classes ─────────┤
+     ├─ Submit Idea/Vote ────┼─ Review Ideas ───────────┤
+     └─ Rate Services ───────┴──────────────────────────┘
+```
+
+### 2. Simplified Class Diagram (Key Models)
+
+```text
+User (Abstract)
+├── Student
+├── Supervisor
+└── Admin
+
+Request (Polymorphic)
+├── MaintenanceReport
+├── CleaningRequest
+├── SupplyRequest
+└── BoothRequest
+
+Announcement
+Class/Event
+Idea (with votes)
+Rating
+```
 
 ---
 
@@ -185,203 +190,66 @@ docker-compose exec backend python manage.py createsuperuser
 
 ```bash
 # Start all services
-docker-compose up -d
-
-# Start with rebuild (after code changes to Dockerfiles)
 docker-compose up -d --build
 
 # Stop all services
 docker-compose down
 
-# Stop and remove volumes (⚠️ deletes database data)
-docker-compose down -v
-
-# View logs
-docker-compose logs -f
+# View backend logs
 docker-compose logs -f backend
-docker-compose logs -f frontend
 
-# Run Django management commands
-docker-compose exec backend python manage.py migrate
+# Create migrations
 docker-compose exec backend python manage.py makemigrations
-docker-compose exec backend python manage.py createsuperuser
-docker-compose exec backend python manage.py shell
-
-# Access database shell
-docker-compose exec db psql -U dormitory_user -d dormitory_db
-
-# Rebuild a single service
-docker-compose up -d --build backend
-docker-compose up -d --build frontend
 ```
 
 ---
 
-## 🔧 Backend Dockerfile
+## 🚀 Development Status
 
-Save this as `backend/Dockerfile`:
+### ✅ Completed
 
-```dockerfile
-FROM python:3.12-slim AS builder
-WORKDIR /app
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential libpq-dev && rm -rf /var/lib/apt/lists/*
-COPY requirements.txt .
-RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+- [x] Full Docker setup
+- [x] Modular backend (users, requests_app, ideas, classes, etc.)
+- [x] JWT Authentication & role-based access
+- [x] Request management (recent fixes for "My Requests")
+- [x] Announcements & notifications
+- [x] Database models & migrations
 
-FROM python:3.12-slim
-WORKDIR /app
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq5 && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
-COPY . .
-RUN mkdir -p /app/staticfiles /app/media
-EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-```
+### 🔄 In Progress
+
+- [ ] Advanced frontend pages
+- [ ] Testing & polishing
 
 ---
 
-## ⚛️ Frontend Dockerfile
+## 👥 Team
 
-Save this as `frontend/Dockerfile`:
+<div align="center">
 
-```dockerfile
-# Development stage
-FROM node:20-alpine AS development
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-EXPOSE 3000
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "3000"]
+| Name | Role |
+|---|---|
+| **Osveh Hasanpour** | Developer |
+| **Razieh Delvari** | Scrum master |
+| **Mahshid Haji Shirmohammadi** | Developer |
+| **Zeinab Golchin** | Developer |
+| **Hanieh Tebianian** | Developer |
+| **Mohammad Saeed Zare** | Mentor |
+| **Dr. Mehran Alidoust Nia** | Supervisor |
 
-# Production build
-FROM node:20-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-
-# Production serve with Nginx
-FROM nginx:alpine AS production
-COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-```
+</div>
 
 ---
 
-## 🖥️ Frontend Setup Notes
+## 🤝 Contributing
 
-If your frontend uses **Vite** (recommended with React + TypeScript), make sure `frontend/package.json` has:
-
-```json
-{
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  }
-}
-```
-
-And `frontend/vite.config.ts`:
-
-```typescript
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    host: '0.0.0.0',
-    port: 3000,
-    proxy: {
-      '/api': 'http://backend:8000',
-      '/graphql': 'http://backend:8000',
-    }
-  }
-})
-```
+1. Fork & create a feature branch
+2. Follow Clean Code / SOLID principles
+3. Submit a PR with tests
 
 ---
 
-## 🗄️ pgAdmin Setup
+<div align="center">
 
-1. Open http://localhost:5050
-2. Login: `admin@dormitory.com` / `admin123`
-3. Add New Server:
-   - **Name:** Dormitory DB
-   - **Host:** `db`
-   - **Port:** `5432`
-   - **Username:** `dormitory_user`
-   - **Password:** `dormitory_pass`
+⭐ **Star this repo if you find it useful!**
 
----
-
-## 🧪 Testing
-
-```bash
-# Backend tests
-docker-compose exec backend python manage.py test
-
-# Frontend tests
-docker-compose exec frontend npm test
-
-# Frontend tests with coverage
-docker-compose exec frontend npm run test:coverage
-```
-
----
-
-## 📦 How to Push to GitHub
-
-```bash
-# Stage all files including new Dockerfiles
-git add .
-
-# Commit
-git commit -m "feat: add full Docker setup with frontend, backend, PostgreSQL"
-
-# Push
-git push origin main
-```
-
----
-
-## 🚀 Production Deployment
-
-For production, switch the frontend target in `docker-compose.yml`:
-
-```yaml
-frontend:
-  build:
-    context: ./frontend
-    dockerfile: Dockerfile
-    target: production   # ← add this line
-```
-
-And set these in your `.env`:
-
-```
-DEBUG=False
-SECRET_KEY=<strong-random-key>
-ALLOWED_HOSTS=your-domain.com
-CORS_ALLOWED_ORIGINS=https://your-domain.com
-```
-
----
-
-## 👥 Contributors
-
-- [@osvehHasanpour](https://github.com/osvehHasanpour)
-
----
-
-## 📄 License
-
-This project is for educational/internal use.
+</div>

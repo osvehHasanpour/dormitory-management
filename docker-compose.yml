@@ -1,4 +1,3 @@
-
 services:
   # ─── PostgreSQL Database ───────────────────────────────────────────────
   db:
@@ -16,7 +15,11 @@ services:
     networks:
       - dormitory_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dormitory_user} -d ${POSTGRES_DB:-dormitory_db}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-dormitory_user} -d ${POSTGRES_DB:-dormitory_db}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -85,7 +88,7 @@ services:
       - ./frontend:/app
       - /app/node_modules
     ports:
-      - "3000:3000"
+      - "3000:80"
     depends_on:
       - backend
     networks:
