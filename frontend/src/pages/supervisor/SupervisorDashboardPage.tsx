@@ -1,7 +1,7 @@
-import { BottomNav } from '../../components/layout/BottomNav'
-import { DashboardBanner } from '../../components/dashboard/DashboardBanner'
-import { FeatureCard } from '../../components/dashboard/FeatureCard'
-import { supervisorDashboardItems } from '../../data/supervisorDashboardItems'
+import { BottomNav } from "../../components/layout/BottomNav";
+import { DashboardBanner } from "../../components/dashboard/DashboardBanner";
+import { FeatureCard } from "../../components/dashboard/FeatureCard";
+import { supervisorDashboardItems } from "../../data/supervisorDashboardItems";
 
 export function SupervisorDashboardPage() {
   return (
@@ -28,5 +28,5 @@ export function SupervisorDashboardPage() {
 
       <BottomNav variant="supervisor" activeTab="home" />
     </div>
-  )
+  );
 }

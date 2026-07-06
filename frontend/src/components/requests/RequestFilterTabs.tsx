@@ -1,17 +1,20 @@
-import type { RequestFilterValue } from '../../types/request'
-import { requestFilterTabs } from '../../data/requestItems'
+import type { RequestFilterValue } from "../../types/request";
+import { requestFilterTabs } from "../../data/requestItems";
 
 interface RequestFilterTabsProps {
-  activeFilter: RequestFilterValue
-  onChange: (filter: RequestFilterValue) => void
+  activeFilter: RequestFilterValue;
+  onChange: (filter: RequestFilterValue) => void;
 }
 
-export function RequestFilterTabs({ activeFilter, onChange }: RequestFilterTabsProps) {
+export function RequestFilterTabs({
+  activeFilter,
+  onChange,
+}: RequestFilterTabsProps) {
   return (
     <div className="overflow-x-auto pb-1">
       <div className="flex min-w-max gap-5 border-b border-hairline px-1">
         {requestFilterTabs.map((tab) => {
-          const isActive = tab.value === activeFilter
+          const isActive = tab.value === activeFilter;
 
           return (
             <button
@@ -19,9 +22,9 @@ export function RequestFilterTabs({ activeFilter, onChange }: RequestFilterTabsP
               type="button"
               onClick={() => onChange(tab.value)}
               className={`relative pb-3 text-caption-md font-bold transition-colors ${
-                isActive ? 'text-ink' : 'text-mute hover:text-ink'
+                isActive ? "text-ink" : "text-mute hover:text-ink"
               }`}
-              aria-current={isActive ? 'true' : undefined}
+              aria-current={isActive ? "true" : undefined}
             >
               {tab.label}
               {isActive ? (
@@ -31,9 +34,9 @@ export function RequestFilterTabs({ activeFilter, onChange }: RequestFilterTabsP
                 />
               ) : null}
             </button>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }

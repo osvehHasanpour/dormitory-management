@@ -1,22 +1,22 @@
-import type { ClassesTabValue } from '../../types/class'
+import type { ClassesTabValue } from "../../types/class";
 
 interface ClassTabsProps {
-  activeTab: ClassesTabValue
-  onChange: (tab: ClassesTabValue) => void
+  activeTab: ClassesTabValue;
+  onChange: (tab: ClassesTabValue) => void;
 }
 
 const tabs: Array<{ value: ClassesTabValue; label: string }> = [
-  { value: 'active', label: 'فعال' },
-  { value: 'enrolled', label: 'ثبت‌نام شده' },
-  { value: 'ended', label: 'پایان یافته' },
-]
+  { value: "active", label: "فعال" },
+  { value: "enrolled", label: "ثبت‌نام شده" },
+  { value: "ended", label: "پایان یافته" },
+];
 
 export function ClassTabs({ activeTab, onChange }: ClassTabsProps) {
   return (
     <div className="overflow-x-auto pb-1">
       <div className="flex min-w-max gap-5 border-b border-hairline px-1">
         {tabs.map((tab) => {
-          const isActive = tab.value === activeTab
+          const isActive = tab.value === activeTab;
 
           return (
             <button
@@ -24,9 +24,9 @@ export function ClassTabs({ activeTab, onChange }: ClassTabsProps) {
               type="button"
               onClick={() => onChange(tab.value)}
               className={`relative pb-3 text-caption-md font-bold transition-colors ${
-                isActive ? 'text-ink' : 'text-mute hover:text-ink'
+                isActive ? "text-ink" : "text-mute hover:text-ink"
               }`}
-              aria-current={isActive ? 'true' : undefined}
+              aria-current={isActive ? "true" : undefined}
             >
               {tab.label}
               {isActive ? (
@@ -36,9 +36,9 @@ export function ClassTabs({ activeTab, onChange }: ClassTabsProps) {
                 />
               ) : null}
             </button>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }

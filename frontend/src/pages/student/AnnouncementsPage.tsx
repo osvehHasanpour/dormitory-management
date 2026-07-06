@@ -1,15 +1,15 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
-import { AnnouncementCard } from '../../components/announcement/AnnouncementCard'
-import { AnnouncementCardSkeleton } from '../../components/announcement/AnnouncementCardSkeleton'
-import { AnnouncementsEmptyState } from '../../components/announcement/AnnouncementsEmptyState'
-import { BottomNav } from '../../components/layout/BottomNav'
-import { Toast } from '../../components/ui/Toast'
-import { useAnnouncementsFeed } from '../../hooks/useAnnouncementsFeed'
+import { AnnouncementCard } from "../../components/announcement/AnnouncementCard";
+import { AnnouncementCardSkeleton } from "../../components/announcement/AnnouncementCardSkeleton";
+import { AnnouncementsEmptyState } from "../../components/announcement/AnnouncementsEmptyState";
+import { BottomNav } from "../../components/layout/BottomNav";
+import { Toast } from "../../components/ui/Toast";
+import { useAnnouncementsFeed } from "../../hooks/useAnnouncementsFeed";
 
 export function AnnouncementsPage() {
-  const navigate = useNavigate()
-  const { announcements, isLoading, error, retry } = useAnnouncementsFeed()
+  const navigate = useNavigate();
+  const { announcements, isLoading, error, retry } = useAnnouncementsFeed();
 
   return (
     <div className="page-gradient min-h-screen pb-28">
@@ -31,14 +31,21 @@ export function AnnouncementsPage() {
 
         <section className="space-y-3">
           {isLoading
-            ? Array.from({ length: 4 }, (_, index) => <AnnouncementCardSkeleton key={index} />)
+            ? Array.from({ length: 4 }, (_, index) => (
+                <AnnouncementCardSkeleton key={index} />
+              ))
             : null}
 
-          {!isLoading && !error && announcements.length === 0 ? <AnnouncementsEmptyState /> : null}
+          {!isLoading && !error && announcements.length === 0 ? (
+            <AnnouncementsEmptyState />
+          ) : null}
 
           {!isLoading && !error
             ? announcements.map((announcement) => (
-                <AnnouncementCard key={announcement.id} announcement={announcement} />
+                <AnnouncementCard
+                  key={announcement.id}
+                  announcement={announcement}
+                />
               ))
             : null}
         </section>
@@ -48,5 +55,5 @@ export function AnnouncementsPage() {
 
       <BottomNav activeTab="home" />
     </div>
-  )
+  );
 }

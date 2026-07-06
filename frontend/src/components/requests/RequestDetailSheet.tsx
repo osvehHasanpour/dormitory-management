@@ -1,4 +1,7 @@
-import type { StudentRequestDetail, StudentRequestListItem } from '../../types/request'
+import type {
+  StudentRequestDetail,
+  StudentRequestListItem,
+} from "../../types/request";
 import {
   buildRequestDetailRows,
   buildTimelineSteps,
@@ -7,33 +10,33 @@ import {
   getRequestTypeLabel,
   getStatusBadgeVariant,
   type RequestDetailRow,
-} from '../../utils/requestHelpers'
-import { formatPersianDateShort } from '../../utils/formatRelativeDate'
-import { RequestTimeline } from './RequestTimeline'
-import { StatusBadge } from '../ui/StatusBadge'
-import { Skeleton } from '../ui/Skeleton'
+} from "../../utils/requestHelpers";
+import { formatPersianDateShort } from "../../utils/formatRelativeDate";
+import { RequestTimeline } from "./RequestTimeline";
+import { StatusBadge } from "../ui/StatusBadge";
+import { Skeleton } from "../ui/Skeleton";
 
 interface RequestDetailSheetProps {
-  request: StudentRequestDetail | null
-  preview: StudentRequestListItem | null
-  isLoading: boolean
-  error: string | null
-  onRetry: () => void
+  request: StudentRequestDetail | null;
+  preview: StudentRequestListItem | null;
+  isLoading: boolean;
+  error: string | null;
+  onRetry: () => void;
 }
 
 function buildPreviewRows(request: StudentRequestListItem): RequestDetailRow[] {
   const rows: RequestDetailRow[] = [
     {
-      label: 'تاریخ ثبت',
+      label: "تاریخ ثبت",
       value: formatPersianDateShort(request.created_at),
     },
-  ]
+  ];
 
   if (request.description.trim()) {
-    rows.push({ label: 'توضیحات', value: request.description.trim() })
+    rows.push({ label: "توضیحات", value: request.description.trim() });
   }
 
-  return rows
+  return rows;
 }
 
 function DetailInfoRows({ rows }: { rows: RequestDetailRow[] }) {
@@ -45,7 +48,7 @@ function DetailInfoRows({ rows }: { rows: RequestDetailRow[] }) {
             <p className="text-body-sm-strong text-mute">{row.label}</p>
             <p
               className={`mt-1 whitespace-pre-wrap text-body-md ${
-                row.highlight ? 'text-heading-md text-ink' : 'text-ink'
+                row.highlight ? "text-heading-md text-ink" : "text-ink"
               }`}
             >
               {row.value}
@@ -55,7 +58,7 @@ function DetailInfoRows({ rows }: { rows: RequestDetailRow[] }) {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 function DetailLoadingSkeleton() {
@@ -72,7 +75,7 @@ function DetailLoadingSkeleton() {
       </div>
       <Skeleton className="h-28 w-full rounded-lg" />
     </div>
-  )
+  );
 }
 
 export function RequestDetailSheet({
@@ -82,16 +85,18 @@ export function RequestDetailSheet({
   error,
   onRetry,
 }: RequestDetailSheetProps) {
-  const displayRequest = request ?? preview
+  const displayRequest = request ?? preview;
 
   if (!displayRequest && isLoading) {
-    return <DetailLoadingSkeleton />
+    return <DetailLoadingSkeleton />;
   }
 
   if (!displayRequest) {
     return (
       <div className="py-6 text-center">
-        <p className="text-body-md text-body-text">جزئیات درخواست در دسترس نیست.</p>
+        <p className="text-body-md text-body-text">
+          جزئیات درخواست در دسترس نیست.
+        </p>
         {error ? (
           <button
             type="button"
@@ -102,14 +107,16 @@ export function RequestDetailSheet({
           </button>
         ) : null}
       </div>
-    )
+    );
   }
 
-  const typeLabel = getRequestTypeLabel(displayRequest.request_type)
-  const effectiveStatus = getEffectiveRequestStatus(displayRequest)
-  const supervisorResponse = displayRequest.supervisor_response?.trim()
-  const infoRows = request ? buildRequestDetailRows(request) : buildPreviewRows(displayRequest)
-  const timelineSteps = buildTimelineSteps(displayRequest)
+  const typeLabel = getRequestTypeLabel(displayRequest.request_type);
+  const effectiveStatus = getEffectiveRequestStatus(displayRequest);
+  const supervisorResponse = displayRequest.supervisor_response?.trim();
+  const infoRows = request
+    ? buildRequestDetailRows(request)
+    : buildPreviewRows(displayRequest);
+  const timelineSteps = buildTimelineSteps(displayRequest);
 
   return (
     <div className="space-y-5 animate-[sheet-content-in_360ms_ease-out_both]">
@@ -130,7 +137,9 @@ export function RequestDetailSheet({
       <section className="glass-card overflow-hidden px-4 py-3.5">
         <p className="text-body-sm-strong text-mute">پاسخ سرپرست</p>
         {supervisorResponse ? (
-          <p className="mt-1 whitespace-pre-wrap text-body-md text-ink">{supervisorResponse}</p>
+          <p className="mt-1 whitespace-pre-wrap text-body-md text-ink">
+            {supervisorResponse}
+          </p>
         ) : (
           <p className="mt-1 text-body-md text-ash">هنوز پاسخی ثبت نشده است</p>
         )}
@@ -155,7 +164,7 @@ export function RequestDetailSheet({
 
       <DetailInfoRows rows={infoRows} />
 
-      {request?.request_type === 'maintenance' && request.photo_url ? (
+      {request?.request_type === "maintenance" && request.photo_url ? (
         <div className="glass-card overflow-hidden p-4">
           <p className="mb-3 text-body-sm-strong text-mute">تصویر پیوست</p>
           <img
@@ -171,5 +180,5 @@ export function RequestDetailSheet({
         <RequestTimeline steps={timelineSteps} />
       </section>
     </div>
-  )
+  );
 }

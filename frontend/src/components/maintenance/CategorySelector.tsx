@@ -1,16 +1,23 @@
-import { maintenanceCategories } from '../../types/maintenance'
+import { maintenanceCategories } from "../../types/maintenance";
 
 interface CategorySelectorProps {
-  value: string
-  error?: string
-  onChange: (value: string) => void
-  onBlur: () => void
+  value: string;
+  error?: string;
+  onChange: (value: string) => void;
+  onBlur: () => void;
 }
 
-export function CategorySelector({ value, error, onChange, onBlur }: CategorySelectorProps) {
+export function CategorySelector({
+  value,
+  error,
+  onChange,
+  onBlur,
+}: CategorySelectorProps) {
   return (
     <label className="block glass-card p-4">
-      <span className="mb-3 block text-body-sm-strong text-ink">دسته‌بندی خرابی</span>
+      <span className="mb-3 block text-body-sm-strong text-ink">
+        دسته‌بندی خرابی
+      </span>
       <select
         value={value}
         onChange={(event) => onChange(event.target.value)}
@@ -26,5 +33,5 @@ export function CategorySelector({ value, error, onChange, onBlur }: CategorySel
       </select>
       {error ? <p className="mt-2 text-body-sm text-error">{error}</p> : null}
     </label>
-  )
+  );
 }

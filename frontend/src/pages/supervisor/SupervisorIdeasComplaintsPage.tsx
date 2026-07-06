@@ -1,20 +1,20 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
-import { BottomNav } from '../../components/layout/BottomNav'
-import { FeedbackCard } from '../../components/supervisor-feedback/FeedbackCard'
-import { FeedbackCardSkeleton } from '../../components/supervisor-feedback/FeedbackCardSkeleton'
-import { FeedbackDetailSheet } from '../../components/supervisor-feedback/FeedbackDetailSheet'
-import { FeedbackEmptyState } from '../../components/supervisor-feedback/FeedbackEmptyState'
-import { FeedbackFilterTabs } from '../../components/supervisor-feedback/FeedbackFilterTabs'
-import { BottomSheet } from '../../components/ui/BottomSheet'
-import { Toast } from '../../components/ui/Toast'
-import { feedbackFilterTabs } from '../../data/supervisorFeedbackItems'
-import { useSupervisorFeedbackDetail } from '../../hooks/useSupervisorFeedbackDetail'
-import { useSupervisorFeedbackFeed } from '../../hooks/useSupervisorFeedbackFeed'
-import { useSupervisorFeedbackResponse } from '../../hooks/useSupervisorFeedbackResponse'
+import { BottomNav } from "../../components/layout/BottomNav";
+import { FeedbackCard } from "../../components/supervisor-feedback/FeedbackCard";
+import { FeedbackCardSkeleton } from "../../components/supervisor-feedback/FeedbackCardSkeleton";
+import { FeedbackDetailSheet } from "../../components/supervisor-feedback/FeedbackDetailSheet";
+import { FeedbackEmptyState } from "../../components/supervisor-feedback/FeedbackEmptyState";
+import { FeedbackFilterTabs } from "../../components/supervisor-feedback/FeedbackFilterTabs";
+import { BottomSheet } from "../../components/ui/BottomSheet";
+import { Toast } from "../../components/ui/Toast";
+import { feedbackFilterTabs } from "../../data/supervisorFeedbackItems";
+import { useSupervisorFeedbackDetail } from "../../hooks/useSupervisorFeedbackDetail";
+import { useSupervisorFeedbackFeed } from "../../hooks/useSupervisorFeedbackFeed";
+import { useSupervisorFeedbackResponse } from "../../hooks/useSupervisorFeedbackResponse";
 
 export function SupervisorIdeasComplaintsPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     items,
     isLoading,
@@ -23,7 +23,7 @@ export function SupervisorIdeasComplaintsPage() {
     setActiveFilter,
     retry,
     updateItem,
-  } = useSupervisorFeedbackFeed()
+  } = useSupervisorFeedbackFeed();
 
   const {
     detail,
@@ -35,12 +35,12 @@ export function SupervisorIdeasComplaintsPage() {
     closeDetail,
     retry: retryDetail,
     setDetail,
-  } = useSupervisorFeedbackDetail()
+  } = useSupervisorFeedbackDetail();
 
   const handleFeedbackUpdated = (updated: Parameters<typeof updateItem>[0]) => {
-    updateItem(updated)
-    setDetail(updated)
-  }
+    updateItem(updated);
+    setDetail(updated);
+  };
 
   const {
     form,
@@ -50,11 +50,12 @@ export function SupervisorIdeasComplaintsPage() {
     applyStatusAction,
     approveIdea,
     rejectIdea,
-  } = useSupervisorFeedbackResponse({ onSuccess: handleFeedbackUpdated })
+  } = useSupervisorFeedbackResponse({ onSuccess: handleFeedbackUpdated });
 
-  const displaySource = detail ?? preview
+  const displaySource = detail ?? preview;
   const activeTabLabel =
-    feedbackFilterTabs.find((tab) => tab.value === activeFilter)?.label ?? 'همه'
+    feedbackFilterTabs.find((tab) => tab.value === activeFilter)?.label ??
+    "همه";
 
   return (
     <div className="page-gradient min-h-screen pb-28">
@@ -75,11 +76,16 @@ export function SupervisorIdeasComplaintsPage() {
           <p className="mt-2 text-body-sm text-mute">مشاهده و پاسخگویی</p>
         </section>
 
-        <FeedbackFilterTabs activeFilter={activeFilter} onChange={setActiveFilter} />
+        <FeedbackFilterTabs
+          activeFilter={activeFilter}
+          onChange={setActiveFilter}
+        />
 
         <section className="mt-6 space-y-3">
           {isLoading
-            ? Array.from({ length: 4 }, (_, index) => <FeedbackCardSkeleton key={index} />)
+            ? Array.from({ length: 4 }, (_, index) => (
+                <FeedbackCardSkeleton key={index} />
+              ))
             : null}
 
           {!isLoading && !error && items.length === 0 ? (
@@ -95,12 +101,14 @@ export function SupervisorIdeasComplaintsPage() {
       </main>
 
       {error ? <Toast message={error} onRetry={retry} /> : null}
-      {detailError ? <Toast message={detailError} onRetry={retryDetail} /> : null}
+      {detailError ? (
+        <Toast message={detailError} onRetry={retryDetail} />
+      ) : null}
 
       <BottomSheet
         isOpen={selectedId !== null}
         onClose={closeDetail}
-        title={displaySource?.title ?? 'جزئیات'}
+        title={displaySource?.title ?? "جزئیات"}
         subtitle={displaySource ? displaySource.type_display : null}
       >
         <FeedbackDetailSheet
@@ -114,21 +122,21 @@ export function SupervisorIdeasComplaintsPage() {
           onRetry={retryDetail}
           onClearMessages={clearMessages}
           onStatusAction={(action) => {
-            const source = detail ?? preview
+            const source = detail ?? preview;
             if (source) {
-              void applyStatusAction(source, action)
+              void applyStatusAction(source, action);
             }
           }}
           onApproveIdea={() => {
-            const source = detail ?? preview
+            const source = detail ?? preview;
             if (source) {
-              void approveIdea(source)
+              void approveIdea(source);
             }
           }}
           onRejectIdea={() => {
-            const source = detail ?? preview
+            const source = detail ?? preview;
             if (source) {
-              void rejectIdea(source)
+              void rejectIdea(source);
             }
           }}
         />
@@ -136,5 +144,5 @@ export function SupervisorIdeasComplaintsPage() {
 
       <BottomNav variant="supervisor" activeTab="home" />
     </div>
-  )
+  );
 }

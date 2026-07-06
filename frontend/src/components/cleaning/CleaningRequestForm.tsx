@@ -1,10 +1,10 @@
-import { useCallback, useState } from 'react'
-import { Controller } from 'react-hook-form'
+import { useCallback, useState } from "react";
+import { Controller } from "react-hook-form";
 
-import { BlockFloorSelector } from './BlockFloorSelector'
-import { useCleaningRequest } from '../../hooks/useCleaningRequest'
-import type { Block, Floor } from '../../types/cleaning'
-import { cleaningLines, cleaningSpaceTypes } from '../../types/cleaning'
+import { BlockFloorSelector } from "./BlockFloorSelector";
+import { useCleaningRequest } from "../../hooks/useCleaningRequest";
+import type { Block, Floor } from "../../types/cleaning";
+import { cleaningLines, cleaningSpaceTypes } from "../../types/cleaning";
 
 export function CleaningRequestForm() {
   const {
@@ -15,38 +15,38 @@ export function CleaningRequestForm() {
     submitRequest,
     clearMessages,
     resetCascadeFromBlock,
-  } = useCleaningRequest()
+  } = useCleaningRequest();
   const {
     control,
     register,
     handleSubmit,
     formState: { errors },
-  } = form
+  } = form;
 
-  const [selectedBlock, setSelectedBlock] = useState<Block | null>(null)
-  const [selectedFloor, setSelectedFloor] = useState<Floor | null>(null)
+  const [selectedBlock, setSelectedBlock] = useState<Block | null>(null);
+  const [selectedFloor, setSelectedFloor] = useState<Floor | null>(null);
 
   const handleBlockSelect = useCallback((block: Block | null) => {
-    setSelectedBlock(block)
-  }, [])
+    setSelectedBlock(block);
+  }, []);
 
   const handleFloorSelect = useCallback((floor: Floor | null) => {
-    setSelectedFloor(floor)
-  }, [])
+    setSelectedFloor(floor);
+  }, []);
 
   const onSubmit = handleSubmit(async (values) => {
     if (!selectedBlock || !selectedFloor) {
-      return
+      return;
     }
 
     await submitRequest(values, {
       blockName: selectedBlock.name,
       floorLabel: selectedFloor.label,
-    })
-  })
+    });
+  });
 
   const selectClassName =
-    'h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30'
+    "h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30";
 
   return (
     <form className="flex w-full flex-col gap-4" onSubmit={onSubmit}>
@@ -64,13 +64,13 @@ export function CleaningRequestForm() {
                 blockError={errors.blockId?.message}
                 floorError={errors.floorId?.message}
                 onBlockChange={(value) => {
-                  clearMessages()
-                  blockField.onChange(value)
-                  resetCascadeFromBlock()
+                  clearMessages();
+                  blockField.onChange(value);
+                  resetCascadeFromBlock();
                 }}
                 onFloorChange={(value) => {
-                  clearMessages()
-                  floorField.onChange(value)
+                  clearMessages();
+                  floorField.onChange(value);
                 }}
                 onBlockBlur={blockField.onBlur}
                 onFloorBlur={floorField.onBlur}
@@ -87,12 +87,14 @@ export function CleaningRequestForm() {
         name="line"
         render={({ field }) => (
           <label className="block glass-card p-4">
-            <span className="mb-3 block text-body-sm-strong text-ink">انتخاب لاین</span>
+            <span className="mb-3 block text-body-sm-strong text-ink">
+              انتخاب لاین
+            </span>
             <select
               value={field.value}
               onChange={(event) => {
-                clearMessages()
-                field.onChange(event.target.value)
+                clearMessages();
+                field.onChange(event.target.value);
               }}
               onBlur={field.onBlur}
               className={selectClassName}
@@ -105,7 +107,9 @@ export function CleaningRequestForm() {
               ))}
             </select>
             {errors.line?.message ? (
-              <p className="mt-2 text-body-sm text-error">{errors.line.message}</p>
+              <p className="mt-2 text-body-sm text-error">
+                {errors.line.message}
+              </p>
             ) : null}
           </label>
         )}
@@ -116,12 +120,14 @@ export function CleaningRequestForm() {
         name="spaceType"
         render={({ field }) => (
           <label className="block glass-card p-4">
-            <span className="mb-3 block text-body-sm-strong text-ink">انتخاب فضا</span>
+            <span className="mb-3 block text-body-sm-strong text-ink">
+              انتخاب فضا
+            </span>
             <select
               value={field.value}
               onChange={(event) => {
-                clearMessages()
-                field.onChange(event.target.value)
+                clearMessages();
+                field.onChange(event.target.value);
               }}
               onBlur={field.onBlur}
               className={selectClassName}
@@ -134,24 +140,30 @@ export function CleaningRequestForm() {
               ))}
             </select>
             {errors.spaceType?.message ? (
-              <p className="mt-2 text-body-sm text-error">{errors.spaceType.message}</p>
+              <p className="mt-2 text-body-sm text-error">
+                {errors.spaceType.message}
+              </p>
             ) : null}
           </label>
         )}
       />
 
       <label className="block glass-card p-4">
-        <span className="mb-3 block text-body-sm-strong text-ink">توضیحات تکمیلی</span>
+        <span className="mb-3 block text-body-sm-strong text-ink">
+          توضیحات تکمیلی
+        </span>
         <textarea
           rows={5}
           placeholder="در صورت نیاز، توضیحات بیشتری بنویسید..."
           className="min-h-32 w-full resize-y rounded-md border border-stone bg-canvas px-4 py-3 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30"
-          {...register('description', {
+          {...register("description", {
             onChange: clearMessages,
           })}
         />
         {errors.description?.message ? (
-          <p className="mt-2 text-body-sm text-error">{errors.description.message}</p>
+          <p className="mt-2 text-body-sm text-error">
+            {errors.description.message}
+          </p>
         ) : null}
       </label>
 
@@ -178,8 +190,8 @@ export function CleaningRequestForm() {
         disabled={isSubmitting}
         className="mt-1 flex h-11 w-full items-center justify-center rounded-md bg-primary text-button-md text-on-primary transition-colors hover:bg-primary-pressed disabled:cursor-not-allowed disabled:bg-surface-card disabled:text-ash"
       >
-        {isSubmitting ? 'در حال ثبت...' : 'ارسال درخواست نظافت'}
+        {isSubmitting ? "در حال ثبت..." : "ارسال درخواست نظافت"}
       </button>
     </form>
-  )
+  );
 }

@@ -1,14 +1,14 @@
-import complaintImage from '@media/complaint.png'
-import ideaImage from '@media/idea.png'
-import { useNavigate } from 'react-router-dom'
+import complaintImage from "@media/complaint.png";
+import ideaImage from "@media/idea.png";
+import { useNavigate } from "react-router-dom";
 
-import { BottomNav } from '../../components/layout/BottomNav'
+import { BottomNav } from "../../components/layout/BottomNav";
 
 interface OptionCardProps {
-  title: string
-  description: string
-  image: string
-  onClick: () => void
+  title: string;
+  description: string;
+  image: string;
+  onClick: () => void;
 }
 
 function OptionCard({ title, description, image, onClick }: OptionCardProps) {
@@ -31,11 +31,11 @@ function OptionCard({ title, description, image, onClick }: OptionCardProps) {
         ‹
       </span>
     </button>
-  )
+  );
 }
 
 export function IdeasComplaintsMenuPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div className="page-gradient min-h-screen pb-32">
@@ -60,18 +60,18 @@ export function IdeasComplaintsMenuPage() {
             title="ثبت ایده جدید"
             description="ایده‌ها و نظرات سازنده خود را با ما به اشتراک بگذارید."
             image={ideaImage}
-            onClick={() => navigate('/ideas')}
+            onClick={() => navigate("/ideas")}
           />
           <OptionCard
             title="ثبت شکایت جدید"
             description="موضوع شکایت خود را ثبت کنید تا در سریع‌ترین زمان بررسی شود."
             image={complaintImage}
-            onClick={() => navigate('/complaints')}
+            onClick={() => navigate("/complaints")}
           />
         </div>
       </main>
 
       <BottomNav activeTab="home" />
     </div>
-  )
+  );
 }

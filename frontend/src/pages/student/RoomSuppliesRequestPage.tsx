@@ -1,10 +1,10 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
-import { ItemRequestForm } from '../../components/item/ItemRequestForm'
-import { BottomNav } from '../../components/layout/BottomNav'
+import { ItemRequestForm } from "../../components/item/ItemRequestForm";
+import { BottomNav } from "../../components/layout/BottomNav";
 
 export function RoomSuppliesRequestPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div className="page-gradient min-h-screen pb-28">
@@ -38,5 +38,5 @@ export function RoomSuppliesRequestPage() {
 
       <BottomNav activeTab="home" />
     </div>
-  )
+  );
 }

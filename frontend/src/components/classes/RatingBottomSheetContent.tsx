@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
-import type { StudentClassItem } from '../../types/class'
+import type { StudentClassItem } from "../../types/class";
 
 interface RatingBottomSheetContentProps {
-  classItem: StudentClassItem
-  isSubmitting: boolean
-  error: string | null
-  onSubmit: (score: number, comment: string) => Promise<void>
+  classItem: StudentClassItem;
+  isSubmitting: boolean;
+  error: string | null;
+  onSubmit: (score: number, comment: string) => Promise<void>;
 }
 
-const STAR_VALUES = [1, 2, 3, 4, 5]
+const STAR_VALUES = [1, 2, 3, 4, 5];
 
 export function RatingBottomSheetContent({
   classItem,
@@ -17,27 +17,27 @@ export function RatingBottomSheetContent({
   error,
   onSubmit,
 }: RatingBottomSheetContentProps) {
-  const [score, setScore] = useState<number>(0)
-  const [comment, setComment] = useState('')
-  const [localError, setLocalError] = useState<string | null>(null)
+  const [score, setScore] = useState<number>(0);
+  const [comment, setComment] = useState("");
+  const [localError, setLocalError] = useState<string | null>(null);
 
   useEffect(() => {
-    setScore(0)
-    setComment('')
-    setLocalError(null)
-  }, [classItem.id])
+    setScore(0);
+    setComment("");
+    setLocalError(null);
+  }, [classItem.id]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    event.preventDefault();
 
     if (score < 1 || score > 5) {
-      setLocalError('لطفاً یک امتیاز بین ۱ تا ۵ انتخاب کنید.')
-      return
+      setLocalError("لطفاً یک امتیاز بین ۱ تا ۵ انتخاب کنید.");
+      return;
     }
 
-    setLocalError(null)
-    await onSubmit(score, comment)
-  }
+    setLocalError(null);
+    await onSubmit(score, comment);
+  };
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
@@ -47,23 +47,23 @@ export function RatingBottomSheetContent({
 
         <div className="mt-3 flex items-center justify-center gap-1">
           {STAR_VALUES.map((value) => {
-            const isActive = value <= score
+            const isActive = value <= score;
             return (
               <button
                 key={value}
                 type="button"
                 onClick={() => {
-                  setScore(value)
-                  setLocalError(null)
+                  setScore(value);
+                  setLocalError(null);
                 }}
                 className={`text-heading-xl leading-none transition-transform active:scale-95 ${
-                  isActive ? 'text-warning' : 'text-stone'
+                  isActive ? "text-warning" : "text-stone"
                 }`}
                 aria-label={`امتیاز ${value}`}
               >
                 ★
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -99,8 +99,8 @@ export function RatingBottomSheetContent({
         {isSubmitting ? (
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
         ) : null}
-        <span>{isSubmitting ? 'در حال ثبت...' : 'ثبت امتیاز'}</span>
+        <span>{isSubmitting ? "در حال ثبت..." : "ثبت امتیاز"}</span>
       </button>
     </form>
-  )
+  );
 }

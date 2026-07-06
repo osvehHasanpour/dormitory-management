@@ -1,25 +1,25 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { ClassCard } from '../../components/classes/ClassCard'
-import { ClassCardSkeleton } from '../../components/classes/ClassCardSkeleton'
-import { ClassesEmptyState } from '../../components/classes/ClassesEmptyState'
-import { ClassTabs } from '../../components/classes/ClassTabs'
-import { RatingBottomSheetContent } from '../../components/classes/RatingBottomSheetContent'
-import { BottomNav } from '../../components/layout/BottomNav'
-import { BottomSheet } from '../../components/ui/BottomSheet'
-import { Toast } from '../../components/ui/Toast'
-import { useClassRegistration } from '../../hooks/useClassRegistration'
-import type { ClassesTabValue, StudentClassItem } from '../../types/class'
+import { ClassCard } from "../../components/classes/ClassCard";
+import { ClassCardSkeleton } from "../../components/classes/ClassCardSkeleton";
+import { ClassesEmptyState } from "../../components/classes/ClassesEmptyState";
+import { ClassTabs } from "../../components/classes/ClassTabs";
+import { RatingBottomSheetContent } from "../../components/classes/RatingBottomSheetContent";
+import { BottomNav } from "../../components/layout/BottomNav";
+import { BottomSheet } from "../../components/ui/BottomSheet";
+import { Toast } from "../../components/ui/Toast";
+import { useClassRegistration } from "../../hooks/useClassRegistration";
+import type { ClassesTabValue, StudentClassItem } from "../../types/class";
 
 const sectionTitles: Record<ClassesTabValue, string> = {
-  active: 'کلاس‌های قابل ثبت‌نام',
-  enrolled: 'کلاس‌های ثبت‌نام‌شده من',
-  ended: 'کلاس‌های پایان‌یافته',
-}
+  active: "کلاس‌های قابل ثبت‌نام",
+  enrolled: "کلاس‌های ثبت‌نام‌شده من",
+  ended: "کلاس‌های پایان‌یافته",
+};
 
 export function ClassRegistrationPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     activeTab,
     setActiveTab,
@@ -33,26 +33,30 @@ export function ClassRegistrationPage() {
     cancelEnrollment,
     submitRatingForClass,
     isActionPending,
-  } = useClassRegistration()
-  const [selectedRatingClass, setSelectedRatingClass] = useState<StudentClassItem | null>(null)
+  } = useClassRegistration();
+  const [selectedRatingClass, setSelectedRatingClass] =
+    useState<StudentClassItem | null>(null);
 
   const handleTabChange = (tab: ClassesTabValue) => {
-    clearFeedback()
-    setActiveTab(tab)
-  }
+    clearFeedback();
+    setActiveTab(tab);
+  };
 
   const handleSubmitRating = async (score: number, comment: string) => {
     if (!selectedRatingClass) {
-      return
+      return;
     }
 
-    const success = await submitRatingForClass(selectedRatingClass.id, { score, comment })
+    const success = await submitRatingForClass(selectedRatingClass.id, {
+      score,
+      comment,
+    });
     if (success) {
-      setSelectedRatingClass(null)
+      setSelectedRatingClass(null);
     }
-  }
+  };
 
-  const toastMessage = error ?? feedbackMessage
+  const toastMessage = error ?? feedbackMessage;
 
   return (
     <div className="page-gradient min-h-screen pb-32">
@@ -76,15 +80,21 @@ export function ClassRegistrationPage() {
         <ClassTabs activeTab={activeTab} onChange={handleTabChange} />
 
         <section className="mt-5">
-          <h2 className="text-heading-lg text-mute">{sectionTitles[activeTab]}</h2>
+          <h2 className="text-heading-lg text-mute">
+            {sectionTitles[activeTab]}
+          </h2>
         </section>
 
         <section className="mt-4 space-y-3">
           {isLoading
-            ? Array.from({ length: 3 }, (_, index) => <ClassCardSkeleton key={index} />)
+            ? Array.from({ length: 3 }, (_, index) => (
+                <ClassCardSkeleton key={index} />
+              ))
             : null}
 
-          {!isLoading && classes.length === 0 ? <ClassesEmptyState tab={activeTab} /> : null}
+          {!isLoading && classes.length === 0 ? (
+            <ClassesEmptyState tab={activeTab} />
+          ) : null}
 
           {!isLoading
             ? classes.map((classItem) => (
@@ -93,10 +103,10 @@ export function ClassRegistrationPage() {
                   classItem={classItem}
                   tab={activeTab}
                   onRegister={(classId) => {
-                    void registerInClass(classId)
+                    void registerInClass(classId);
                   }}
                   onCancel={(classId) => {
-                    void cancelEnrollment(classId)
+                    void cancelEnrollment(classId);
                   }}
                   onRate={setSelectedRatingClass}
                   isActionPending={isActionPending}
@@ -119,7 +129,7 @@ export function ClassRegistrationPage() {
         {selectedRatingClass ? (
           <RatingBottomSheetContent
             classItem={selectedRatingClass}
-            isSubmitting={isActionPending('rate', selectedRatingClass.id)}
+            isSubmitting={isActionPending("rate", selectedRatingClass.id)}
             error={null}
             onSubmit={handleSubmitRating}
           />
@@ -128,5 +138,5 @@ export function ClassRegistrationPage() {
 
       <BottomNav activeTab="home" />
     </div>
-  )
+  );
 }

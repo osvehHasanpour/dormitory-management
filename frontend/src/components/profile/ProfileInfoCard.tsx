@@ -1,12 +1,16 @@
-import type { LucideIcon } from 'lucide-react'
+import type { LucideIcon } from "lucide-react";
 
 interface ProfileInfoCardProps {
-  icon: LucideIcon
-  label: string
-  value: string
+  icon: LucideIcon;
+  label: string;
+  value: string;
 }
 
-export function ProfileInfoCard({ icon: Icon, label, value }: ProfileInfoCardProps) {
+export function ProfileInfoCard({
+  icon: Icon,
+  label,
+  value,
+}: ProfileInfoCardProps) {
   return (
     <div className="flex items-center gap-4 glass-card rounded-md p-4">
       <div
@@ -21,5 +25,5 @@ export function ProfileInfoCard({ icon: Icon, label, value }: ProfileInfoCardPro
         <p className="mt-1 text-body-md text-body-text">{value}</p>
       </div>
     </div>
-  )
+  );
 }

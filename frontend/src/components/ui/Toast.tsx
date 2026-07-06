@@ -1,6 +1,6 @@
 interface ToastProps {
-  message: string
-  onRetry?: () => void
+  message: string;
+  onRetry?: () => void;
 }
 
 export function Toast({ message, onRetry }: ToastProps) {
@@ -20,5 +20,5 @@ export function Toast({ message, onRetry }: ToastProps) {
         </button>
       ) : null}
     </div>
-  )
+  );
 }

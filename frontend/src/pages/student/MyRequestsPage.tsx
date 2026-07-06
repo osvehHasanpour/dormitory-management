@@ -1,20 +1,24 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
-import { BottomNav } from '../../components/layout/BottomNav'
-import { RequestCard } from '../../components/requests/RequestCard'
-import { RequestCardSkeleton } from '../../components/requests/RequestCardSkeleton'
-import { RequestDetailSheet } from '../../components/requests/RequestDetailSheet'
-import { RequestEmptyState } from '../../components/requests/RequestEmptyState'
-import { RequestFilterTabs } from '../../components/requests/RequestFilterTabs'
-import { BottomSheet } from '../../components/ui/BottomSheet'
-import { Toast } from '../../components/ui/Toast'
-import { useMyRequests } from '../../hooks/useMyRequests'
-import { useRequestDetail } from '../../hooks/useRequestDetail'
-import { getRequestDetailTitle, getRequestDetailSubtitle } from '../../utils/requestHelpers'
+import { BottomNav } from "../../components/layout/BottomNav";
+import { RequestCard } from "../../components/requests/RequestCard";
+import { RequestCardSkeleton } from "../../components/requests/RequestCardSkeleton";
+import { RequestDetailSheet } from "../../components/requests/RequestDetailSheet";
+import { RequestEmptyState } from "../../components/requests/RequestEmptyState";
+import { RequestFilterTabs } from "../../components/requests/RequestFilterTabs";
+import { BottomSheet } from "../../components/ui/BottomSheet";
+import { Toast } from "../../components/ui/Toast";
+import { useMyRequests } from "../../hooks/useMyRequests";
+import { useRequestDetail } from "../../hooks/useRequestDetail";
+import {
+  getRequestDetailTitle,
+  getRequestDetailSubtitle,
+} from "../../utils/requestHelpers";
 
 export function MyRequestsPage() {
-  const navigate = useNavigate()
-  const { requests, isLoading, error, activeFilter, setActiveFilter, retry } = useMyRequests()
+  const navigate = useNavigate();
+  const { requests, isLoading, error, activeFilter, setActiveFilter, retry } =
+    useMyRequests();
   const {
     detail,
     preview,
@@ -24,11 +28,15 @@ export function MyRequestsPage() {
     openDetail,
     closeDetail,
     retry: retryDetail,
-  } = useRequestDetail()
+  } = useRequestDetail();
 
-  const displaySource = detail ?? preview
-  const sheetTitle = displaySource ? getRequestDetailTitle(displaySource) : 'جزئیات درخواست'
-  const sheetSubtitle = displaySource ? getRequestDetailSubtitle(displaySource) : null
+  const displaySource = detail ?? preview;
+  const sheetTitle = displaySource
+    ? getRequestDetailTitle(displaySource)
+    : "جزئیات درخواست";
+  const sheetSubtitle = displaySource
+    ? getRequestDetailSubtitle(displaySource)
+    : null;
 
   return (
     <div className="page-gradient min-h-screen pb-28">
@@ -48,11 +56,16 @@ export function MyRequestsPage() {
           <h1 className="text-heading-xl text-ink">درخواست‌های من</h1>
         </section>
 
-        <RequestFilterTabs activeFilter={activeFilter} onChange={setActiveFilter} />
+        <RequestFilterTabs
+          activeFilter={activeFilter}
+          onChange={setActiveFilter}
+        />
 
         <section className="mt-6 space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 lg:grid-cols-2">
           {isLoading
-            ? Array.from({ length: 4 }, (_, index) => <RequestCardSkeleton key={index} />)
+            ? Array.from({ length: 4 }, (_, index) => (
+                <RequestCardSkeleton key={index} />
+              ))
             : null}
 
           {!isLoading && !error && requests.length === 0 ? (
@@ -63,14 +76,20 @@ export function MyRequestsPage() {
 
           {!isLoading && !error
             ? requests.map((request) => (
-                <RequestCard key={request.id} request={request} onClick={openDetail} />
+                <RequestCard
+                  key={request.id}
+                  request={request}
+                  onClick={openDetail}
+                />
               ))
             : null}
         </section>
       </main>
 
       {error ? <Toast message={error} onRetry={retry} /> : null}
-      {detailError ? <Toast message={detailError} onRetry={retryDetail} /> : null}
+      {detailError ? (
+        <Toast message={detailError} onRetry={retryDetail} />
+      ) : null}
 
       <BottomSheet
         isOpen={selectedId !== null}
@@ -89,5 +108,5 @@ export function MyRequestsPage() {
 
       <BottomNav activeTab="requests" />
     </div>
-  )
+  );
 }

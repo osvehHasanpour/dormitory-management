@@ -1,25 +1,28 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState } from "react";
 
 interface AnnouncementIconProps {
-  className?: string
-  alt?: string
-  preferredSrc?: string | null
+  className?: string;
+  alt?: string;
+  preferredSrc?: string | null;
 }
 
-const FALLBACK_ICON_SOURCES = ['/media/announcement-megaphone.png', '/media/megaphone.png']
+const FALLBACK_ICON_SOURCES = [
+  "/media/announcement-megaphone.png",
+  "/media/megaphone.png",
+];
 
 export function AnnouncementIcon({
-  className = 'h-10 w-10',
-  alt = 'آیکون اطلاعیه',
+  className = "h-10 w-10",
+  alt = "آیکون اطلاعیه",
   preferredSrc = null,
 }: AnnouncementIconProps) {
   const sources = useMemo(() => {
     const orderedSources = [preferredSrc, ...FALLBACK_ICON_SOURCES].filter(
       (source): source is string => Boolean(source && source.trim()),
-    )
-    return Array.from(new Set(orderedSources))
-  }, [preferredSrc])
-  const [activeSourceIndex, setActiveSourceIndex] = useState(0)
+    );
+    return Array.from(new Set(orderedSources));
+  }, [preferredSrc]);
+  const [activeSourceIndex, setActiveSourceIndex] = useState(0);
 
   if (sources.length > 0 && activeSourceIndex < sources.length) {
     return (
@@ -29,7 +32,7 @@ export function AnnouncementIcon({
         className={className}
         onError={() => setActiveSourceIndex((value) => value + 1)}
       />
-    )
+    );
   }
 
   return (
@@ -59,5 +62,5 @@ export function AnnouncementIcon({
         strokeLinejoin="round"
       />
     </svg>
-  )
+  );
 }

@@ -1,15 +1,15 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
-import { IdeaCard } from '../../components/idea/IdeaCard'
-import { IdeaCardSkeleton } from '../../components/idea/IdeaCardSkeleton'
-import { IdeasEmptyState } from '../../components/idea/IdeasEmptyState'
-import { BottomNav } from '../../components/layout/BottomNav'
-import { Toast } from '../../components/ui/Toast'
-import { useIdeasFeed } from '../../hooks/useIdeasFeed'
+import { IdeaCard } from "../../components/idea/IdeaCard";
+import { IdeaCardSkeleton } from "../../components/idea/IdeaCardSkeleton";
+import { IdeasEmptyState } from "../../components/idea/IdeasEmptyState";
+import { BottomNav } from "../../components/layout/BottomNav";
+import { Toast } from "../../components/ui/Toast";
+import { useIdeasFeed } from "../../hooks/useIdeasFeed";
 
 export function ViewIdeasPage() {
-  const navigate = useNavigate()
-  const { ideas, isLoading, error, votingIds, retry, vote } = useIdeasFeed()
+  const navigate = useNavigate();
+  const { ideas, isLoading, error, votingIds, retry, vote } = useIdeasFeed();
 
   return (
     <div className="page-gradient min-h-screen pb-28">
@@ -31,10 +31,14 @@ export function ViewIdeasPage() {
 
         <section className="space-y-3">
           {isLoading
-            ? Array.from({ length: 4 }, (_, index) => <IdeaCardSkeleton key={index} />)
+            ? Array.from({ length: 4 }, (_, index) => (
+                <IdeaCardSkeleton key={index} />
+              ))
             : null}
 
-          {!isLoading && !error && ideas.length === 0 ? <IdeasEmptyState /> : null}
+          {!isLoading && !error && ideas.length === 0 ? (
+            <IdeasEmptyState />
+          ) : null}
 
           {!isLoading && !error
             ? ideas.map((idea) => (
@@ -53,5 +57,5 @@ export function ViewIdeasPage() {
 
       <BottomNav activeTab="home" />
     </div>
-  )
+  );
 }

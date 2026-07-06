@@ -1,4 +1,4 @@
-import { Skeleton } from '../ui/Skeleton'
+import { Skeleton } from "../ui/Skeleton";
 
 export function IdeaCardSkeleton() {
   return (
@@ -17,5 +17,5 @@ export function IdeaCardSkeleton() {
         <Skeleton className="h-9 w-20 rounded-full" />
       </div>
     </div>
-  )
+  );
 }
