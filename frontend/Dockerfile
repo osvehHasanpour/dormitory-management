@@ -23,7 +23,9 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
+
 RUN npm run build
+
 
 # ─── Stage 3: Production (Nginx) ──────────────────────────────────────
 FROM nginx:alpine AS production

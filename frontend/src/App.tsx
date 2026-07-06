@@ -1,121 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { Navigate, Route, Routes } from 'react-router-dom'
+
+import { LoginPage } from './pages/auth/LoginPage'
+import { DashboardPage } from './pages/student/DashboardPage'
+import { CleaningRequestPage } from './pages/student/CleaningRequestPage'
+import { MaintenanceReportPage } from './pages/student/MaintenanceReportPage'
+import { BoothRequestPage } from './pages/student/BoothRequestPage'
+import { ClassRegistrationPage } from './pages/student/ClassRegistrationPage'
+import { MyRequestsPage } from './pages/student/MyRequestsPage'
+import { ProfilePage } from './pages/student/ProfilePage'
+import { RoomSuppliesRequestPage } from './pages/student/RoomSuppliesRequestPage'
+import { NewIdeaPage } from './pages/student/NewIdeaPage'
+import { NewComplaintPage } from './pages/student/NewComplaintPage'
+import { IdeasComplaintsMenuPage } from './pages/student/IdeasComplaintsMenuPage'
+import { ViewIdeasPage } from './pages/student/ViewIdeasPage'
+import { AnnouncementsPage } from './pages/student/AnnouncementsPage'
+import { CreateAnnouncementPage } from './pages/supervisor/CreateAnnouncementPage'
+import { SupervisorAnnouncementsPage } from './pages/supervisor/SupervisorAnnouncementsPage'
+import { SupervisorDashboardPage } from './pages/supervisor/SupervisorDashboardPage'
+import { SupervisorIdeasComplaintsPage } from './pages/supervisor/SupervisorIdeasComplaintsPage'
+import { SupervisorRequestsPage } from './pages/supervisor/SupervisorRequestsPage'
+import { SupervisorProfilePage } from './pages/supervisor/SupervisorProfilePage'
+
+function PagePlaceholder({ title }: { title: string }) {
+  return (
+    <main className="page-gradient flex min-h-screen items-center justify-center px-4 pb-24">
+      <p className="text-heading-xl text-ink">{title}</p>
+    </main>
+  )
+}
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/maintenance-request" element={<MaintenanceReportPage />} />
+      <Route path="/cleaning-request" element={<CleaningRequestPage />} />
+      <Route path="/item-request" element={<RoomSuppliesRequestPage />} />
+      <Route path="/announcements" element={<AnnouncementsPage />} />
+      <Route path="/booth-request" element={<BoothRequestPage />} />
+      <Route path="/class-registration" element={<ClassRegistrationPage />} />
+      <Route path="/ideas-complaints" element={<IdeasComplaintsMenuPage />} />
+      <Route path="/view-ideas" element={<ViewIdeasPage />} />
+      <Route path="/ideas" element={<NewIdeaPage />} />
+      <Route path="/complaints" element={<NewComplaintPage />} />
+      <Route path="/my-requests" element={<MyRequestsPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/supervisor/dashboard" element={<SupervisorDashboardPage />} />
+      <Route path="/supervisor/profile" element={<SupervisorProfilePage />} />
+      <Route path="/supervisor/announcements" element={<SupervisorAnnouncementsPage />} />
+      <Route path="/supervisor/announcements/new" element={<CreateAnnouncementPage />} />
+      <Route path="/supervisor/requests" element={<SupervisorRequestsPage />} />
+      <Route
+        path="/supervisor/classes"
+        element={<PagePlaceholder title="مدیریت کلاس‌ها" />}
+      />
+      <Route path="/supervisor/ideas-complaints" element={<SupervisorIdeasComplaintsPage />} />
+      <Route path="/admin/dashboard" element={<PagePlaceholder title="داشبورد مدیر" />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
   )
 }
 
