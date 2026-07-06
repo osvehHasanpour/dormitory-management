@@ -1,66 +1,69 @@
-import { CheckCircle2, Clock3, XCircle } from 'lucide-react'
+import { CheckCircle2, Clock3, XCircle } from "lucide-react";
 
-import type { TimelineStep } from '../../types/request'
-import { formatPersianDateShort } from '../../utils/formatRelativeDate'
+import type { TimelineStep } from "../../types/request";
+import { formatPersianDateShort } from "../../utils/formatRelativeDate";
 
 interface RequestTimelineProps {
-  steps: TimelineStep[]
+  steps: TimelineStep[];
 }
 
-const dotClasses: Record<TimelineStep['state'], string> = {
-  pending: 'border-stone bg-canvas text-ash',
-  active: 'border-primary bg-primary text-on-primary scale-110',
-  completed: 'border-success-deep bg-success-pale text-success-deep',
-  approved: 'border-success-deep bg-success-deep text-on-primary scale-110',
-  rejected: 'border-error bg-error text-on-primary scale-110',
-}
+const dotClasses: Record<TimelineStep["state"], string> = {
+  pending: "border-stone bg-canvas text-ash",
+  active: "border-primary bg-primary text-on-primary scale-110",
+  completed: "border-success-deep bg-success-pale text-success-deep",
+  approved: "border-success-deep bg-success-deep text-on-primary scale-110",
+  rejected: "border-error bg-error text-on-primary scale-110",
+};
 
-const lineClasses: Record<TimelineStep['state'], string> = {
-  pending: 'bg-hairline',
-  active: 'bg-primary',
-  completed: 'bg-success-deep/40',
-  approved: 'bg-success-deep/40',
-  rejected: 'bg-error/40',
-}
+const lineClasses: Record<TimelineStep["state"], string> = {
+  pending: "bg-hairline",
+  active: "bg-primary",
+  completed: "bg-success-deep/40",
+  approved: "bg-success-deep/40",
+  rejected: "bg-error/40",
+};
 
 function TimelineIcon({ step }: { step: TimelineStep }) {
-  if (step.state === 'rejected') {
-    return <XCircle className="h-3.5 w-3.5" strokeWidth={2.25} />
+  if (step.state === "rejected") {
+    return <XCircle className="h-3.5 w-3.5" strokeWidth={2.25} />;
   }
 
-  if (step.state === 'approved' || (step.id === 'completed' && step.state !== 'pending')) {
-    return <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2.25} />
+  if (
+    step.state === "approved" ||
+    (step.id === "completed" && step.state !== "pending")
+  ) {
+    return <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2.25} />;
   }
 
-  if (step.state === 'completed' || step.state === 'active') {
-    return step.id === 'decision' ? (
+  if (step.state === "completed" || step.state === "active") {
+    return step.id === "decision" ? (
       <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2.25} />
     ) : (
       <Clock3 className="h-3.5 w-3.5" strokeWidth={2.25} />
-    )
+    );
   }
 
-  return <Clock3 className="h-3.5 w-3.5" strokeWidth={2.25} />
+  return <Clock3 className="h-3.5 w-3.5" strokeWidth={2.25} />;
 }
 
 export function RequestTimeline({ steps }: RequestTimelineProps) {
   return (
     <ol className="glass-card space-y-0 overflow-hidden px-4 py-2">
       {steps.map((step, index) => {
-        const isLast = index === steps.length - 1
+        const isLast = index === steps.length - 1;
         const connectorActive =
-          step.state === 'completed' ||
-          step.state === 'active' ||
-          step.state === 'approved' ||
-          step.state === 'rejected'
+          step.state === "completed" ||
+          step.state === "active" ||
+          step.state === "approved" ||
+          step.state === "rejected";
         const connectorClass =
-          step.state === 'rejected'
+          step.state === "rejected"
             ? lineClasses.rejected
-            : step.state === 'approved'
+            : step.state === "approved"
               ? lineClasses.approved
               : connectorActive
                 ? lineClasses.completed
-                : lineClasses.pending
+                : lineClasses.pending;
 
         return (
           <li key={step.id} className="flex gap-3">
@@ -81,24 +84,26 @@ export function RequestTimeline({ steps }: RequestTimelineProps) {
 
             <div
               className={`pb-5 pt-0.5 transition-opacity duration-300 ${
-                step.state === 'pending' ? 'opacity-50' : 'opacity-100'
+                step.state === "pending" ? "opacity-50" : "opacity-100"
               }`}
             >
               <p
                 className={`text-body-sm-strong ${
-                  step.state === 'rejected'
-                    ? 'text-error'
-                    : step.state === 'approved' || step.state === 'completed'
-                      ? 'text-success-deep'
-                      : step.state === 'active'
-                        ? 'text-ink'
-                        : 'text-body-text'
+                  step.state === "rejected"
+                    ? "text-error"
+                    : step.state === "approved" || step.state === "completed"
+                      ? "text-success-deep"
+                      : step.state === "active"
+                        ? "text-ink"
+                        : "text-body-text"
                 }`}
               >
                 {step.label}
               </p>
               {step.date ? (
-                <p className="mt-1 text-caption-sm text-mute">{formatPersianDateShort(step.date)}</p>
+                <p className="mt-1 text-caption-sm text-mute">
+                  {formatPersianDateShort(step.date)}
+                </p>
               ) : (
                 <p className="mt-1 text-caption-sm text-ash">در انتظار</p>
               )}
@@ -109,8 +114,8 @@ export function RequestTimeline({ steps }: RequestTimelineProps) {
               ) : null}
             </div>
           </li>
-        )
+        );
       })}
     </ol>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { Skeleton } from '../ui/Skeleton'
+import { Skeleton } from "../ui/Skeleton";
 
 export function SupervisorRequestCardSkeleton() {
   return (
@@ -10,5 +10,5 @@ export function SupervisorRequestCardSkeleton() {
       <Skeleton className="h-4 w-40" />
       <Skeleton className="h-3 w-28" />
     </div>
-  )
+  );
 }

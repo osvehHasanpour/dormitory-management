@@ -1,11 +1,11 @@
-import complaintHero from '@media/complaint.png'
-import { useNavigate } from 'react-router-dom'
+import complaintHero from "@media/complaint.png";
+import { useNavigate } from "react-router-dom";
 
-import { ComplaintRequestForm } from '../../components/complaint/ComplaintRequestForm'
-import { BottomNav } from '../../components/layout/BottomNav'
+import { ComplaintRequestForm } from "../../components/complaint/ComplaintRequestForm";
+import { BottomNav } from "../../components/layout/BottomNav";
 
 export function NewComplaintPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div className="page-gradient min-h-screen pb-32">
@@ -38,5 +38,5 @@ export function NewComplaintPage() {
 
       <BottomNav activeTab="home" />
     </div>
-  )
+  );
 }

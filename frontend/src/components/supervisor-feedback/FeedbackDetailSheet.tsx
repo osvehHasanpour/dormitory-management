@@ -1,13 +1,13 @@
-import { useEffect } from 'react'
-import type { UseFormReturn } from 'react-hook-form'
+import { useEffect } from "react";
+import type { UseFormReturn } from "react-hook-form";
 
-import { feedbackTypeBadgeConfig } from '../../data/supervisorFeedbackItems'
+import { feedbackTypeBadgeConfig } from "../../data/supervisorFeedbackItems";
 import type {
   FeedbackResponseFormValues,
   FeedbackStatusAction,
   SupervisorFeedbackItem,
-} from '../../types/supervisorFeedback'
-import { formatPersianDateShort } from '../../utils/formatRelativeDate'
+} from "../../types/supervisorFeedback";
+import { formatPersianDateShort } from "../../utils/formatRelativeDate";
 import {
   canApproveIdea,
   canMarkReviewed,
@@ -16,28 +16,28 @@ import {
   canRespond,
   getFeedbackStatusBadgeVariant,
   hasAvailableFeedbackActions,
-} from '../../utils/supervisorFeedbackHelpers'
-import { Skeleton } from '../ui/Skeleton'
-import { StatusBadge } from '../ui/StatusBadge'
-import { Toast } from '../ui/Toast'
+} from "../../utils/supervisorFeedbackHelpers";
+import { Skeleton } from "../ui/Skeleton";
+import { StatusBadge } from "../ui/StatusBadge";
+import { Toast } from "../ui/Toast";
 
 interface FeedbackDetailSheetProps {
-  item: SupervisorFeedbackItem | null
-  preview: SupervisorFeedbackItem | null
-  isLoading: boolean
-  error: string | null
-  isSubmitting: boolean
-  toastMessage: string | null
-  form: UseFormReturn<FeedbackResponseFormValues>
-  onRetry: () => void
-  onClearMessages: () => void
-  onStatusAction: (action: FeedbackStatusAction) => void
-  onApproveIdea: () => void
-  onRejectIdea: () => void
+  item: SupervisorFeedbackItem | null;
+  preview: SupervisorFeedbackItem | null;
+  isLoading: boolean;
+  error: string | null;
+  isSubmitting: boolean;
+  toastMessage: string | null;
+  form: UseFormReturn<FeedbackResponseFormValues>;
+  onRetry: () => void;
+  onClearMessages: () => void;
+  onStatusAction: (action: FeedbackStatusAction) => void;
+  onApproveIdea: () => void;
+  onRejectIdea: () => void;
 }
 
 const textareaClassName =
-  'min-h-28 w-full resize-y rounded-md border border-stone bg-canvas px-4 py-3 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30'
+  "min-h-28 w-full resize-y rounded-md border border-stone bg-canvas px-4 py-3 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30";
 
 function DetailLoadingSkeleton() {
   return (
@@ -51,7 +51,7 @@ function DetailLoadingSkeleton() {
       </div>
       <Skeleton className="h-28 w-full rounded-lg" />
     </div>
-  )
+  );
 }
 
 function DetailInfoRow({ label, value }: { label: string; value: string }) {
@@ -60,7 +60,7 @@ function DetailInfoRow({ label, value }: { label: string; value: string }) {
       <p className="text-body-sm-strong text-mute">{label}</p>
       <p className="mt-1 whitespace-pre-wrap text-body-md text-ink">{value}</p>
     </div>
-  )
+  );
 }
 
 export function FeedbackDetailSheet({
@@ -77,19 +77,22 @@ export function FeedbackDetailSheet({
   onApproveIdea,
   onRejectIdea,
 }: FeedbackDetailSheetProps) {
-  const display = item ?? preview
-  const { register, formState: { errors } } = form
+  const display = item ?? preview;
+  const {
+    register,
+    formState: { errors },
+  } = form;
 
   useEffect(() => {
     if (item?.response_text) {
-      form.reset({ response_text: item.response_text })
+      form.reset({ response_text: item.response_text });
     } else if (item && !item.response_text) {
-      form.reset({ response_text: '' })
+      form.reset({ response_text: "" });
     }
-  }, [form, item])
+  }, [form, item]);
 
   if (isLoading && !display) {
-    return <DetailLoadingSkeleton />
+    return <DetailLoadingSkeleton />;
   }
 
   if (error && !display) {
@@ -104,18 +107,19 @@ export function FeedbackDetailSheet({
           تلاش مجدد
         </button>
       </div>
-    )
+    );
   }
 
   if (!display) {
-    return null
+    return null;
   }
 
-  const typeConfig = feedbackTypeBadgeConfig[display.type]
-  const source = item ?? display
-  const showComplaintActions = source.type === 'complaint' || source.type === 'suggestion'
-  const showIdeaActions = source.type === 'idea'
-  const showActions = item != null && hasAvailableFeedbackActions(item)
+  const typeConfig = feedbackTypeBadgeConfig[display.type];
+  const source = item ?? display;
+  const showComplaintActions =
+    source.type === "complaint" || source.type === "suggestion";
+  const showIdeaActions = source.type === "idea";
+  const showActions = item != null && hasAvailableFeedbackActions(item);
 
   return (
     <div className="space-y-4">
@@ -130,7 +134,9 @@ export function FeedbackDetailSheet({
           variant={getFeedbackStatusBadgeVariant(source.status)}
         />
         {source.is_sla_overdue ? (
-          <span className="text-caption-md text-error">گذشته از مهلت ۷۲ ساعته</span>
+          <span className="text-caption-md text-error">
+            گذشته از مهلت ۷۲ ساعته
+          </span>
         ) : null}
       </div>
 
@@ -144,13 +150,19 @@ export function FeedbackDetailSheet({
           </>
         ) : null}
         <div className="glass-divider" />
-        <DetailInfoRow label="تاریخ ثبت" value={formatPersianDateShort(source.created_at)} />
+        <DetailInfoRow
+          label="تاریخ ثبت"
+          value={formatPersianDateShort(source.created_at)}
+        />
         <div className="glass-divider" />
         <DetailInfoRow label="شرح کامل" value={source.description} />
         {source.response_text ? (
           <>
             <div className="glass-divider" />
-            <DetailInfoRow label="پاسخ قبلی سرپرست" value={source.response_text} />
+            <DetailInfoRow
+              label="پاسخ قبلی سرپرست"
+              value={source.response_text}
+            />
           </>
         ) : null}
       </div>
@@ -175,16 +187,20 @@ export function FeedbackDetailSheet({
       {!isLoading && showActions ? (
         <div className="space-y-4">
           <label className="block">
-            <span className="mb-2 block text-body-sm-strong text-ink">پاسخ سرپرست</span>
+            <span className="mb-2 block text-body-sm-strong text-ink">
+              پاسخ سرپرست
+            </span>
             <textarea
               rows={5}
               placeholder="پاسخ یا توضیح خود را بنویسید..."
               className={textareaClassName}
               disabled={isSubmitting}
-              {...register('response_text', { onChange: onClearMessages })}
+              {...register("response_text", { onChange: onClearMessages })}
             />
             {errors.response_text?.message ? (
-              <p className="mt-2 text-body-sm text-error">{errors.response_text.message}</p>
+              <p className="mt-2 text-body-sm text-error">
+                {errors.response_text.message}
+              </p>
             ) : null}
           </label>
 
@@ -194,7 +210,7 @@ export function FeedbackDetailSheet({
                 <button
                   type="button"
                   disabled={isSubmitting}
-                  onClick={() => onStatusAction('reviewed')}
+                  onClick={() => onStatusAction("reviewed")}
                   className="flex h-10 flex-1 items-center justify-center rounded-md bg-[#ede4f7] px-4 text-button-sm text-[#582281] transition-colors hover:bg-[#e0d4f0] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   در حال بررسی
@@ -204,7 +220,7 @@ export function FeedbackDetailSheet({
                 <button
                   type="button"
                   disabled={isSubmitting}
-                  onClick={() => onStatusAction('answered')}
+                  onClick={() => onStatusAction("answered")}
                   className="flex h-10 flex-1 items-center justify-center rounded-md bg-primary text-button-sm text-on-primary transition-colors hover:bg-primary-pressed disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   پاسخ داده شده
@@ -214,7 +230,7 @@ export function FeedbackDetailSheet({
                 <button
                   type="button"
                   disabled={isSubmitting}
-                  onClick={() => onStatusAction('rejected')}
+                  onClick={() => onStatusAction("rejected")}
                   className="flex h-10 flex-1 items-center justify-center rounded-md border border-error bg-error-pale text-button-sm text-error transition-colors hover:bg-[#f9d4d4] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   رد شده
@@ -252,5 +268,5 @@ export function FeedbackDetailSheet({
 
       {toastMessage ? <Toast message={toastMessage} /> : null}
     </div>
-  )
+  );
 }

@@ -1,15 +1,15 @@
-import { useProfile } from './useProfile'
+import { useProfile } from "./useProfile";
 
 interface UseRoomAssignmentResult {
-  blockName: string | null
-  roomNumber: string | null
-  isLoading: boolean
-  error: string | null
-  refetch: () => Promise<void>
+  blockName: string | null;
+  roomNumber: string | null;
+  isLoading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
 }
 
 export function useRoomAssignment(): UseRoomAssignmentResult {
-  const { profile, isLoading, error, refetch } = useProfile()
+  const { profile, isLoading, error, refetch } = useProfile();
 
   return {
     blockName: profile?.block_name ?? null,
@@ -17,5 +17,5 @@ export function useRoomAssignment(): UseRoomAssignmentResult {
     isLoading,
     error,
     refetch,
-  }
+  };
 }

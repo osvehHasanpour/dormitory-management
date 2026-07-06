@@ -1,27 +1,34 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
-import { BottomNav } from '../../components/layout/BottomNav'
-import { SupervisorRequestCard } from '../../components/supervisor-requests/SupervisorRequestCard'
-import { SupervisorRequestCardSkeleton } from '../../components/supervisor-requests/SupervisorRequestCardSkeleton'
-import { SupervisorRequestDetailSheet } from '../../components/supervisor-requests/SupervisorRequestDetailSheet'
-import { SupervisorRequestEmptyState } from '../../components/supervisor-requests/SupervisorRequestEmptyState'
-import { SupervisorRequestTabs } from '../../components/supervisor-requests/SupervisorRequestTabs'
-import { BottomSheet } from '../../components/ui/BottomSheet'
-import { Toast } from '../../components/ui/Toast'
-import { supervisorRequestTabs } from '../../data/supervisorRequestItems'
-import { useSupervisorRequestDetail } from '../../hooks/useSupervisorRequestDetail'
-import { useSupervisorRequestUpdate } from '../../hooks/useSupervisorRequestUpdate'
-import { useSupervisorRequestsFeed } from '../../hooks/useSupervisorRequestsFeed'
+import { BottomNav } from "../../components/layout/BottomNav";
+import { SupervisorRequestCard } from "../../components/supervisor-requests/SupervisorRequestCard";
+import { SupervisorRequestCardSkeleton } from "../../components/supervisor-requests/SupervisorRequestCardSkeleton";
+import { SupervisorRequestDetailSheet } from "../../components/supervisor-requests/SupervisorRequestDetailSheet";
+import { SupervisorRequestEmptyState } from "../../components/supervisor-requests/SupervisorRequestEmptyState";
+import { SupervisorRequestTabs } from "../../components/supervisor-requests/SupervisorRequestTabs";
+import { BottomSheet } from "../../components/ui/BottomSheet";
+import { Toast } from "../../components/ui/Toast";
+import { supervisorRequestTabs } from "../../data/supervisorRequestItems";
+import { useSupervisorRequestDetail } from "../../hooks/useSupervisorRequestDetail";
+import { useSupervisorRequestUpdate } from "../../hooks/useSupervisorRequestUpdate";
+import { useSupervisorRequestsFeed } from "../../hooks/useSupervisorRequestsFeed";
 import {
   getRequestDetailSubtitle,
   getRequestDetailTitle,
-} from '../../utils/requestHelpers'
-import type { StudentRequestDetail } from '../../types/request'
+} from "../../utils/requestHelpers";
+import type { StudentRequestDetail } from "../../types/request";
 
 export function SupervisorRequestsPage() {
-  const navigate = useNavigate()
-  const { items, isLoading, error, activeType, setActiveType, retry, updateItem } =
-    useSupervisorRequestsFeed()
+  const navigate = useNavigate();
+  const {
+    items,
+    isLoading,
+    error,
+    activeType,
+    setActiveType,
+    retry,
+    updateItem,
+  } = useSupervisorRequestsFeed();
 
   const {
     detail,
@@ -33,21 +40,25 @@ export function SupervisorRequestsPage() {
     closeDetail,
     retry: retryDetail,
     setDetail,
-  } = useSupervisorRequestDetail()
+  } = useSupervisorRequestDetail();
 
   const handleRequestUpdated = (updated: StudentRequestDetail) => {
-    updateItem(updated)
-    setDetail(updated)
-  }
+    updateItem(updated);
+    setDetail(updated);
+  };
 
   const { form, isSubmitting, toastMessage, clearMessages, submit } =
-    useSupervisorRequestUpdate({ onSuccess: handleRequestUpdated })
+    useSupervisorRequestUpdate({ onSuccess: handleRequestUpdated });
 
-  const displaySource = detail ?? preview
-  const sheetTitle = displaySource ? getRequestDetailTitle(displaySource) : 'جزئیات درخواست'
-  const sheetSubtitle = displaySource ? getRequestDetailSubtitle(displaySource) : null
+  const displaySource = detail ?? preview;
+  const sheetTitle = displaySource
+    ? getRequestDetailTitle(displaySource)
+    : "جزئیات درخواست";
+  const sheetSubtitle = displaySource
+    ? getRequestDetailSubtitle(displaySource)
+    : null;
   const activeTabLabel =
-    supervisorRequestTabs.find((tab) => tab.value === activeType)?.label ?? ''
+    supervisorRequestTabs.find((tab) => tab.value === activeType)?.label ?? "";
 
   return (
     <div className="page-gradient min-h-screen pb-28">
@@ -70,7 +81,10 @@ export function SupervisorRequestsPage() {
           <h1 className="text-heading-xl text-ink">درخواست‌های خوابگاه</h1>
         </section>
 
-        <SupervisorRequestTabs activeType={activeType} onChange={setActiveType} />
+        <SupervisorRequestTabs
+          activeType={activeType}
+          onChange={setActiveType}
+        />
 
         <section className="mt-6 space-y-3">
           {isLoading
@@ -96,7 +110,9 @@ export function SupervisorRequestsPage() {
       </main>
 
       {error ? <Toast message={error} onRetry={retry} /> : null}
-      {detailError ? <Toast message={detailError} onRetry={retryDetail} /> : null}
+      {detailError ? (
+        <Toast message={detailError} onRetry={retryDetail} />
+      ) : null}
 
       <BottomSheet
         isOpen={selectedId !== null}
@@ -115,9 +131,9 @@ export function SupervisorRequestsPage() {
           onRetry={retryDetail}
           onClearMessages={clearMessages}
           onSubmit={() => {
-            const source = detail ?? preview
+            const source = detail ?? preview;
             if (source) {
-              void submit(source)
+              void submit(source);
             }
           }}
         />
@@ -125,5 +141,5 @@ export function SupervisorRequestsPage() {
 
       <BottomNav variant="supervisor" activeTab="home" />
     </div>
-  )
+  );
 }

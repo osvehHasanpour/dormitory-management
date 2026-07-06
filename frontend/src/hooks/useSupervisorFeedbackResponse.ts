@@ -1,185 +1,201 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import {
   markFeedbackReviewed,
   rejectFeedback,
   respondToFeedback,
   reviewIdea,
-} from '../services/supervisorFeedbackService'
-import { useAuth } from './useAuth'
+} from "../services/supervisorFeedbackService";
+import { useAuth } from "./useAuth";
 import type {
   FeedbackResponseFormValues,
   FeedbackStatusAction,
   SupervisorFeedbackItem,
-} from '../types/supervisorFeedback'
+} from "../types/supervisorFeedback";
 
 const responseSchema = z.object({
   response_text: z.string(),
-})
+});
 
 interface UseSupervisorFeedbackResponseOptions {
-  onSuccess: (item: SupervisorFeedbackItem) => void
+  onSuccess: (item: SupervisorFeedbackItem) => void;
 }
 
 interface UseSupervisorFeedbackResponseResult {
-  form: ReturnType<typeof useForm<FeedbackResponseFormValues>>
-  isSubmitting: boolean
-  toastMessage: string | null
-  clearMessages: () => void
-  applyStatusAction: (item: SupervisorFeedbackItem, action: FeedbackStatusAction) => Promise<void>
-  approveIdea: (item: SupervisorFeedbackItem) => Promise<void>
-  rejectIdea: (item: SupervisorFeedbackItem) => Promise<void>
+  form: ReturnType<typeof useForm<FeedbackResponseFormValues>>;
+  isSubmitting: boolean;
+  toastMessage: string | null;
+  clearMessages: () => void;
+  applyStatusAction: (
+    item: SupervisorFeedbackItem,
+    action: FeedbackStatusAction,
+  ) => Promise<void>;
+  approveIdea: (item: SupervisorFeedbackItem) => Promise<void>;
+  rejectIdea: (item: SupervisorFeedbackItem) => Promise<void>;
 }
 
 export function useSupervisorFeedbackResponse({
   onSuccess,
 }: UseSupervisorFeedbackResponseOptions): UseSupervisorFeedbackResponseResult {
-  const { tokens, isAuthenticated } = useAuth()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [toastMessage, setToastMessage] = useState<string | null>(null)
+  const { tokens, isAuthenticated } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const form = useForm<FeedbackResponseFormValues>({
     resolver: zodResolver(responseSchema),
-    defaultValues: { response_text: '' },
-    mode: 'onTouched',
-  })
+    defaultValues: { response_text: "" },
+    mode: "onTouched",
+  });
 
   const clearMessages = () => {
-    setToastMessage(null)
-  }
+    setToastMessage(null);
+  };
 
   const ensureAuth = (): string | null => {
     if (!isAuthenticated || !tokens?.access) {
-      setToastMessage('برای انجام این عملیات باید وارد سامانه شوید.')
-      return null
+      setToastMessage("برای انجام این عملیات باید وارد سامانه شوید.");
+      return null;
     }
-    return tokens.access
-  }
+    return tokens.access;
+  };
 
-  const validateResponseText = (action: FeedbackStatusAction, text: string): boolean => {
-    if (action === 'reviewed') {
-      return true
+  const validateResponseText = (
+    action: FeedbackStatusAction,
+    text: string,
+  ): boolean => {
+    if (action === "reviewed") {
+      return true;
     }
 
     if (!text.trim()) {
       setToastMessage(
-        action === 'rejected'
-          ? 'در صورت رد، ذکر دلیل الزامی است.'
-          : 'متن پاسخ الزامی است.',
-      )
-      return false
+        action === "rejected"
+          ? "در صورت رد، ذکر دلیل الزامی است."
+          : "متن پاسخ الزامی است.",
+      );
+      return false;
     }
 
-    return true
-  }
+    return true;
+  };
 
   const applyStatusAction = async (
     item: SupervisorFeedbackItem,
     action: FeedbackStatusAction,
   ) => {
-    clearMessages()
+    clearMessages();
 
-    const accessToken = ensureAuth()
+    const accessToken = ensureAuth();
     if (!accessToken) {
-      return
+      return;
     }
 
-    const responseText = form.getValues('response_text')
+    const responseText = form.getValues("response_text");
 
     if (!validateResponseText(action, responseText)) {
-      return
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
-      let updated: SupervisorFeedbackItem
+      let updated: SupervisorFeedbackItem;
 
-      if (action === 'reviewed') {
-        updated = await markFeedbackReviewed(accessToken, item.id)
-        setToastMessage('وضعیت به «در حال بررسی» تغییر یافت.')
-      } else if (action === 'answered') {
-        updated = await respondToFeedback(accessToken, item.id, responseText)
-        setToastMessage('پاسخ با موفقیت ثبت شد.')
+      if (action === "reviewed") {
+        updated = await markFeedbackReviewed(accessToken, item.id);
+        setToastMessage("وضعیت به «در حال بررسی» تغییر یافت.");
+      } else if (action === "answered") {
+        updated = await respondToFeedback(accessToken, item.id, responseText);
+        setToastMessage("پاسخ با موفقیت ثبت شد.");
       } else {
-        updated = await rejectFeedback(accessToken, item.id, responseText)
-        setToastMessage('مورد با موفقیت رد شد.')
+        updated = await rejectFeedback(accessToken, item.id, responseText);
+        setToastMessage("مورد با موفقیت رد شد.");
       }
 
-      form.reset({ response_text: updated.response_text || '' })
-      onSuccess(updated)
+      form.reset({ response_text: updated.response_text || "" });
+      onSuccess(updated);
     } catch (submitError) {
       setToastMessage(
         submitError instanceof Error
           ? submitError.message
-          : 'عملیات ناموفق بود. لطفاً دوباره تلاش کنید.',
-      )
+          : "عملیات ناموفق بود. لطفاً دوباره تلاش کنید.",
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const approveIdea = async (item: SupervisorFeedbackItem) => {
-    clearMessages()
+    clearMessages();
 
-    const accessToken = ensureAuth()
+    const accessToken = ensureAuth();
     if (!accessToken) {
-      return
+      return;
     }
 
-    const responseText = form.getValues('response_text')
-    setIsSubmitting(true)
+    const responseText = form.getValues("response_text");
+    setIsSubmitting(true);
 
     try {
-      const updated = await reviewIdea(accessToken, item.id, 'approve', responseText)
-      setToastMessage('ایده با موفقیت تأیید شد.')
-      form.reset({ response_text: updated.response_text || '' })
-      onSuccess(updated)
+      const updated = await reviewIdea(
+        accessToken,
+        item.id,
+        "approve",
+        responseText,
+      );
+      setToastMessage("ایده با موفقیت تأیید شد.");
+      form.reset({ response_text: updated.response_text || "" });
+      onSuccess(updated);
     } catch (submitError) {
       setToastMessage(
         submitError instanceof Error
           ? submitError.message
-          : 'تأیید ایده ناموفق بود. لطفاً دوباره تلاش کنید.',
-      )
+          : "تأیید ایده ناموفق بود. لطفاً دوباره تلاش کنید.",
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const rejectIdea = async (item: SupervisorFeedbackItem) => {
-    clearMessages()
+    clearMessages();
 
-    const accessToken = ensureAuth()
+    const accessToken = ensureAuth();
     if (!accessToken) {
-      return
+      return;
     }
 
-    const responseText = form.getValues('response_text')
+    const responseText = form.getValues("response_text");
     if (!responseText.trim()) {
-      setToastMessage('در صورت رد ایده، ذکر دلیل الزامی است.')
-      return
+      setToastMessage("در صورت رد ایده، ذکر دلیل الزامی است.");
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
-      const updated = await reviewIdea(accessToken, item.id, 'reject', responseText)
-      setToastMessage('ایده با موفقیت رد شد.')
-      form.reset({ response_text: updated.response_text || '' })
-      onSuccess(updated)
+      const updated = await reviewIdea(
+        accessToken,
+        item.id,
+        "reject",
+        responseText,
+      );
+      setToastMessage("ایده با موفقیت رد شد.");
+      form.reset({ response_text: updated.response_text || "" });
+      onSuccess(updated);
     } catch (submitError) {
       setToastMessage(
         submitError instanceof Error
           ? submitError.message
-          : 'رد ایده ناموفق بود. لطفاً دوباره تلاش کنید.',
-      )
+          : "رد ایده ناموفق بود. لطفاً دوباره تلاش کنید.",
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return {
     form,
@@ -189,5 +205,5 @@ export function useSupervisorFeedbackResponse({
     applyStatusAction,
     approveIdea,
     rejectIdea,
-  }
+  };
 }

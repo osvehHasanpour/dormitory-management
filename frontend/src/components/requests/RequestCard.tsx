@@ -1,16 +1,16 @@
-import { getRequestTypeConfig } from '../../data/requestItems'
-import type { StudentRequestListItem } from '../../types/request'
-import { formatRelativeDate } from '../../utils/formatRelativeDate'
-import { getStatusBadgeVariant } from '../../utils/requestHelpers'
-import { StatusBadge } from '../ui/StatusBadge'
+import { getRequestTypeConfig } from "../../data/requestItems";
+import type { StudentRequestListItem } from "../../types/request";
+import { formatRelativeDate } from "../../utils/formatRelativeDate";
+import { getStatusBadgeVariant } from "../../utils/requestHelpers";
+import { StatusBadge } from "../ui/StatusBadge";
 
 interface RequestCardProps {
-  request: StudentRequestListItem
-  onClick: (request: StudentRequestListItem) => void
+  request: StudentRequestListItem;
+  onClick: (request: StudentRequestListItem) => void;
 }
 
 export function RequestCard({ request, onClick }: RequestCardProps) {
-  const typeConfig = getRequestTypeConfig(request.request_type)
+  const typeConfig = getRequestTypeConfig(request.request_type);
 
   return (
     <button
@@ -28,7 +28,9 @@ export function RequestCard({ request, onClick }: RequestCardProps) {
 
       <div className="min-w-0 flex-1">
         <p className="text-heading-md text-ink">{typeConfig.label}</p>
-        <p className="mt-1 line-clamp-2 text-body-sm text-body-text">{request.description}</p>
+        <p className="mt-1 line-clamp-2 text-body-sm text-body-text">
+          {request.description}
+        </p>
       </div>
 
       <div className="flex shrink-0 flex-col items-end gap-2">
@@ -36,8 +38,10 @@ export function RequestCard({ request, onClick }: RequestCardProps) {
           label={request.status_display}
           variant={getStatusBadgeVariant(request.status)}
         />
-        <span className="text-caption-sm text-mute">{formatRelativeDate(request.created_at)}</span>
+        <span className="text-caption-sm text-mute">
+          {formatRelativeDate(request.created_at)}
+        </span>
       </div>
     </button>
-  )
+  );
 }

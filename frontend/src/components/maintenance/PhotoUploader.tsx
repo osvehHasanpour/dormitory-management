@@ -1,36 +1,41 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from "react";
 
 interface PhotoUploaderProps {
-  file: File | null
-  error?: string
-  onChange: (file: File | null) => void
+  file: File | null;
+  error?: string;
+  onChange: (file: File | null) => void;
 }
 
 export function PhotoUploader({ file, error, onChange }: PhotoUploaderProps) {
-  const inputRef = useRef<HTMLInputElement | null>(null)
-  const previewUrl = useMemo(() => (file ? URL.createObjectURL(file) : null), [file])
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const previewUrl = useMemo(
+    () => (file ? URL.createObjectURL(file) : null),
+    [file],
+  );
 
   useEffect(() => {
     return () => {
       if (previewUrl) {
-        URL.revokeObjectURL(previewUrl)
+        URL.revokeObjectURL(previewUrl);
       }
-    }
-  }, [previewUrl])
+    };
+  }, [previewUrl]);
 
   const handleRemove = () => {
-    onChange(null)
+    onChange(null);
     if (inputRef.current) {
-      inputRef.current.value = ''
+      inputRef.current.value = "";
     }
-  }
+  };
 
   return (
     <section className="glass-card p-4">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
           <h3 className="text-body-sm-strong text-ink">افزودن عکس خرابی</h3>
-          <p className="mt-1 text-body-sm text-mute">یک تصویر تا حجم ۵ مگابایت انتخاب کنید.</p>
+          <p className="mt-1 text-body-sm text-mute">
+            یک تصویر تا حجم ۵ مگابایت انتخاب کنید.
+          </p>
         </div>
         {file ? (
           <button
@@ -55,7 +60,7 @@ export function PhotoUploader({ file, error, onChange }: PhotoUploaderProps) {
 
       <label className="flex min-h-24 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-stone bg-surface-soft px-4 py-5 text-center transition-colors active:bg-primary/20">
         <span className="text-body-sm-strong text-ink">
-          {file ? 'تغییر عکس' : 'افزودن عکس جدید'}
+          {file ? "تغییر عکس" : "افزودن عکس جدید"}
         </span>
         <span className="mt-1 text-body-sm text-mute">JPG، PNG یا WEBP</span>
         <input
@@ -69,5 +74,5 @@ export function PhotoUploader({ file, error, onChange }: PhotoUploaderProps) {
 
       {error ? <p className="mt-2 text-body-sm text-error">{error}</p> : null}
     </section>
-  )
+  );
 }

@@ -1,5 +1,5 @@
 interface FeedbackEmptyStateProps {
-  filterLabel: string
+  filterLabel: string;
 }
 
 export function FeedbackEmptyState({ filterLabel }: FeedbackEmptyStateProps) {
@@ -10,5 +10,5 @@ export function FeedbackEmptyState({ filterLabel }: FeedbackEmptyStateProps) {
         در بخش «{filterLabel}» هنوز ایده، شکایت یا پیشنهادی ثبت نشده است.
       </p>
     </div>
-  )
+  );
 }

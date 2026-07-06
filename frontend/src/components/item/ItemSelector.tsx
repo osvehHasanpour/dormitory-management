@@ -1,19 +1,19 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from "react";
 
-import { useAuth } from '../../hooks/useAuth'
-import { fetchInventoryItems } from '../../services/itemService'
-import { MAX_ITEM_QUANTITY, MIN_ITEM_QUANTITY } from '../../types/item'
-import type { InventoryItem } from '../../types/item'
+import { useAuth } from "../../hooks/useAuth";
+import { fetchInventoryItems } from "../../services/itemService";
+import { MAX_ITEM_QUANTITY, MIN_ITEM_QUANTITY } from "../../types/item";
+import type { InventoryItem } from "../../types/item";
 
 interface ItemSelectorProps {
-  itemId: string
-  quantity: number
-  itemError?: string
-  quantityError?: string
-  onItemChange: (itemId: string, maxQuantity: number) => void
-  onQuantityChange: (quantity: number) => void
-  onItemBlur: () => void
-  onQuantityBlur: () => void
+  itemId: string;
+  quantity: number;
+  itemError?: string;
+  quantityError?: string;
+  onItemChange: (itemId: string, maxQuantity: number) => void;
+  onQuantityChange: (quantity: number) => void;
+  onItemBlur: () => void;
+  onQuantityBlur: () => void;
 }
 
 export function ItemSelector({
@@ -26,88 +26,95 @@ export function ItemSelector({
   onItemBlur,
   onQuantityBlur,
 }: ItemSelectorProps) {
-  const { tokens, isAuthenticated } = useAuth()
-  const [items, setItems] = useState<InventoryItem[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [fetchError, setFetchError] = useState<string | null>(null)
+  const { tokens, isAuthenticated } = useAuth();
+  const [items, setItems] = useState<InventoryItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
-  const accessToken = isAuthenticated ? tokens?.access : undefined
+  const accessToken = isAuthenticated ? tokens?.access : undefined;
   const authError =
-    !isAuthenticated || !accessToken ? 'برای مشاهده لیست اقلام باید وارد سامانه شوید.' : null
-  const loadError = authError ?? fetchError
+    !isAuthenticated || !accessToken
+      ? "برای مشاهده لیست اقلام باید وارد سامانه شوید."
+      : null;
+  const loadError = authError ?? fetchError;
 
   useEffect(() => {
     if (!accessToken) {
-      return
+      return;
     }
 
-    let isMounted = true
+    let isMounted = true;
 
     const loadItems = async () => {
-      setIsLoading(true)
-      setFetchError(null)
+      setIsLoading(true);
+      setFetchError(null);
 
       try {
-        const results = await fetchInventoryItems(accessToken)
+        const results = await fetchInventoryItems(accessToken);
         if (isMounted) {
-          setItems(results)
+          setItems(results);
         }
       } catch (error) {
         if (isMounted) {
           setFetchError(
             error instanceof Error
               ? error.message
-              : 'دریافت لیست اقلام ناموفق بود. لطفاً دوباره تلاش کنید.',
-          )
+              : "دریافت لیست اقلام ناموفق بود. لطفاً دوباره تلاش کنید.",
+          );
         }
       } finally {
         if (isMounted) {
-          setIsLoading(false)
+          setIsLoading(false);
         }
       }
-    }
+    };
 
-    void loadItems()
+    void loadItems();
 
     return () => {
-      isMounted = false
-    }
-  }, [accessToken])
+      isMounted = false;
+    };
+  }, [accessToken]);
 
   const selectedItem = useMemo(
     () => items.find((item) => String(item.id) === itemId),
     [itemId, items],
-  )
+  );
 
   const maxQuantity = useMemo(() => {
     if (!selectedItem) {
-      return MAX_ITEM_QUANTITY
+      return MAX_ITEM_QUANTITY;
     }
 
-    return Math.min(MAX_ITEM_QUANTITY, selectedItem.quantity)
-  }, [selectedItem])
+    return Math.min(MAX_ITEM_QUANTITY, selectedItem.quantity);
+  }, [selectedItem]);
 
   const quantityOptions = useMemo(() => {
     if (maxQuantity < MIN_ITEM_QUANTITY) {
-      return []
+      return [];
     }
 
-    return Array.from({ length: maxQuantity }, (_, index) => index + MIN_ITEM_QUANTITY)
-  }, [maxQuantity])
+    return Array.from(
+      { length: maxQuantity },
+      (_, index) => index + MIN_ITEM_QUANTITY,
+    );
+  }, [maxQuantity]);
 
   const handleItemChange = (nextItemId: string) => {
-    const nextItem = items.find((item) => String(item.id) === nextItemId)
+    const nextItem = items.find((item) => String(item.id) === nextItemId);
     const nextMaxQuantity = nextItem
       ? Math.min(MAX_ITEM_QUANTITY, nextItem.quantity)
-      : MAX_ITEM_QUANTITY
+      : MAX_ITEM_QUANTITY;
 
-    onItemChange(nextItemId, nextMaxQuantity)
-  }
+    onItemChange(nextItemId, nextMaxQuantity);
+  };
 
   return (
     <div className="flex flex-col gap-4">
       <label className="block glass-card p-4">
-        <span className="mb-3 block text-body-sm-strong text-ink">لیست اقلام</span>
+        <span className="mb-3 block text-body-sm-strong text-ink">
+          لیست اقلام
+        </span>
         {authError ? (
           <p className="text-body-sm text-error">{authError}</p>
         ) : isLoading ? (
@@ -125,13 +132,19 @@ export function ItemSelector({
           >
             <option value="">انتخاب اقلام مورد نظر</option>
             {items.map((item) => (
-              <option key={item.id} value={String(item.id)} disabled={item.quantity < MIN_ITEM_QUANTITY}>
+              <option
+                key={item.id}
+                value={String(item.id)}
+                disabled={item.quantity < MIN_ITEM_QUANTITY}
+              >
                 {item.item_name} ({item.category})
               </option>
             ))}
           </select>
         )}
-        {itemError ? <p className="mt-2 text-body-sm text-error">{itemError}</p> : null}
+        {itemError ? (
+          <p className="mt-2 text-body-sm text-error">{itemError}</p>
+        ) : null}
       </label>
 
       <label className="block glass-card p-4">
@@ -158,8 +171,10 @@ export function ItemSelector({
             حداکثر {maxQuantity} عدد بر اساس موجودی انبار
           </p>
         ) : null}
-        {quantityError ? <p className="mt-2 text-body-sm text-error">{quantityError}</p> : null}
+        {quantityError ? (
+          <p className="mt-2 text-body-sm text-error">{quantityError}</p>
+        ) : null}
       </label>
     </div>
-  )
+  );
 }

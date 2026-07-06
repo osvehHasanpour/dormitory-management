@@ -1,4 +1,4 @@
-import homeDashboard from '@media/home_dashboard.jpg'
+import homeDashboard from "@media/home_dashboard.jpg";
 
 export function DashboardBanner() {
   return (
@@ -9,5 +9,5 @@ export function DashboardBanner() {
         className="block h-auto w-full object-cover"
       />
     </div>
-  )
+  );
 }

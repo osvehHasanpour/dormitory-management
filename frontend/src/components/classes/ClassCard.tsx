@@ -1,32 +1,35 @@
-import type { ClassesTabValue, StudentClassItem } from '../../types/class'
-import { formatPersianDateShort } from '../../utils/formatRelativeDate'
+import type { ClassesTabValue, StudentClassItem } from "../../types/class";
+import { formatPersianDateShort } from "../../utils/formatRelativeDate";
 
-type CardActionType = 'register' | 'cancel' | 'rate'
+type CardActionType = "register" | "cancel" | "rate";
 
 interface ClassCardProps {
-  classItem: StudentClassItem
-  tab: ClassesTabValue
-  onRegister: (classId: number) => void
-  onCancel: (classId: number) => void
-  onRate: (classItem: StudentClassItem) => void
-  isActionPending: (type: CardActionType, classId: number) => boolean
+  classItem: StudentClassItem;
+  tab: ClassesTabValue;
+  onRegister: (classId: number) => void;
+  onCancel: (classId: number) => void;
+  onRate: (classItem: StudentClassItem) => void;
+  isActionPending: (type: CardActionType, classId: number) => boolean;
 }
 
 interface CardActionConfig {
-  label: string
-  onClick?: () => void
-  variant: 'primary' | 'secondary' | 'disabled'
-  isPending: boolean
+  label: string;
+  onClick?: () => void;
+  variant: "primary" | "secondary" | "disabled";
+  isPending: boolean;
 }
 
 function getTeacherName(classItem: StudentClassItem): string {
-  const teacherName = `${classItem.teacher?.first_name ?? ''} ${classItem.teacher?.last_name ?? ''}`.trim()
-  return teacherName || 'نامشخص'
+  const teacherName =
+    `${classItem.teacher?.first_name ?? ""} ${classItem.teacher?.last_name ?? ""}`.trim();
+  return teacherName || "نامشخص";
 }
 
 function buildRatingStars(averageRating: number | null): string[] {
-  const roundedValue = Math.max(0, Math.min(5, Math.round(averageRating ?? 0)))
-  return Array.from({ length: 5 }, (_, index) => (index < roundedValue ? '★' : '☆'))
+  const roundedValue = Math.max(0, Math.min(5, Math.round(averageRating ?? 0)));
+  return Array.from({ length: 5 }, (_, index) =>
+    index < roundedValue ? "★" : "☆",
+  );
 }
 
 function getActionConfig(
@@ -37,54 +40,56 @@ function getActionConfig(
   onRate: (classItem: StudentClassItem) => void,
   isActionPending: (type: CardActionType, classId: number) => boolean,
 ): CardActionConfig {
-  if (tab === 'active') {
+  if (tab === "active") {
     if (classItem.is_enrolled) {
       return {
-        label: 'ثبت‌نام شده',
-        variant: 'secondary',
+        label: "ثبت‌نام شده",
+        variant: "secondary",
         isPending: false,
-      }
+      };
     }
 
     if (classItem.is_full) {
       return {
-        label: 'تکمیل ظرفیت',
-        variant: 'disabled',
+        label: "تکمیل ظرفیت",
+        variant: "disabled",
         isPending: false,
-      }
+      };
     }
 
     return {
-      label: 'ثبت‌نام',
+      label: "ثبت‌نام",
       onClick: () => onRegister(classItem.id),
-      variant: 'primary',
-      isPending: isActionPending('register', classItem.id),
-    }
+      variant: "primary",
+      isPending: isActionPending("register", classItem.id),
+    };
   }
 
-  if (tab === 'enrolled') {
+  if (tab === "enrolled") {
     return {
-      label: 'لغو ثبت‌نام',
+      label: "لغو ثبت‌نام",
       onClick: () => onCancel(classItem.id),
-      variant: 'secondary',
-      isPending: isActionPending('cancel', classItem.id),
-    }
+      variant: "secondary",
+      isPending: isActionPending("cancel", classItem.id),
+    };
   }
 
   if (classItem.can_rate) {
     return {
-      label: 'امتیازدهی',
+      label: "امتیازدهی",
       onClick: () => onRate(classItem),
-      variant: 'primary',
-      isPending: isActionPending('rate', classItem.id),
-    }
+      variant: "primary",
+      isPending: isActionPending("rate", classItem.id),
+    };
   }
 
   return {
-    label: classItem.user_rating ? `امتیاز: ${classItem.user_rating}/5` : 'امتیاز ثبت شده',
-    variant: 'secondary',
+    label: classItem.user_rating
+      ? `امتیاز: ${classItem.user_rating}/5`
+      : "امتیاز ثبت شده",
+    variant: "secondary",
     isPending: false,
-  }
+  };
 }
 
 export function ClassCard({
@@ -96,31 +101,50 @@ export function ClassCard({
   isActionPending,
 }: ClassCardProps) {
   const capacityPercent =
-    classItem.capacity > 0 ? Math.min(100, (classItem.registered_count / classItem.capacity) * 100) : 0
+    classItem.capacity > 0
+      ? Math.min(100, (classItem.registered_count / classItem.capacity) * 100)
+      : 0;
   const averageRatingText =
-    classItem.average_rating == null ? 'بدون امتیاز' : `${classItem.average_rating.toFixed(1)} از ۵`
-  const actionConfig = getActionConfig(tab, classItem, onRegister, onCancel, onRate, isActionPending)
+    classItem.average_rating == null
+      ? "بدون امتیاز"
+      : `${classItem.average_rating.toFixed(1)} از ۵`;
+  const actionConfig = getActionConfig(
+    tab,
+    classItem,
+    onRegister,
+    onCancel,
+    onRate,
+    isActionPending,
+  );
   const statusBadgeClass =
-    tab === 'ended'
-      ? 'bg-surface-card text-mute'
+    tab === "ended"
+      ? "bg-surface-card text-mute"
       : classItem.is_full
-        ? 'bg-warning-pale text-warning'
-        : 'bg-success-pale text-success-deep'
+        ? "bg-warning-pale text-warning"
+        : "bg-success-pale text-success-deep";
   const statusLabel =
-    tab === 'ended' ? 'پایان یافته' : classItem.is_full ? 'تکمیل ظرفیت' : 'در حال ثبت‌نام'
+    tab === "ended"
+      ? "پایان یافته"
+      : classItem.is_full
+        ? "تکمیل ظرفیت"
+        : "در حال ثبت‌نام";
   const actionClass =
-    actionConfig.variant === 'primary'
-      ? 'bg-primary text-on-primary hover:bg-primary-pressed'
-      : actionConfig.variant === 'secondary'
-        ? 'bg-secondary-bg text-on-secondary hover:bg-secondary-pressed'
-        : 'bg-surface-card text-ash'
+    actionConfig.variant === "primary"
+      ? "bg-primary text-on-primary hover:bg-primary-pressed"
+      : actionConfig.variant === "secondary"
+        ? "bg-secondary-bg text-on-secondary hover:bg-secondary-pressed"
+        : "bg-surface-card text-ash";
 
   return (
     <article className="glass-card p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="line-clamp-2 text-heading-md text-ink">{classItem.title}</h3>
-          <p className="mt-1 text-body-sm text-mute">مدرس: {getTeacherName(classItem)}</p>
+          <h3 className="line-clamp-2 text-heading-md text-ink">
+            {classItem.title}
+          </h3>
+          <p className="mt-1 text-body-sm text-mute">
+            مدرس: {getTeacherName(classItem)}
+          </p>
           <p className="mt-1 text-body-sm text-mute">
             تاریخ: {formatPersianDateShort(classItem.start_datetime)}
           </p>
@@ -172,9 +196,11 @@ export function ClassCard({
               aria-hidden="true"
             />
           ) : null}
-          <span>{actionConfig.isPending ? 'در حال ارسال...' : actionConfig.label}</span>
+          <span>
+            {actionConfig.isPending ? "در حال ارسال..." : actionConfig.label}
+          </span>
         </button>
       </div>
     </article>
-  )
+  );
 }

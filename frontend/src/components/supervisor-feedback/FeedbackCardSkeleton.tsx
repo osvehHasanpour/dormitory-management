@@ -1,4 +1,4 @@
-import { Skeleton } from '../ui/Skeleton'
+import { Skeleton } from "../ui/Skeleton";
 
 export function FeedbackCardSkeleton() {
   return (
@@ -17,5 +17,5 @@ export function FeedbackCardSkeleton() {
       </div>
       <Skeleton className="h-10 w-full" />
     </div>
-  )
+  );
 }

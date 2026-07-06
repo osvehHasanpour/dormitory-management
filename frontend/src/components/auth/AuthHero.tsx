@@ -1,4 +1,4 @@
-import loginPicture from '@media/login_picture.jpg'
+import loginPicture from "@media/login_picture.jpg";
 
 export function AuthHero() {
   return (
@@ -9,5 +9,5 @@ export function AuthHero() {
         className="block h-auto w-full object-cover"
       />
     </div>
-  )
+  );
 }

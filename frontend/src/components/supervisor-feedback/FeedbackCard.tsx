@@ -1,20 +1,20 @@
-import { feedbackTypeBadgeConfig } from '../../data/supervisorFeedbackItems'
-import type { SupervisorFeedbackItem } from '../../types/supervisorFeedback'
-import { formatPersianDateShort } from '../../utils/formatRelativeDate'
+import { feedbackTypeBadgeConfig } from "../../data/supervisorFeedbackItems";
+import type { SupervisorFeedbackItem } from "../../types/supervisorFeedback";
+import { formatPersianDateShort } from "../../utils/formatRelativeDate";
 import {
   buildFeedbackPreview,
   getFeedbackStatusBadgeVariant,
-} from '../../utils/supervisorFeedbackHelpers'
-import { StatusBadge } from '../ui/StatusBadge'
+} from "../../utils/supervisorFeedbackHelpers";
+import { StatusBadge } from "../ui/StatusBadge";
 
 interface FeedbackCardProps {
-  item: SupervisorFeedbackItem
-  onClick: (item: SupervisorFeedbackItem) => void
+  item: SupervisorFeedbackItem;
+  onClick: (item: SupervisorFeedbackItem) => void;
 }
 
 export function FeedbackCard({ item, onClick }: FeedbackCardProps) {
-  const typeConfig = feedbackTypeBadgeConfig[item.type]
-  const preview = buildFeedbackPreview(item.description)
+  const typeConfig = feedbackTypeBadgeConfig[item.type];
+  const preview = buildFeedbackPreview(item.description);
 
   return (
     <button
@@ -40,7 +40,9 @@ export function FeedbackCard({ item, onClick }: FeedbackCardProps) {
 
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-caption-sm text-mute">
         <span>{formatPersianDateShort(item.created_at)}</span>
-        {item.category_display ? <span>دسته‌بندی: {item.category_display}</span> : null}
+        {item.category_display ? (
+          <span>دسته‌بندی: {item.category_display}</span>
+        ) : null}
         {item.is_sla_overdue ? (
           <span className="text-error">گذشته از مهلت پاسخ</span>
         ) : null}
@@ -48,5 +50,5 @@ export function FeedbackCard({ item, onClick }: FeedbackCardProps) {
 
       <p className="line-clamp-2 text-body-sm text-body-text">{preview}</p>
     </button>
-  )
+  );
 }
