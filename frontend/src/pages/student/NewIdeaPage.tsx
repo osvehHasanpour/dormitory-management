@@ -1,11 +1,11 @@
-import newIdeaHero from '@media/idea.png'
-import { useNavigate } from 'react-router-dom'
+import newIdeaHero from "@media/idea.png";
+import { useNavigate } from "react-router-dom";
 
-import { IdeaRequestForm } from '../../components/idea/IdeaRequestForm'
-import { BottomNav } from '../../components/layout/BottomNav'
+import { IdeaRequestForm } from "../../components/idea/IdeaRequestForm";
+import { BottomNav } from "../../components/layout/BottomNav";
 
 export function NewIdeaPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div className="page-gradient min-h-screen pb-32">
@@ -38,5 +38,5 @@ export function NewIdeaPage() {
 
       <BottomNav activeTab="home" />
     </div>
-  )
+  );
 }

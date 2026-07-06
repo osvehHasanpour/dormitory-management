@@ -1,5 +1,5 @@
 interface SectionHeaderProps {
-  title: string
+  title: string;
 }
 
 export function SectionHeader({ title }: SectionHeaderProps) {
@@ -9,5 +9,5 @@ export function SectionHeader({ title }: SectionHeaderProps) {
       <h2 className="shrink-0 text-heading-lg text-ink">{title}</h2>
       <span className="h-px flex-1 bg-hairline" aria-hidden="true" />
     </div>
-  )
+  );
 }

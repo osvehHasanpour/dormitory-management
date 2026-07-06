@@ -1,81 +1,84 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { z } from "zod";
 
-import { useAuth } from './useAuth'
-import { submitCleaningRequest } from '../services/cleaningService'
-import type { CleaningRequestFormValues } from '../types/cleaning'
+import { useAuth } from "./useAuth";
+import { submitCleaningRequest } from "../services/cleaningService";
+import type { CleaningRequestFormValues } from "../types/cleaning";
 
 const cleaningRequestSchema = z.object({
-  blockId: z.string().min(1, 'انتخاب بلوک الزامی است.'),
-  floorId: z.string().min(1, 'انتخاب طبقه الزامی است.'),
-  line: z.string().min(1, 'انتخاب لاین الزامی است.'),
-  spaceType: z.string().min(1, 'انتخاب فضا الزامی است.'),
+  blockId: z.string().min(1, "انتخاب بلوک الزامی است."),
+  floorId: z.string().min(1, "انتخاب طبقه الزامی است."),
+  line: z.string().min(1, "انتخاب لاین الزامی است."),
+  spaceType: z.string().min(1, "انتخاب فضا الزامی است."),
   description: z
     .string()
-    .min(1, 'توضیحات الزامی است.')
-    .max(1000, 'توضیحات نمی‌تواند بیش از ۱۰۰۰ کاراکتر باشد.'),
-})
+    .min(1, "توضیحات الزامی است.")
+    .max(1000, "توضیحات نمی‌تواند بیش از ۱۰۰۰ کاراکتر باشد."),
+});
 
 interface CleaningSubmitContext {
-  blockName: string
-  floorLabel: string
+  blockName: string;
+  floorLabel: string;
 }
 
 interface UseCleaningRequestResult {
-  form: ReturnType<typeof useForm<CleaningRequestFormValues>>
-  isSubmitting: boolean
-  error: string | null
-  successMessage: string | null
-  submitRequest: (values: CleaningRequestFormValues, context: CleaningSubmitContext) => Promise<void>
-  clearMessages: () => void
-  resetCascadeFromBlock: () => void
+  form: ReturnType<typeof useForm<CleaningRequestFormValues>>;
+  isSubmitting: boolean;
+  error: string | null;
+  successMessage: string | null;
+  submitRequest: (
+    values: CleaningRequestFormValues,
+    context: CleaningSubmitContext,
+  ) => Promise<void>;
+  clearMessages: () => void;
+  resetCascadeFromBlock: () => void;
 }
 
 export function useCleaningRequest(): UseCleaningRequestResult {
-  const navigate = useNavigate()
-  const { tokens, isAuthenticated } = useAuth()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const navigate = useNavigate();
+  const { tokens, isAuthenticated } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const form = useForm<CleaningRequestFormValues>({
     resolver: zodResolver(cleaningRequestSchema),
     defaultValues: {
-      blockId: '',
-      floorId: '',
-      line: '',
-      spaceType: '',
-      description: '',
+      blockId: "",
+      floorId: "",
+      line: "",
+      spaceType: "",
+      description: "",
     },
-    mode: 'onTouched',
-  })
+    mode: "onTouched",
+  });
 
   const clearMessages = () => {
-    setError(null)
-    setSuccessMessage(null)
-  }
+    setError(null);
+    setSuccessMessage(null);
+  };
 
   const resetCascadeFromBlock = () => {
-    form.setValue('floorId', '')
-    form.setValue('line', '')
-    form.setValue('spaceType', '')
-  }
+    form.setValue("floorId", "");
+    form.setValue("line", "");
+    form.setValue("spaceType", "");
+  };
 
   const submitRequest = async (
     values: CleaningRequestFormValues,
     context: CleaningSubmitContext,
   ) => {
-    clearMessages()
+    clearMessages();
 
     if (!isAuthenticated || !tokens?.access) {
-      setError('برای ثبت درخواست نظافت باید وارد سامانه شوید.')
-      return
+      setError("برای ثبت درخواست نظافت باید وارد سامانه شوید.");
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
       await submitCleaningRequest(
@@ -83,22 +86,22 @@ export function useCleaningRequest(): UseCleaningRequestResult {
         tokens.access,
         context.blockName,
         context.floorLabel,
-      )
-      setSuccessMessage('درخواست نظافت با موفقیت ثبت شد.')
-      form.reset()
+      );
+      setSuccessMessage("درخواست نظافت با موفقیت ثبت شد.");
+      form.reset();
       window.setTimeout(() => {
-        navigate('/my-requests', { replace: true })
-      }, 900)
+        navigate("/my-requests", { replace: true });
+      }, 900);
     } catch (submitError) {
       setError(
         submitError instanceof Error
           ? submitError.message
-          : 'ثبت درخواست نظافت ناموفق بود. لطفاً دوباره تلاش کنید.',
-      )
+          : "ثبت درخواست نظافت ناموفق بود. لطفاً دوباره تلاش کنید.",
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return {
     form,
@@ -108,5 +111,5 @@ export function useCleaningRequest(): UseCleaningRequestResult {
     submitRequest,
     clearMessages,
     resetCascadeFromBlock,
-  }
+  };
 }

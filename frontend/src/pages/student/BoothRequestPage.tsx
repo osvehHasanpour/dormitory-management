@@ -1,10 +1,10 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
-import { BoothRequestForm } from '../../components/booth/BoothRequestForm'
-import { BottomNav } from '../../components/layout/BottomNav'
+import { BoothRequestForm } from "../../components/booth/BoothRequestForm";
+import { BottomNav } from "../../components/layout/BottomNav";
 
 export function BoothRequestPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div className="page-gradient min-h-screen pb-32">
@@ -33,5 +33,5 @@ export function BoothRequestPage() {
 
       <BottomNav />
     </div>
-  )
+  );
 }

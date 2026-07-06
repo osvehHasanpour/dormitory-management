@@ -1,12 +1,12 @@
-import { BottomNav } from '../../components/layout/BottomNav'
-import { DashboardBanner } from '../../components/dashboard/DashboardBanner'
-import { FeatureCard } from '../../components/dashboard/FeatureCard'
-import { SectionHeader } from '../../components/dashboard/SectionHeader'
-import { culturalSection, serviceSection } from '../../data/dashboardItems'
+import { BottomNav } from "../../components/layout/BottomNav";
+import { DashboardBanner } from "../../components/dashboard/DashboardBanner";
+import { FeatureCard } from "../../components/dashboard/FeatureCard";
+import { SectionHeader } from "../../components/dashboard/SectionHeader";
+import { culturalSection, serviceSection } from "../../data/dashboardItems";
 
 export function DashboardPage() {
-  const culturalFirstRow = culturalSection.items.slice(0, 3)
-  const culturalSecondRow = culturalSection.items.slice(3)
+  const culturalFirstRow = culturalSection.items.slice(0, 3);
+  const culturalSecondRow = culturalSection.items.slice(3);
 
   return (
     <div className="page-gradient min-h-screen pb-24">
@@ -54,5 +54,5 @@ export function DashboardPage() {
 
       <BottomNav activeTab="home" />
     </div>
-  )
+  );
 }

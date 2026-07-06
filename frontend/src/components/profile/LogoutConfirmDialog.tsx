@@ -1,15 +1,21 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 
 export interface DialogAnchor {
-  x: number
-  y: number
+  x: number;
+  y: number;
 }
 
 interface LogoutConfirmDialogProps {
-  isOpen: boolean
-  anchor: DialogAnchor | null
-  onConfirm: () => void
-  onCancel: () => void
+  isOpen: boolean;
+  anchor: DialogAnchor | null;
+  onConfirm: () => void;
+  onCancel: () => void;
 }
 
 export function LogoutConfirmDialog({
@@ -18,50 +24,50 @@ export function LogoutConfirmDialog({
   onConfirm,
   onCancel,
 }: LogoutConfirmDialogProps) {
-  const panelRef = useRef<HTMLDivElement>(null)
-  const [transformOrigin, setTransformOrigin] = useState('center center')
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [transformOrigin, setTransformOrigin] = useState("center center");
 
   useLayoutEffect(() => {
     if (!isOpen || !anchor || !panelRef.current) {
-      setTransformOrigin('center center')
-      return
+      setTransformOrigin("center center");
+      return;
     }
 
-    const rect = panelRef.current.getBoundingClientRect()
-    const originX = anchor.x - rect.left
-    const originY = anchor.y - rect.top
-    setTransformOrigin(`${originX}px ${originY}px`)
-  }, [isOpen, anchor])
+    const rect = panelRef.current.getBoundingClientRect();
+    const originX = anchor.x - rect.left;
+    const originY = anchor.y - rect.top;
+    setTransformOrigin(`${originX}px ${originY}px`);
+  }, [isOpen, anchor]);
 
   useEffect(() => {
     if (!isOpen) {
-      return undefined
+      return undefined;
     }
 
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onCancel()
+      if (event.key === "Escape") {
+        onCancel();
       }
-    }
+    };
 
-    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.body.style.overflow = previousOverflow
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [isOpen, onCancel])
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onCancel]);
 
   if (!isOpen) {
-    return null
+    return null;
   }
 
   const panelStyle: CSSProperties = {
     transformOrigin,
-  }
+  };
 
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center px-4">
@@ -84,7 +90,10 @@ export function LogoutConfirmDialog({
         <h2 id="logout-confirm-title" className="text-heading-lg text-ink">
           آیا از خروج اطمینان دارید؟
         </h2>
-        <p id="logout-confirm-description" className="mt-3 text-body-md text-mute">
+        <p
+          id="logout-confirm-description"
+          className="mt-3 text-body-md text-mute"
+        >
           با خروج از حساب، به صفحه ورود منتقل می‌شوید.
         </p>
 
@@ -99,8 +108,8 @@ export function LogoutConfirmDialog({
           <button
             type="button"
             onClick={(event) => {
-              event.stopPropagation()
-              onConfirm()
+              event.stopPropagation();
+              onConfirm();
             }}
             className="h-10 flex-1 rounded-md bg-primary px-5 text-button-md text-on-primary transition-colors active:bg-primary-pressed sm:max-w-[140px]"
           >
@@ -109,5 +118,5 @@ export function LogoutConfirmDialog({
         </div>
       </div>
     </div>
-  )
+  );
 }

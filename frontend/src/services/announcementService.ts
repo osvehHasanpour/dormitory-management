@@ -1,41 +1,45 @@
-import axios from 'axios'
+import axios from "axios";
 
-import apiClient from './apiClient'
-import type { ApiSuccessResponse } from '../types/auth'
+import apiClient from "./apiClient";
+import type { ApiSuccessResponse } from "../types/auth";
 import type {
   AnnouncementCreateFormValues,
   AnnouncementListItem,
   AnnouncementListResponse,
-} from '../types/announcement'
+} from "../types/announcement";
 
 function extractApiError(error: unknown, fallback: string): string {
   if (axios.isAxiosError(error)) {
-    const message = error.response?.data?.message
-    if (typeof message === 'string' && message.trim()) {
-      return message
+    const message = error.response?.data?.message;
+    if (typeof message === "string" && message.trim()) {
+      return message;
     }
   }
 
-  return fallback
+  return fallback;
 }
 
-export async function fetchAnnouncements(accessToken: string): Promise<AnnouncementListResponse> {
+export async function fetchAnnouncements(
+  accessToken: string,
+): Promise<AnnouncementListResponse> {
   try {
-    const response = await apiClient.get<ApiSuccessResponse<AnnouncementListResponse>>(
-      '/v1/announcements/',
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+    const response = await apiClient.get<
+      ApiSuccessResponse<AnnouncementListResponse>
+    >("/v1/announcements/", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
       },
-    )
+    });
 
-    return response.data.data
+    return response.data.data;
   } catch (error) {
     throw new Error(
-      extractApiError(error, 'دریافت اطلاعیه‌ها ناموفق بود. لطفاً دوباره تلاش کنید.'),
+      extractApiError(
+        error,
+        "دریافت اطلاعیه‌ها ناموفق بود. لطفاً دوباره تلاش کنید.",
+      ),
       { cause: error },
-    )
+    );
   }
 }
 
@@ -44,8 +48,10 @@ export async function createAnnouncement(
   accessToken: string,
 ): Promise<AnnouncementListItem> {
   try {
-    const response = await apiClient.post<ApiSuccessResponse<AnnouncementListItem>>(
-      '/v1/announcements/',
+    const response = await apiClient.post<
+      ApiSuccessResponse<AnnouncementListItem>
+    >(
+      "/v1/announcements/",
       {
         title: values.title.trim(),
         content: values.content.trim(),
@@ -55,13 +61,13 @@ export async function createAnnouncement(
           Authorization: `Bearer ${accessToken}`,
         },
       },
-    )
+    );
 
-    return response.data.data
+    return response.data.data;
   } catch (error) {
     throw new Error(
-      extractApiError(error, 'ثبت اطلاعیه ناموفق بود. لطفاً دوباره تلاش کنید.'),
+      extractApiError(error, "ثبت اطلاعیه ناموفق بود. لطفاً دوباره تلاش کنید."),
       { cause: error },
-    )
+    );
   }
 }

@@ -1,144 +1,146 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import {
   createSupervisorClass,
   updateSupervisorClass,
-} from '../services/supervisorClassService'
-import { DEFAULT_CLASS_CATEGORY } from '../data/supervisorClassItems'
-import { useAuth } from './useAuth'
-import type { SupervisorClassItem } from '../types/supervisorClass'
-import { toTimeInputValue } from '../utils/formatClassSchedule'
+} from "../services/supervisorClassService";
+import { DEFAULT_CLASS_CATEGORY } from "../data/supervisorClassItems";
+import { useAuth } from "./useAuth";
+import type { SupervisorClassItem } from "../types/supervisorClass";
+import { toTimeInputValue } from "../utils/formatClassSchedule";
 
 const isPositiveInteger = (value: string): boolean => {
-  const parsed = Number(value)
-  return Number.isInteger(parsed) && parsed >= 1
-}
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= 1;
+};
 
 const formSchema = z
   .object({
-    title: z.string().trim().min(1, 'عنوان کلاس الزامی است.'),
+    title: z.string().trim().min(1, "عنوان کلاس الزامی است."),
     teacher_id: z
       .string()
       .trim()
-      .min(1, 'شناسه مدرس الزامی است.')
-      .refine(isPositiveInteger, 'شناسه مدرس باید یک عدد معتبر باشد.'),
+      .min(1, "شناسه مدرس الزامی است.")
+      .refine(isPositiveInteger, "شناسه مدرس باید یک عدد معتبر باشد."),
     location: z.string(),
     capacity: z
       .string()
       .trim()
-      .min(1, 'ظرفیت الزامی است.')
-      .refine(isPositiveInteger, 'ظرفیت باید حداقل ۱ نفر باشد.'),
-    start_datetime: z.string().min(1, 'تاریخ شروع الزامی است.'),
-    end_datetime: z.string().min(1, 'تاریخ پایان الزامی است.'),
-    day_of_week: z.string().min(1, 'روز برگزاری الزامی است.'),
-    start_time: z.string().min(1, 'زمان شروع کلاس الزامی است.'),
-    end_time: z.string().min(1, 'زمان پایان کلاس الزامی است.'),
+      .min(1, "ظرفیت الزامی است.")
+      .refine(isPositiveInteger, "ظرفیت باید حداقل ۱ نفر باشد."),
+    start_datetime: z.string().min(1, "تاریخ شروع الزامی است."),
+    end_datetime: z.string().min(1, "تاریخ پایان الزامی است."),
+    day_of_week: z.string().min(1, "روز برگزاری الزامی است."),
+    start_time: z.string().min(1, "زمان شروع کلاس الزامی است."),
+    end_time: z.string().min(1, "زمان پایان کلاس الزامی است."),
   })
   .refine(
     (data) => new Date(data.end_datetime) > new Date(data.start_datetime),
     {
-      path: ['end_datetime'],
-      message: 'زمان پایان باید بعد از زمان شروع باشد.',
+      path: ["end_datetime"],
+      message: "زمان پایان باید بعد از زمان شروع باشد.",
     },
   )
   .refine((data) => data.end_time > data.start_time, {
-    path: ['end_time'],
-    message: 'زمان پایان کلاس باید بعد از زمان شروع باشد.',
-  })
+    path: ["end_time"],
+    message: "زمان پایان کلاس باید بعد از زمان شروع باشد.",
+  });
 
-export type ClassFormValues = z.infer<typeof formSchema>
+export type ClassFormValues = z.infer<typeof formSchema>;
 
 export const EMPTY_CLASS_FORM: ClassFormValues = {
-  title: '',
-  teacher_id: '',
-  location: '',
-  capacity: '',
-  start_datetime: '',
-  end_datetime: '',
-  day_of_week: '',
-  start_time: '',
-  end_time: '',
-}
+  title: "",
+  teacher_id: "",
+  location: "",
+  capacity: "",
+  start_datetime: "",
+  end_datetime: "",
+  day_of_week: "",
+  start_time: "",
+  end_time: "",
+};
 
 export function toDatetimeLocalValue(iso: string | null | undefined): string {
   if (!iso) {
-    return ''
+    return "";
   }
 
-  const date = new Date(iso)
+  const date = new Date(iso);
   if (Number.isNaN(date.getTime())) {
-    return ''
+    return "";
   }
 
-  const pad = (value: number) => String(value).padStart(2, '0')
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
-export function classItemToFormValues(item: SupervisorClassItem): ClassFormValues {
+export function classItemToFormValues(
+  item: SupervisorClassItem,
+): ClassFormValues {
   return {
     title: item.title,
-    teacher_id: item.teacher ? String(item.teacher.id) : '',
-    location: item.location ?? '',
+    teacher_id: item.teacher ? String(item.teacher.id) : "",
+    location: item.location ?? "",
     capacity: String(item.capacity),
     start_datetime: toDatetimeLocalValue(item.start_datetime),
     end_datetime: toDatetimeLocalValue(item.end_datetime),
-    day_of_week: item.day_of_week ?? '',
+    day_of_week: item.day_of_week ?? "",
     start_time: toTimeInputValue(item.start_time),
     end_time: toTimeInputValue(item.end_time),
-  }
+  };
 }
 
 interface SubmitParams {
-  mode: 'create' | 'edit'
-  classId?: number
+  mode: "create" | "edit";
+  classId?: number;
 }
 
 interface UseSupervisorClassFormOptions {
-  onSuccess: (item: SupervisorClassItem, mode: 'create' | 'edit') => void
+  onSuccess: (item: SupervisorClassItem, mode: "create" | "edit") => void;
 }
 
 interface UseSupervisorClassFormResult {
-  form: ReturnType<typeof useForm<ClassFormValues>>
-  isSubmitting: boolean
-  toastMessage: string | null
-  clearMessages: () => void
-  submit: (params: SubmitParams) => Promise<void>
+  form: ReturnType<typeof useForm<ClassFormValues>>;
+  isSubmitting: boolean;
+  toastMessage: string | null;
+  clearMessages: () => void;
+  submit: (params: SubmitParams) => Promise<void>;
 }
 
 export function useSupervisorClassForm({
   onSuccess,
 }: UseSupervisorClassFormOptions): UseSupervisorClassFormResult {
-  const { tokens, isAuthenticated } = useAuth()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [toastMessage, setToastMessage] = useState<string | null>(null)
+  const { tokens, isAuthenticated } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const form = useForm<ClassFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: EMPTY_CLASS_FORM,
-    mode: 'onTouched',
-  })
+    mode: "onTouched",
+  });
 
   const clearMessages = () => {
-    setToastMessage(null)
-  }
+    setToastMessage(null);
+  };
 
   const submit = async ({ mode, classId }: SubmitParams) => {
-    clearMessages()
+    clearMessages();
 
     if (!isAuthenticated || !tokens?.access) {
-      setToastMessage('برای انجام این عملیات باید وارد سامانه شوید.')
-      return
+      setToastMessage("برای انجام این عملیات باید وارد سامانه شوید.");
+      return;
     }
 
-    const isValid = await form.trigger()
+    const isValid = await form.trigger();
     if (!isValid) {
-      return
+      return;
     }
 
-    const values = form.getValues()
+    const values = form.getValues();
     const basePayload = {
       title: values.title.trim(),
       teacher_id: Number(values.teacher_id),
@@ -149,33 +151,37 @@ export function useSupervisorClassForm({
       day_of_week: values.day_of_week,
       start_time: values.start_time,
       end_time: values.end_time,
-    }
+    };
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
-      let updated: SupervisorClassItem
+      let updated: SupervisorClassItem;
 
-      if (mode === 'edit' && classId != null) {
-        updated = await updateSupervisorClass(tokens.access, classId, basePayload)
+      if (mode === "edit" && classId != null) {
+        updated = await updateSupervisorClass(
+          tokens.access,
+          classId,
+          basePayload,
+        );
       } else {
         updated = await createSupervisorClass(tokens.access, {
           ...basePayload,
           category: DEFAULT_CLASS_CATEGORY,
-        })
+        });
       }
 
-      onSuccess(updated, mode)
+      onSuccess(updated, mode);
     } catch (submitError) {
       setToastMessage(
         submitError instanceof Error
           ? submitError.message
-          : 'ثبت اطلاعات کلاس ناموفق بود. لطفاً دوباره تلاش کنید.',
-      )
+          : "ثبت اطلاعات کلاس ناموفق بود. لطفاً دوباره تلاش کنید.",
+      );
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return {
     form,
@@ -183,5 +189,5 @@ export function useSupervisorClassForm({
     toastMessage,
     clearMessages,
     submit,
-  }
+  };
 }

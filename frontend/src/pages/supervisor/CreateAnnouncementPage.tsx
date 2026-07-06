@@ -1,10 +1,10 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
-import { AnnouncementForm } from '../../components/announcement/AnnouncementForm'
-import { BottomNav } from '../../components/layout/BottomNav'
+import { AnnouncementForm } from "../../components/announcement/AnnouncementForm";
+import { BottomNav } from "../../components/layout/BottomNav";
 
 export function CreateAnnouncementPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div className="page-gradient min-h-screen pb-32">
@@ -29,5 +29,5 @@ export function CreateAnnouncementPage() {
 
       <BottomNav variant="supervisor" activeTab="home" />
     </div>
-  )
+  );
 }

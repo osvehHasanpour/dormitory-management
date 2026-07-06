@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 export function RequestEmptyState() {
   return (
@@ -14,5 +14,5 @@ export function RequestEmptyState() {
         رفتن به صفحه اصلی
       </Link>
     </div>
-  )
+  );
 }

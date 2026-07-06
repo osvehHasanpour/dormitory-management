@@ -1,27 +1,27 @@
-import { Plus } from 'lucide-react'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { BottomNav } from '../../components/layout/BottomNav'
-import { DeleteClassConfirm } from '../../components/supervisor-classes/DeleteClassConfirm'
-import { SupervisorClassCard } from '../../components/supervisor-classes/SupervisorClassCard'
-import { SupervisorClassCardSkeleton } from '../../components/supervisor-classes/SupervisorClassCardSkeleton'
-import { SupervisorClassEmptyState } from '../../components/supervisor-classes/SupervisorClassEmptyState'
-import { SupervisorClassFormSheet } from '../../components/supervisor-classes/SupervisorClassFormSheet'
-import { SupervisorClassTabs } from '../../components/supervisor-classes/SupervisorClassTabs'
-import { Toast } from '../../components/ui/Toast'
-import { supervisorClassTabs } from '../../data/supervisorClassItems'
-import { useSupervisorClasses } from '../../hooks/useSupervisorClasses'
-import type { SupervisorClassItem } from '../../types/supervisorClass'
+import { BottomNav } from "../../components/layout/BottomNav";
+import { DeleteClassConfirm } from "../../components/supervisor-classes/DeleteClassConfirm";
+import { SupervisorClassCard } from "../../components/supervisor-classes/SupervisorClassCard";
+import { SupervisorClassCardSkeleton } from "../../components/supervisor-classes/SupervisorClassCardSkeleton";
+import { SupervisorClassEmptyState } from "../../components/supervisor-classes/SupervisorClassEmptyState";
+import { SupervisorClassFormSheet } from "../../components/supervisor-classes/SupervisorClassFormSheet";
+import { SupervisorClassTabs } from "../../components/supervisor-classes/SupervisorClassTabs";
+import { Toast } from "../../components/ui/Toast";
+import { supervisorClassTabs } from "../../data/supervisorClassItems";
+import { useSupervisorClasses } from "../../hooks/useSupervisorClasses";
+import type { SupervisorClassItem } from "../../types/supervisorClass";
 
 interface FormSheetState {
-  isOpen: boolean
-  mode: 'create' | 'edit'
-  classItem: SupervisorClassItem | null
+  isOpen: boolean;
+  mode: "create" | "edit";
+  classItem: SupervisorClassItem | null;
 }
 
 export function SupervisorClassesPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     items,
     isLoading,
@@ -34,46 +34,55 @@ export function SupervisorClassesPage() {
     setFeedback,
     cancelClass,
     cancellingId,
-  } = useSupervisorClasses()
+  } = useSupervisorClasses();
 
   const [formSheet, setFormSheet] = useState<FormSheetState>({
     isOpen: false,
-    mode: 'create',
+    mode: "create",
     classItem: null,
-  })
-  const [deleteTarget, setDeleteTarget] = useState<SupervisorClassItem | null>(null)
+  });
+  const [deleteTarget, setDeleteTarget] = useState<SupervisorClassItem | null>(
+    null,
+  );
 
   const activeTabLabel =
-    supervisorClassTabs.find((tab) => tab.value === activeTab)?.label ?? ''
+    supervisorClassTabs.find((tab) => tab.value === activeTab)?.label ?? "";
 
   const openCreate = () => {
-    setFormSheet({ isOpen: true, mode: 'create', classItem: null })
-  }
+    setFormSheet({ isOpen: true, mode: "create", classItem: null });
+  };
 
   const openEdit = (classItem: SupervisorClassItem) => {
-    setFormSheet({ isOpen: true, mode: 'edit', classItem })
-  }
+    setFormSheet({ isOpen: true, mode: "edit", classItem });
+  };
 
   const closeForm = () => {
-    setFormSheet((prev) => ({ ...prev, isOpen: false }))
-  }
+    setFormSheet((prev) => ({ ...prev, isOpen: false }));
+  };
 
-  const handleFormSuccess = (_item: SupervisorClassItem, mode: 'create' | 'edit') => {
-    closeForm()
-    setFeedback(mode === 'edit' ? 'کلاس با موفقیت ویرایش شد.' : 'کلاس جدید با موفقیت ثبت شد.')
-    refresh()
-  }
+  const handleFormSuccess = (
+    _item: SupervisorClassItem,
+    mode: "create" | "edit",
+  ) => {
+    closeForm();
+    setFeedback(
+      mode === "edit"
+        ? "کلاس با موفقیت ویرایش شد."
+        : "کلاس جدید با موفقیت ثبت شد.",
+    );
+    refresh();
+  };
 
   const confirmDelete = async () => {
     if (!deleteTarget) {
-      return
+      return;
     }
 
-    const succeeded = await cancelClass(deleteTarget.id)
+    const succeeded = await cancelClass(deleteTarget.id);
     if (succeeded) {
-      setDeleteTarget(null)
+      setDeleteTarget(null);
     }
-  }
+  };
 
   return (
     <div className="page-gradient min-h-screen pb-32">
@@ -151,5 +160,5 @@ export function SupervisorClassesPage() {
 
       <BottomNav variant="supervisor" activeTab="home" />
     </div>
-  )
+  );
 }

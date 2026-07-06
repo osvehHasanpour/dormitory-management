@@ -1,13 +1,13 @@
-import { useCallback, useState } from 'react'
-import { Controller } from 'react-hook-form'
+import { useCallback, useState } from "react";
+import { Controller } from "react-hook-form";
 
-import { BlockDropdown } from '../shared/BlockDropdown'
-import { ReadOnlyLocationFields } from '../shared/ReadOnlyLocationFields'
-import { CategorySelector } from './CategorySelector'
-import { PhotoUploader } from './PhotoUploader'
-import { useMaintenanceReport } from '../../hooks/useMaintenanceReport'
-import type { Block } from '../../services/blockService'
-import { isRoomCategory } from '../../types/maintenance'
+import { BlockDropdown } from "../shared/BlockDropdown";
+import { ReadOnlyLocationFields } from "../shared/ReadOnlyLocationFields";
+import { CategorySelector } from "./CategorySelector";
+import { PhotoUploader } from "./PhotoUploader";
+import { useMaintenanceReport } from "../../hooks/useMaintenanceReport";
+import type { Block } from "../../services/blockService";
+import { isRoomCategory } from "../../types/maintenance";
 
 export function MaintenanceReportForm() {
   const {
@@ -19,7 +19,7 @@ export function MaintenanceReportForm() {
     isProfileLoading,
     submitReport,
     clearMessages,
-  } = useMaintenanceReport()
+  } = useMaintenanceReport();
   const {
     control,
     register,
@@ -27,25 +27,25 @@ export function MaintenanceReportForm() {
     setValue,
     watch,
     formState: { errors },
-  } = form
-  const selectedPhoto = watch('photo')
-  const selectedCategory = watch('category')
-  const roomNumber = watch('roomNumber')
-  const showRoomField = isRoomCategory(selectedCategory)
+  } = form;
+  const selectedPhoto = watch("photo");
+  const selectedCategory = watch("category");
+  const roomNumber = watch("roomNumber");
+  const showRoomField = isRoomCategory(selectedCategory);
 
-  const [selectedBlock, setSelectedBlock] = useState<Block | null>(null)
+  const [selectedBlock, setSelectedBlock] = useState<Block | null>(null);
 
   const handleBlockSelect = useCallback((block: Block | null) => {
-    setSelectedBlock(block)
-  }, [])
+    setSelectedBlock(block);
+  }, []);
 
   const onSubmit = handleSubmit(async (values) => {
     if (!selectedBlock) {
-      return
+      return;
     }
 
-    await submitReport(values, { blockName: selectedBlock.name })
-  })
+    await submitReport(values, { blockName: selectedBlock.name });
+  });
 
   return (
     <form className="flex w-full flex-col gap-4" onSubmit={onSubmit}>
@@ -57,8 +57,8 @@ export function MaintenanceReportForm() {
             blockId={field.value}
             error={errors.blockId?.message}
             onChange={(value) => {
-              clearMessages()
-              field.onChange(value)
+              clearMessages();
+              field.onChange(value);
             }}
             onBlur={field.onBlur}
             onBlockSelect={handleBlockSelect}
@@ -74,8 +74,8 @@ export function MaintenanceReportForm() {
             value={field.value}
             error={errors.category?.message}
             onChange={(value) => {
-              clearMessages()
-              field.onChange(value)
+              clearMessages();
+              field.onChange(value);
             }}
             onBlur={field.onBlur}
           />
@@ -93,17 +93,21 @@ export function MaintenanceReportForm() {
       ) : null}
 
       <label className="block glass-card p-4">
-        <span className="mb-3 block text-body-sm-strong text-ink">توضیحات تکمیلی</span>
+        <span className="mb-3 block text-body-sm-strong text-ink">
+          توضیحات تکمیلی
+        </span>
         <textarea
           rows={5}
           placeholder="جزئیات خرابی را بنویسید..."
           className="min-h-32 w-full resize-y rounded-md border border-stone bg-canvas px-4 py-3 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30"
-          {...register('description', {
+          {...register("description", {
             onChange: clearMessages,
           })}
         />
         {errors.description?.message ? (
-          <p className="mt-2 text-body-sm text-error">{errors.description.message}</p>
+          <p className="mt-2 text-body-sm text-error">
+            {errors.description.message}
+          </p>
         ) : null}
       </label>
 
@@ -111,8 +115,8 @@ export function MaintenanceReportForm() {
         file={selectedPhoto}
         error={errors.photo?.message}
         onChange={(file) => {
-          clearMessages()
-          setValue('photo', file, { shouldDirty: true, shouldValidate: true })
+          clearMessages();
+          setValue("photo", file, { shouldDirty: true, shouldValidate: true });
         }}
       />
 
@@ -139,8 +143,8 @@ export function MaintenanceReportForm() {
         disabled={isSubmitting}
         className="mt-1 flex h-11 w-full items-center justify-center rounded-md bg-primary text-button-md text-on-primary transition-colors hover:bg-primary-pressed disabled:cursor-not-allowed disabled:bg-surface-card disabled:text-ash"
       >
-        {isSubmitting ? 'در حال ثبت...' : 'ثبت درخواست خرابی'}
+        {isSubmitting ? "در حال ثبت..." : "ثبت درخواست خرابی"}
       </button>
     </form>
-  )
+  );
 }

@@ -1,13 +1,16 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState } from "react";
 
-import type { AnnouncementListItem } from '../../types/announcement'
-import { formatAbsoluteDate, formatPersianDateShort } from '../../utils/formatRelativeDate'
+import type { AnnouncementListItem } from "../../types/announcement";
+import {
+  formatAbsoluteDate,
+  formatPersianDateShort,
+} from "../../utils/formatRelativeDate";
 
 interface AnnouncementCardProps {
-  announcement: AnnouncementListItem
+  announcement: AnnouncementListItem;
 }
 
-function SpeakerFilledIcon({ className = '' }: { className?: string }) {
+function SpeakerFilledIcon({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
       <path
@@ -27,10 +30,10 @@ function SpeakerFilledIcon({ className = '' }: { className?: string }) {
         strokeLinecap="round"
       />
     </svg>
-  )
+  );
 }
 
-function ChevronDownIcon({ className = '' }: { className?: string }) {
+function ChevronDownIcon({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
       <path
@@ -42,19 +45,19 @@ function ChevronDownIcon({ className = '' }: { className?: string }) {
         strokeLinejoin="round"
       />
     </svg>
-  )
+  );
 }
 
 export function AnnouncementCard({ announcement }: AnnouncementCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const previewText = useMemo(() => {
-    const normalized = announcement.content.replace(/\s+/g, ' ').trim()
+    const normalized = announcement.content.replace(/\s+/g, " ").trim();
     if (normalized.length <= 100) {
-      return normalized
+      return normalized;
     }
-    return `${normalized.slice(0, 100).trim()}...`
-  }, [announcement.content])
+    return `${normalized.slice(0, 100).trim()}...`;
+  }, [announcement.content]);
 
   return (
     <article className="glass-card overflow-hidden rounded-md border border-hairline p-4 text-right shadow-elevated">
@@ -70,8 +73,12 @@ export function AnnouncementCard({ announcement }: AnnouncementCardProps) {
               <SpeakerFilledIcon className="h-7 w-7 text-ink" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-heading-md text-ink">{announcement.title}</span>
-              <span className="mt-1 block line-clamp-2 text-body-sm text-body-text">{previewText}</span>
+              <span className="block text-heading-md text-ink">
+                {announcement.title}
+              </span>
+              <span className="mt-1 block line-clamp-2 text-body-sm text-body-text">
+                {previewText}
+              </span>
             </span>
           </div>
 
@@ -81,7 +88,7 @@ export function AnnouncementCard({ announcement }: AnnouncementCardProps) {
             </span>
             <ChevronDownIcon
               className={`h-5 w-5 text-mute transition-transform duration-500 ease-out ${
-                isExpanded ? 'rotate-180' : 'rotate-0'
+                isExpanded ? "rotate-180" : "rotate-0"
               }`}
             />
           </span>
@@ -90,12 +97,14 @@ export function AnnouncementCard({ announcement }: AnnouncementCardProps) {
 
       <div
         className={`grid transition-[grid-template-rows] duration-500 ease-out ${
-          isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+          isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
         <div className="overflow-hidden">
           <div className="mt-4 border-t border-hairline pt-4">
-            <p className="whitespace-pre-line text-body-md text-body-text">{announcement.content}</p>
+            <p className="whitespace-pre-line text-body-md text-body-text">
+              {announcement.content}
+            </p>
             <p className="mt-4 text-caption-md text-mute">
               تاریخ انتشار: {formatAbsoluteDate(announcement.created_at)}
             </p>
@@ -103,5 +112,5 @@ export function AnnouncementCard({ announcement }: AnnouncementCardProps) {
         </div>
       </div>
     </article>
-  )
+  );
 }

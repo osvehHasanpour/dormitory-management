@@ -1,8 +1,8 @@
-import { Camera, User } from 'lucide-react'
+import { Camera, User } from "lucide-react";
 
 interface ProfileAvatarProps {
-  imageUrl?: string | null
-  alt: string
+  imageUrl?: string | null;
+  alt: string;
 }
 
 export function ProfileAvatar({ imageUrl, alt }: ProfileAvatarProps) {
@@ -10,9 +10,17 @@ export function ProfileAvatar({ imageUrl, alt }: ProfileAvatarProps) {
     <div className="relative mx-auto h-28 w-28 sm:h-32 sm:w-32">
       <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full border-2 border-hairline bg-surface-card shadow-elevated">
         {imageUrl ? (
-          <img src={imageUrl} alt={alt} className="h-full w-full object-cover" />
+          <img
+            src={imageUrl}
+            alt={alt}
+            className="h-full w-full object-cover"
+          />
         ) : (
-          <User className="h-14 w-14 text-ash sm:h-16 sm:w-16" strokeWidth={1.5} aria-hidden="true" />
+          <User
+            className="h-14 w-14 text-ash sm:h-16 sm:w-16"
+            strokeWidth={1.5}
+            aria-hidden="true"
+          />
         )}
       </div>
 
@@ -24,5 +32,5 @@ export function ProfileAvatar({ imageUrl, alt }: ProfileAvatarProps) {
         <Camera className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
       </button>
     </div>
-  )
+  );
 }

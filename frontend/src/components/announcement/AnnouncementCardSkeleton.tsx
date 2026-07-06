@@ -1,4 +1,4 @@
-import { Skeleton } from '../ui/Skeleton'
+import { Skeleton } from "../ui/Skeleton";
 
 export function AnnouncementCardSkeleton() {
   return (
@@ -18,5 +18,5 @@ export function AnnouncementCardSkeleton() {
         </div>
       </div>
     </div>
-  )
+  );
 }

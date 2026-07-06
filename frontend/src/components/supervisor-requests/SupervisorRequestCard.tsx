@@ -1,7 +1,7 @@
-import { MapPin } from 'lucide-react'
+import { MapPin } from "lucide-react";
 
-import type { StudentRequestDetail } from '../../types/request'
-import { formatPersianDateShort } from '../../utils/formatRelativeDate'
+import type { StudentRequestDetail } from "../../types/request";
+import { formatPersianDateShort } from "../../utils/formatRelativeDate";
 import {
   formatHandledBy,
   getEffectiveRequestStatus,
@@ -9,18 +9,21 @@ import {
   getRequestDetailSubtitle,
   getRequestDetailTitle,
   getStatusBadgeVariant,
-} from '../../utils/requestHelpers'
-import { StatusBadge } from '../ui/StatusBadge'
+} from "../../utils/requestHelpers";
+import { StatusBadge } from "../ui/StatusBadge";
 
 interface SupervisorRequestCardProps {
-  request: StudentRequestDetail
-  onClick: (request: StudentRequestDetail) => void
+  request: StudentRequestDetail;
+  onClick: (request: StudentRequestDetail) => void;
 }
 
-export function SupervisorRequestCard({ request, onClick }: SupervisorRequestCardProps) {
-  const title = getRequestDetailTitle(request)
-  const location = getRequestDetailSubtitle(request)
-  const requester = formatHandledBy(request.user)
+export function SupervisorRequestCard({
+  request,
+  onClick,
+}: SupervisorRequestCardProps) {
+  const title = getRequestDetailTitle(request);
+  const location = getRequestDetailSubtitle(request);
+  const requester = formatHandledBy(request.user);
 
   return (
     <button
@@ -38,7 +41,11 @@ export function SupervisorRequestCard({ request, onClick }: SupervisorRequestCar
 
       {location ? (
         <div className="flex items-center gap-1.5 text-body-sm text-mute">
-          <MapPin className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden="true" />
+          <MapPin
+            className="h-4 w-4 shrink-0"
+            strokeWidth={2}
+            aria-hidden="true"
+          />
           <span className="line-clamp-1">{location}</span>
         </div>
       ) : null}
@@ -48,5 +55,5 @@ export function SupervisorRequestCard({ request, onClick }: SupervisorRequestCar
         <span>{formatPersianDateShort(request.created_at)}</span>
       </div>
     </button>
-  )
+  );
 }

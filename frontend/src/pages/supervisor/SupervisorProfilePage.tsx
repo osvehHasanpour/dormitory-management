@@ -1,35 +1,39 @@
-import navProfile from '@media/nav-profile.png'
-import { Building2, IdCard, User } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import navProfile from "@media/nav-profile.png";
+import { Building2, IdCard, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-import { BottomNav } from '../../components/layout/BottomNav'
-import { ProfileAvatar } from '../../components/profile/ProfileAvatar'
-import { ProfileInfoList } from '../../components/profile/ProfileInfoList'
-import { Skeleton } from '../../components/ui/Skeleton'
-import { useProfile } from '../../hooks/useProfile'
-import { formatProfileValue, getProfileFullName } from '../../types/auth'
+import { BottomNav } from "../../components/layout/BottomNav";
+import { ProfileAvatar } from "../../components/profile/ProfileAvatar";
+import { ProfileInfoList } from "../../components/profile/ProfileInfoList";
+import { Skeleton } from "../../components/ui/Skeleton";
+import { useProfile } from "../../hooks/useProfile";
+import { formatProfileValue, getProfileFullName } from "../../types/auth";
 
 export function SupervisorProfilePage() {
-  const navigate = useNavigate()
-  const { profile, isLoading, error, refetch } = useProfile()
+  const navigate = useNavigate();
+  const { profile, isLoading, error, refetch } = useProfile();
 
-  const avatarUrl = profile?.profile_image || navProfile
+  const avatarUrl = profile?.profile_image || navProfile;
 
   const profileItems = profile
     ? [
-        { icon: User, label: 'نام و نام خانوادگی', value: getProfileFullName(profile) },
+        {
+          icon: User,
+          label: "نام و نام خانوادگی",
+          value: getProfileFullName(profile),
+        },
         {
           icon: IdCard,
-          label: 'شماره پرسنلی',
+          label: "شماره پرسنلی",
           value: formatProfileValue(profile.personnel_code),
         },
         {
           icon: Building2,
-          label: 'بلوک تحت نظارت',
+          label: "بلوک تحت نظارت",
           value: formatProfileValue(profile.block_name),
         },
       ]
-    : []
+    : [];
 
   return (
     <div className="page-gradient min-h-screen pb-28">
@@ -77,6 +81,5 @@ export function SupervisorProfilePage() {
 
       <BottomNav variant="supervisor" activeTab="profile" />
     </div>
-  )
+  );
 }
-

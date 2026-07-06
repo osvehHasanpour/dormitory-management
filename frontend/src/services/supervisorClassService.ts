@@ -1,44 +1,46 @@
-import axios from 'axios'
+import axios from "axios";
 
-import apiClient from './apiClient'
-import type { ApiSuccessResponse } from '../types/auth'
+import apiClient from "./apiClient";
+import type { ApiSuccessResponse } from "../types/auth";
 import type {
   SupervisorClassCreatePayload,
   SupervisorClassItem,
   SupervisorClassUpdatePayload,
   SupervisorClassesData,
-} from '../types/supervisorClass'
+} from "../types/supervisorClass";
 
 function extractApiError(error: unknown, fallback: string): string {
   if (axios.isAxiosError(error)) {
-    const message = error.response?.data?.message
-    if (typeof message === 'string' && message.trim()) {
-      return message
+    const message = error.response?.data?.message;
+    if (typeof message === "string" && message.trim()) {
+      return message;
     }
   }
 
-  return fallback
+  return fallback;
 }
 
 export async function fetchSupervisorClasses(
   accessToken: string,
-  statusFilter?: 'active',
+  statusFilter?: "active",
 ): Promise<SupervisorClassesData> {
   try {
-    const response = await apiClient.get<ApiSuccessResponse<SupervisorClassesData>>(
-      '/v1/supervisor/classes/',
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        params: statusFilter ? { status: statusFilter } : undefined,
-      },
-    )
+    const response = await apiClient.get<
+      ApiSuccessResponse<SupervisorClassesData>
+    >("/v1/supervisor/classes/", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      params: statusFilter ? { status: statusFilter } : undefined,
+    });
 
-    return response.data.data
+    return response.data.data;
   } catch (error) {
     throw new Error(
-      extractApiError(error, 'دریافت کلاس‌ها ناموفق بود. لطفاً دوباره تلاش کنید.'),
+      extractApiError(
+        error,
+        "دریافت کلاس‌ها ناموفق بود. لطفاً دوباره تلاش کنید.",
+      ),
       { cause: error },
-    )
+    );
   }
 }
 
@@ -47,18 +49,18 @@ export async function createSupervisorClass(
   payload: SupervisorClassCreatePayload,
 ): Promise<SupervisorClassItem> {
   try {
-    const response = await apiClient.post<ApiSuccessResponse<SupervisorClassItem>>(
-      '/v1/supervisor/classes/',
-      payload,
-      { headers: { Authorization: `Bearer ${accessToken}` } },
-    )
+    const response = await apiClient.post<
+      ApiSuccessResponse<SupervisorClassItem>
+    >("/v1/supervisor/classes/", payload, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
 
-    return response.data.data
+    return response.data.data;
   } catch (error) {
     throw new Error(
-      extractApiError(error, 'ثبت کلاس ناموفق بود. لطفاً دوباره تلاش کنید.'),
+      extractApiError(error, "ثبت کلاس ناموفق بود. لطفاً دوباره تلاش کنید."),
       { cause: error },
-    )
+    );
   }
 }
 
@@ -68,18 +70,18 @@ export async function updateSupervisorClass(
   payload: SupervisorClassUpdatePayload,
 ): Promise<SupervisorClassItem> {
   try {
-    const response = await apiClient.put<ApiSuccessResponse<SupervisorClassItem>>(
-      `/v1/supervisor/classes/${classId}/`,
-      payload,
-      { headers: { Authorization: `Bearer ${accessToken}` } },
-    )
+    const response = await apiClient.put<
+      ApiSuccessResponse<SupervisorClassItem>
+    >(`/v1/supervisor/classes/${classId}/`, payload, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
 
-    return response.data.data
+    return response.data.data;
   } catch (error) {
     throw new Error(
-      extractApiError(error, 'ویرایش کلاس ناموفق بود. لطفاً دوباره تلاش کنید.'),
+      extractApiError(error, "ویرایش کلاس ناموفق بود. لطفاً دوباره تلاش کنید."),
       { cause: error },
-    )
+    );
   }
 }
 
@@ -88,16 +90,17 @@ export async function cancelSupervisorClass(
   classId: number,
 ): Promise<SupervisorClassItem> {
   try {
-    const response = await apiClient.delete<ApiSuccessResponse<SupervisorClassItem>>(
-      `/v1/supervisor/classes/${classId}/`,
-      { headers: { Authorization: `Bearer ${accessToken}` } },
-    )
+    const response = await apiClient.delete<
+      ApiSuccessResponse<SupervisorClassItem>
+    >(`/v1/supervisor/classes/${classId}/`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
 
-    return response.data.data
+    return response.data.data;
   } catch (error) {
     throw new Error(
-      extractApiError(error, 'حذف کلاس ناموفق بود. لطفاً دوباره تلاش کنید.'),
+      extractApiError(error, "حذف کلاس ناموفق بود. لطفاً دوباره تلاش کنید."),
       { cause: error },
-    )
+    );
   }
 }

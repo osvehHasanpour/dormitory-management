@@ -1,17 +1,20 @@
-import { supervisorClassTabs } from '../../data/supervisorClassItems'
-import type { SupervisorClassTabValue } from '../../types/supervisorClass'
+import { supervisorClassTabs } from "../../data/supervisorClassItems";
+import type { SupervisorClassTabValue } from "../../types/supervisorClass";
 
 interface SupervisorClassTabsProps {
-  activeTab: SupervisorClassTabValue
-  onChange: (tab: SupervisorClassTabValue) => void
+  activeTab: SupervisorClassTabValue;
+  onChange: (tab: SupervisorClassTabValue) => void;
 }
 
-export function SupervisorClassTabs({ activeTab, onChange }: SupervisorClassTabsProps) {
+export function SupervisorClassTabs({
+  activeTab,
+  onChange,
+}: SupervisorClassTabsProps) {
   return (
     <div className="overflow-x-auto pb-1">
       <div className="flex min-w-max gap-5 border-b border-hairline px-1">
         {supervisorClassTabs.map((tab) => {
-          const isActive = tab.value === activeTab
+          const isActive = tab.value === activeTab;
 
           return (
             <button
@@ -19,9 +22,9 @@ export function SupervisorClassTabs({ activeTab, onChange }: SupervisorClassTabs
               type="button"
               onClick={() => onChange(tab.value)}
               className={`relative pb-3 text-caption-md font-bold transition-colors ${
-                isActive ? 'text-ink' : 'text-mute hover:text-ink'
+                isActive ? "text-ink" : "text-mute hover:text-ink"
               }`}
-              aria-current={isActive ? 'true' : undefined}
+              aria-current={isActive ? "true" : undefined}
             >
               {tab.label}
               {isActive ? (
@@ -31,9 +34,9 @@ export function SupervisorClassTabs({ activeTab, onChange }: SupervisorClassTabs
                 />
               ) : null}
             </button>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }

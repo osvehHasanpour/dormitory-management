@@ -1,40 +1,49 @@
-import { Pencil, Trash2 } from 'lucide-react'
+import { Pencil, Trash2 } from "lucide-react";
 
 import {
   buildRatingStars,
   formatAverageRating,
-} from '../../data/supervisorClassItems'
-import type { SupervisorClassItem } from '../../types/supervisorClass'
-import { formatClassSchedule } from '../../utils/formatClassSchedule'
-import { formatPersianDateShort } from '../../utils/formatRelativeDate'
+} from "../../data/supervisorClassItems";
+import type { SupervisorClassItem } from "../../types/supervisorClass";
+import { formatClassSchedule } from "../../utils/formatClassSchedule";
+import { formatPersianDateShort } from "../../utils/formatRelativeDate";
 
 interface SupervisorClassCardProps {
-  classItem: SupervisorClassItem
-  onEdit: (classItem: SupervisorClassItem) => void
-  onDelete: (classItem: SupervisorClassItem) => void
-  isCancelling: boolean
+  classItem: SupervisorClassItem;
+  onEdit: (classItem: SupervisorClassItem) => void;
+  onDelete: (classItem: SupervisorClassItem) => void;
+  isCancelling: boolean;
 }
 
 function getTeacherName(classItem: SupervisorClassItem): string {
   const teacherName =
-    `${classItem.teacher?.first_name ?? ''} ${classItem.teacher?.last_name ?? ''}`.trim()
-  return teacherName || 'نامشخص'
+    `${classItem.teacher?.first_name ?? ""} ${classItem.teacher?.last_name ?? ""}`.trim();
+  return teacherName || "نامشخص";
 }
 
-function getStatusBadge(classItem: SupervisorClassItem): { label: string; className: string } {
-  if (classItem.status === 'cancelled') {
-    return { label: classItem.status_display, className: 'bg-error-pale text-error' }
+function getStatusBadge(classItem: SupervisorClassItem): {
+  label: string;
+  className: string;
+} {
+  if (classItem.status === "cancelled") {
+    return {
+      label: classItem.status_display,
+      className: "bg-error-pale text-error",
+    };
   }
 
-  if (classItem.status === 'completed') {
-    return { label: classItem.status_display, className: 'bg-surface-card text-mute' }
+  if (classItem.status === "completed") {
+    return {
+      label: classItem.status_display,
+      className: "bg-surface-card text-mute",
+    };
   }
 
   if (classItem.is_full) {
-    return { label: 'تکمیل ظرفیت', className: 'bg-warning-pale text-warning' }
+    return { label: "تکمیل ظرفیت", className: "bg-warning-pale text-warning" };
   }
 
-  return { label: 'فعال', className: 'bg-success-pale text-success-deep' }
+  return { label: "فعال", className: "bg-success-pale text-success-deep" };
 }
 
 export function SupervisorClassCard({
@@ -46,29 +55,39 @@ export function SupervisorClassCard({
   const capacityPercent =
     classItem.capacity > 0
       ? Math.min(100, (classItem.enrolled_count / classItem.capacity) * 100)
-      : 0
-  const statusBadge = getStatusBadge(classItem)
-  const canManage = classItem.status === 'active' && new Date(classItem.end_datetime) > new Date()
+      : 0;
+  const statusBadge = getStatusBadge(classItem);
+  const canManage =
+    classItem.status === "active" &&
+    new Date(classItem.end_datetime) > new Date();
   const scheduleText = formatClassSchedule(
     classItem.day_of_week_display,
     classItem.start_time,
     classItem.end_time,
-  )
+  );
 
   return (
     <article className="glass-card p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="line-clamp-2 text-heading-md text-ink">{classItem.title}</h3>
-          <p className="mt-1 text-body-sm text-mute">مدرس: {getTeacherName(classItem)}</p>
+          <h3 className="line-clamp-2 text-heading-md text-ink">
+            {classItem.title}
+          </h3>
+          <p className="mt-1 text-body-sm text-mute">
+            مدرس: {getTeacherName(classItem)}
+          </p>
           <p className="mt-1 text-body-sm text-mute">
             تاریخ: {formatPersianDateShort(classItem.start_datetime)}
           </p>
-          {scheduleText !== '—' ? (
-            <p className="mt-1 text-body-sm text-mute">برنامه: {scheduleText}</p>
+          {scheduleText !== "—" ? (
+            <p className="mt-1 text-body-sm text-mute">
+              برنامه: {scheduleText}
+            </p>
           ) : null}
           {classItem.location.trim() ? (
-            <p className="mt-1 text-body-sm text-mute">مکان: {classItem.location}</p>
+            <p className="mt-1 text-body-sm text-mute">
+              مکان: {classItem.location}
+            </p>
           ) : null}
         </div>
         <span
@@ -139,5 +158,5 @@ export function SupervisorClassCard({
         </div>
       ) : null}
     </article>
-  )
+  );
 }

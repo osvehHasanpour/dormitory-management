@@ -1,15 +1,15 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
-import { AnnouncementCard } from '../../components/announcement/AnnouncementCard'
-import { AnnouncementCardSkeleton } from '../../components/announcement/AnnouncementCardSkeleton'
-import { AnnouncementsEmptyState } from '../../components/announcement/AnnouncementsEmptyState'
-import { BottomNav } from '../../components/layout/BottomNav'
-import { Toast } from '../../components/ui/Toast'
-import { useAnnouncementsFeed } from '../../hooks/useAnnouncementsFeed'
+import { AnnouncementCard } from "../../components/announcement/AnnouncementCard";
+import { AnnouncementCardSkeleton } from "../../components/announcement/AnnouncementCardSkeleton";
+import { AnnouncementsEmptyState } from "../../components/announcement/AnnouncementsEmptyState";
+import { BottomNav } from "../../components/layout/BottomNav";
+import { Toast } from "../../components/ui/Toast";
+import { useAnnouncementsFeed } from "../../hooks/useAnnouncementsFeed";
 
 export function SupervisorAnnouncementsPage() {
-  const navigate = useNavigate()
-  const { announcements, isLoading, error, retry } = useAnnouncementsFeed()
+  const navigate = useNavigate();
+  const { announcements, isLoading, error, retry } = useAnnouncementsFeed();
 
   return (
     <div className="page-gradient min-h-screen pb-40">
@@ -31,14 +31,21 @@ export function SupervisorAnnouncementsPage() {
 
         <section className="space-y-3">
           {isLoading
-            ? Array.from({ length: 4 }, (_, index) => <AnnouncementCardSkeleton key={index} />)
+            ? Array.from({ length: 4 }, (_, index) => (
+                <AnnouncementCardSkeleton key={index} />
+              ))
             : null}
 
-          {!isLoading && !error && announcements.length === 0 ? <AnnouncementsEmptyState /> : null}
+          {!isLoading && !error && announcements.length === 0 ? (
+            <AnnouncementsEmptyState />
+          ) : null}
 
           {!isLoading && !error
             ? announcements.map((announcement) => (
-                <AnnouncementCard key={announcement.id} announcement={announcement} />
+                <AnnouncementCard
+                  key={announcement.id}
+                  announcement={announcement}
+                />
               ))
             : null}
         </section>
@@ -50,7 +57,7 @@ export function SupervisorAnnouncementsPage() {
         <div className="mx-auto w-full max-w-lg">
           <button
             type="button"
-            onClick={() => navigate('/supervisor/announcements/new')}
+            onClick={() => navigate("/supervisor/announcements/new")}
             className="flex h-11 w-full items-center justify-center rounded-md bg-primary text-button-md text-on-primary shadow-elevated transition-colors hover:bg-primary-pressed"
           >
             + ثبت اطلاعیه جدید
@@ -60,5 +67,5 @@ export function SupervisorAnnouncementsPage() {
 
       <BottomNav variant="supervisor" activeTab="home" />
     </div>
-  )
+  );
 }

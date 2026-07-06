@@ -1,10 +1,10 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
-import { CleaningRequestForm } from '../../components/cleaning/CleaningRequestForm'
-import { BottomNav } from '../../components/layout/BottomNav'
+import { CleaningRequestForm } from "../../components/cleaning/CleaningRequestForm";
+import { BottomNav } from "../../components/layout/BottomNav";
 
 export function CleaningRequestPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div className="page-gradient min-h-screen pb-28">
@@ -34,5 +34,5 @@ export function CleaningRequestPage() {
 
       <BottomNav activeTab="home" />
     </div>
-  )
+  );
 }

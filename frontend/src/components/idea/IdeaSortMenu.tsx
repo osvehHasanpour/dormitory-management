@@ -1,14 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from "react";
 
-import { ideaSortOptions } from '../../data/ideaItems'
-import type { IdeaOrdering } from '../../types/idea'
+import { ideaSortOptions } from "../../data/ideaItems";
+import type { IdeaOrdering } from "../../types/idea";
 
 interface IdeaSortMenuProps {
-  activeOrdering: IdeaOrdering
-  onChange: (ordering: IdeaOrdering) => void
+  activeOrdering: IdeaOrdering;
+  onChange: (ordering: IdeaOrdering) => void;
 }
 
-function SortIcon({ className = '' }: { className?: string }) {
+function SortIcon({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
       <path
@@ -25,43 +25,43 @@ function SortIcon({ className = '' }: { className?: string }) {
         strokeLinejoin="round"
       />
     </svg>
-  )
+  );
 }
 
 export function IdeaSortMenu({ activeOrdering, onChange }: IdeaSortMenuProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) {
-      return
+      return;
     }
 
     const handlePointerDown = (event: MouseEvent) => {
       if (!containerRef.current?.contains(event.target as Node)) {
-        setIsOpen(false)
+        setIsOpen(false);
       }
-    }
+    };
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsOpen(false)
+      if (event.key === "Escape") {
+        setIsOpen(false);
       }
-    }
+    };
 
-    document.addEventListener('mousedown', handlePointerDown)
-    document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('mousedown', handlePointerDown)
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [isOpen])
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
 
   const handleSelect = (ordering: IdeaOrdering) => {
-    onChange(ordering)
-    setIsOpen(false)
-  }
+    onChange(ordering);
+    setIsOpen(false);
+  };
 
   return (
     <div ref={containerRef} className="absolute left-4 top-5 z-20 sm:left-6">
@@ -82,7 +82,7 @@ export function IdeaSortMenu({ activeOrdering, onChange }: IdeaSortMenuProps) {
           className="absolute left-0 top-full z-30 mt-2 min-w-[10.5rem] overflow-hidden rounded-md border border-hairline bg-white/95 py-1 text-right shadow-elevated backdrop-blur-md"
         >
           {ideaSortOptions.map((option) => {
-            const isActive = option.value === activeOrdering
+            const isActive = option.value === activeOrdering;
 
             return (
               <button
@@ -93,16 +93,16 @@ export function IdeaSortMenu({ activeOrdering, onChange }: IdeaSortMenuProps) {
                 onClick={() => handleSelect(option.value)}
                 className={`block w-full px-4 py-2.5 text-right text-body-sm transition-colors ${
                   isActive
-                    ? 'bg-primary/20 font-bold text-ink'
-                    : 'text-body-text hover:bg-primary/10'
+                    ? "bg-primary/20 font-bold text-ink"
+                    : "text-body-text hover:bg-primary/10"
                 }`}
               >
                 {option.label}
               </button>
-            )
+            );
           })}
         </div>
       ) : null}
     </div>
-  )
+  );
 }

@@ -1,8 +1,10 @@
 interface SupervisorRequestEmptyStateProps {
-  filterLabel: string
+  filterLabel: string;
 }
 
-export function SupervisorRequestEmptyState({ filterLabel }: SupervisorRequestEmptyStateProps) {
+export function SupervisorRequestEmptyState({
+  filterLabel,
+}: SupervisorRequestEmptyStateProps) {
   return (
     <div className="flex flex-col items-center glass-card border-dashed px-6 py-12 text-center">
       <p className="text-heading-md text-ink">درخواستی یافت نشد</p>
@@ -10,5 +12,5 @@ export function SupervisorRequestEmptyState({ filterLabel }: SupervisorRequestEm
         در بخش «{filterLabel}» هنوز درخواستی ثبت نشده است.
       </p>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { Skeleton } from '../ui/Skeleton'
+import { Skeleton } from "../ui/Skeleton";
 
 export function SupervisorClassCardSkeleton() {
   return (
@@ -20,5 +20,5 @@ export function SupervisorClassCardSkeleton() {
         <Skeleton className="h-10 flex-1 rounded-md" />
       </div>
     </div>
-  )
+  );
 }

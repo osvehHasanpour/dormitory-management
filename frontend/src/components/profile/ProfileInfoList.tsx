@@ -1,20 +1,20 @@
-import type { LucideIcon } from 'lucide-react'
+import type { LucideIcon } from "lucide-react";
 
 interface ProfileInfoItem {
-  icon: LucideIcon
-  label: string
-  value: string
+  icon: LucideIcon;
+  label: string;
+  value: string;
 }
 
 interface ProfileInfoListProps {
-  items: ProfileInfoItem[]
+  items: ProfileInfoItem[];
 }
 
 export function ProfileInfoList({ items }: ProfileInfoListProps) {
   return (
     <div className="glass-card overflow-hidden">
       {items.map((item, index) => {
-        const Icon = item.icon
+        const Icon = item.icon;
 
         return (
           <div key={item.label}>
@@ -32,10 +32,12 @@ export function ProfileInfoList({ items }: ProfileInfoListProps) {
               </div>
             </div>
 
-            {index < items.length - 1 ? <div className="glass-divider" /> : null}
+            {index < items.length - 1 ? (
+              <div className="glass-divider" />
+            ) : null}
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
