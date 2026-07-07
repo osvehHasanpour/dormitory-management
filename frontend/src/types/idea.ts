@@ -5,6 +5,8 @@ export interface IdeaRequestFormValues {
 
 export type IdeaVoteType = "up" | "down";
 
+export type IdeaOrdering = "most_votes" | "least_votes" | "newest";
+
 export interface IdeaAuthorSummary {
   id: number;
   personnel_code: string;

@@ -2,12 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 
 import { useAuth } from "./useAuth";
 import { fetchIdeas, voteIdea } from "../services/ideaService";
-import type { IdeaFeedItem, IdeaVoteType } from "../types/idea";
+import type { IdeaFeedItem, IdeaOrdering, IdeaVoteType } from "../types/idea";
 
 interface UseIdeasFeedResult {
   ideas: IdeaFeedItem[];
   isLoading: boolean;
   error: string | null;
+  ordering: IdeaOrdering;
+  setOrdering: (ordering: IdeaOrdering) => void;
   votingIds: Set<number>;
   retry: () => void;
   vote: (ideaId: number, voteType: IdeaVoteType) => Promise<void>;
@@ -17,6 +19,7 @@ export function useIdeasFeed(): UseIdeasFeedResult {
   const { tokens, isAuthenticated } = useAuth();
   const accessToken = tokens?.access;
   const [ideas, setIdeas] = useState<IdeaFeedItem[]>([]);
+  const [ordering, setOrdering] = useState<IdeaOrdering>("newest");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [votingIds, setVotingIds] = useState<Set<number>>(() => new Set());
@@ -34,7 +37,7 @@ export function useIdeasFeed(): UseIdeasFeedResult {
     setError(null);
 
     try {
-      const data = await fetchIdeas(accessToken);
+      const data = await fetchIdeas(accessToken, ordering);
       setIdeas(data.results ?? []);
     } catch (loadError) {
       setError(
@@ -46,7 +49,7 @@ export function useIdeasFeed(): UseIdeasFeedResult {
     } finally {
       setIsLoading(false);
     }
-  }, [accessToken, isAuthenticated]);
+  }, [accessToken, isAuthenticated, ordering]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -103,6 +106,8 @@ export function useIdeasFeed(): UseIdeasFeedResult {
     ideas,
     isLoading,
     error,
+    ordering,
+    setOrdering,
     votingIds,
     retry,
     vote,

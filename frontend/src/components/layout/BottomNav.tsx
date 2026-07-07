@@ -36,8 +36,8 @@ export function BottomNav({
 
   const confirmLogout = useCallback(() => {
     closeLogoutDialog();
-    logout();
     navigate("/login", { replace: true });
+    logout();
   }, [closeLogoutDialog, logout, navigate]);
 
   const navItems =

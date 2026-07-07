@@ -25,4 +25,4 @@ jobs:
         run: cd frontend && npm ci
 
       - name: Run Prettier Check
-        run: cd frontend && npx prettier --check .
+        run: cd frontend && npm run format:check

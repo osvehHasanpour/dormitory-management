@@ -37,7 +37,7 @@ class IdeaListCreateView(EnvelopedAPIViewMixin, APIView):
         parameters=[
             OpenApiParameter(
                 name='ordering',
-                description='مرتب‌سازی: newest، oldest، most_votes',
+                description='مرتب‌سازی: newest، oldest، most_votes، least_votes',
                 required=False,
                 type=str,
             ),

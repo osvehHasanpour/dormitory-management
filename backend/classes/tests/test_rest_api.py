@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import time, timedelta
 
 from django.urls import reverse
 from django.utils import timezone
@@ -55,6 +55,9 @@ class ClassesAPITestBase(APITestCase):
             capacity=2,
             start_datetime=now + timedelta(days=2),
             end_datetime=now + timedelta(days=2, hours=2),
+            day_of_week=Class.DayOfWeek.SATURDAY,
+            start_time=time(10, 0),
+            end_time=time(12, 0),
             created_by=self.supervisor,
             teacher=self.supervisor,
             category=Class.Category.SPORTS,
@@ -98,6 +101,11 @@ class ClassListDetailAPITests(ClassesAPITestBase):
         self.assertIn('can_rate', data)
         self.assertIn('remaining_capacity', data)
         self.assertIn('average_rating', data)
+        self.assertIn('day_of_week', data)
+        self.assertIn('day_of_week_display', data)
+        self.assertIn('start_time', data)
+        self.assertIn('end_time', data)
+        self.assertEqual(data['day_of_week'], Class.DayOfWeek.SATURDAY)
         self.assertFalse(data['is_enrolled'])
         self.assertFalse(data['can_rate'])
 

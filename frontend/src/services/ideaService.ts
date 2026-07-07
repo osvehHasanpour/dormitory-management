@@ -4,6 +4,7 @@ import apiClient from "./apiClient";
 import type { ApiSuccessResponse } from "../types/auth";
 import type {
   IdeaListResponse,
+  IdeaOrdering,
   IdeaRequestFormValues,
   IdeaRequestResponse,
   IdeaVoteType,
@@ -53,11 +54,13 @@ export async function submitIdeaRequest(
 
 export async function fetchIdeas(
   accessToken: string,
+  ordering: IdeaOrdering = "newest",
 ): Promise<IdeaListResponse> {
   try {
     const response = await apiClient.get<ApiSuccessResponse<IdeaListResponse>>(
       "/v1/ideas/",
       {
+        params: { ordering },
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

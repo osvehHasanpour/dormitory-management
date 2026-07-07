@@ -42,14 +42,13 @@ export function ClassRegistrationPage() {
     setActiveTab(tab);
   };
 
-  const handleSubmitRating = async (score: number, comment: string) => {
+  const handleSubmitRating = async (score: number) => {
     if (!selectedRatingClass) {
       return;
     }
 
     const success = await submitRatingForClass(selectedRatingClass.id, {
       score,
-      comment,
     });
     if (success) {
       setSelectedRatingClass(null);

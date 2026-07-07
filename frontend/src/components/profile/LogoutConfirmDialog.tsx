@@ -88,7 +88,7 @@ export function LogoutConfirmDialog({
         className="relative z-10 w-full max-w-sm animate-modal-pop glass-card-modal rounded-lg px-7 py-7 text-center"
       >
         <h2 id="logout-confirm-title" className="text-heading-lg text-ink">
-          آیا مطمئن هستید؟
+          آیا از خروج اطمینان دارید؟
         </h2>
         <p
           id="logout-confirm-description"
@@ -103,14 +103,17 @@ export function LogoutConfirmDialog({
             onClick={onCancel}
             className="h-10 flex-1 rounded-md bg-secondary-bg px-5 text-button-md text-on-secondary transition-colors active:bg-secondary-pressed sm:max-w-[140px]"
           >
-            انصراف
+            خیر
           </button>
           <button
             type="button"
-            onClick={onConfirm}
+            onClick={(event) => {
+              event.stopPropagation();
+              onConfirm();
+            }}
             className="h-10 flex-1 rounded-md bg-primary px-5 text-button-md text-on-primary transition-colors active:bg-primary-pressed sm:max-w-[140px]"
           >
-            بله، خروج
+            بله
           </button>
         </div>
       </div>
