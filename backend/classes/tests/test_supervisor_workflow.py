@@ -219,6 +219,47 @@ class SupervisorClassCRUDTests(SupervisorClassTestBase):
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0]['id'], self.ended_class.id)
 
+    def test_finished_filter_returns_non_active_classes(self):
+        self.auth_as(self.supervisor)
+        response = self.client.get(
+            reverse('supervisor_classes:class-list'),
+            {'status': 'finished'},
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = response.data['data']['results']
+        ids = [item['id'] for item in results]
+        self.assertIn(self.ended_class.id, ids)
+        self.assertNotIn(self.active_class.id, ids)
+        self.assertTrue(
+            all(item['status'] != Class.Status.ACTIVE for item in results),
+        )
+
+    def test_ended_active_class_is_marked_completed_on_list(self):
+        now = timezone.now()
+        expired_active = Class.objects.create(
+            title='کلاس منقضی',
+            description='کلاس گذشته',
+            location='اتاق ۲۰۲',
+            capacity=10,
+            start_datetime=now - timedelta(days=2),
+            end_datetime=now - timedelta(hours=1),
+            day_of_week=Class.DayOfWeek.MONDAY,
+            start_time=time(9, 0),
+            end_time=time(11, 0),
+            created_by=self.supervisor,
+            teacher=self.supervisor,
+            category=Class.Category.EDUCATIONAL,
+            status=Class.Status.ACTIVE,
+        )
+
+        self.auth_as(self.supervisor)
+        response = self.client.get(reverse('supervisor_classes:class-list'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        expired_active.refresh_from_db()
+        self.assertEqual(expired_active.status, Class.Status.COMPLETED)
+
     def test_active_filter_excludes_past_end_datetime(self):
         now = timezone.now()
         expired_active = Class.objects.create(
