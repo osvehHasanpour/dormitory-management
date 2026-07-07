@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   cancelSupervisorClass,
@@ -28,7 +28,7 @@ interface UseSupervisorClassesResult {
 export function useSupervisorClasses(): UseSupervisorClassesResult {
   const { tokens, isAuthenticated } = useAuth();
   const accessToken = tokens?.access;
-  const [items, setItems] = useState<SupervisorClassItem[]>([]);
+  const [allItems, setAllItems] = useState<SupervisorClassItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<SupervisorClassTabValue>("active");
@@ -39,7 +39,7 @@ export function useSupervisorClasses(): UseSupervisorClassesResult {
   const loadItems = useCallback(async () => {
     if (!isAuthenticated || !accessToken) {
       setError("برای مشاهده کلاس‌ها باید وارد سامانه شوید.");
-      setItems([]);
+      setAllItems([]);
       setIsLoading(false);
       return;
     }
@@ -48,22 +48,30 @@ export function useSupervisorClasses(): UseSupervisorClassesResult {
     setError(null);
 
     try {
-      const data = await fetchSupervisorClasses(
-        accessToken,
-        activeTab === "active" ? "active" : undefined,
-      );
-      setItems(data.results ?? []);
+      const data = await fetchSupervisorClasses(accessToken);
+      setAllItems(data.results ?? []);
     } catch (loadError) {
       setError(
         loadError instanceof Error
           ? loadError.message
           : "دریافت کلاس‌ها ناموفق بود. لطفاً دوباره تلاش کنید.",
       );
-      setItems([]);
+      setAllItems([]);
     } finally {
       setIsLoading(false);
     }
-  }, [accessToken, activeTab, isAuthenticated]);
+  }, [accessToken, isAuthenticated]);
+
+  const items = useMemo(() => {
+    const now = Date.now();
+
+    return allItems.filter((classItem) => {
+      const endTime = new Date(classItem.end_datetime).getTime();
+      const hasEnded = Number.isFinite(endTime) && endTime <= now;
+
+      return activeTab === "finished" ? hasEnded : !hasEnded;
+    });
+  }, [allItems, activeTab]);
 
   useEffect(() => {
     void loadItems();

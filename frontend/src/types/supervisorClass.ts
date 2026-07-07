@@ -1,6 +1,6 @@
 import type { ClassUserSummary } from "./class";
 
-export type SupervisorClassTabValue = "active" | "all";
+export type SupervisorClassTabValue = "active" | "finished";
 
 export type SupervisorClassStatus = "active" | "completed" | "cancelled";
 
