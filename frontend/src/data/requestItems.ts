@@ -3,7 +3,7 @@ import serviceCleaningRequest from "@media/service-cleaning-request.jpg";
 import serviceRepairTools from "@media/service-repair-tools.jpg";
 import serviceRoomSupplies from "@media/service-room-supplies.jpg";
 
-import type { RequestFilterValue, RequestType } from "../types/request";
+import type { MyRequestsTab, RequestType } from "../types/request";
 
 export interface RequestTypeConfig {
   type: RequestType;
@@ -34,14 +34,14 @@ export const requestTypeConfigs: RequestTypeConfig[] = [
   },
 ];
 
-export const requestFilterTabs: { value: RequestFilterValue; label: string }[] =
-  [
-    { value: "all", label: "همه" },
-    ...requestTypeConfigs.map((config) => ({
-      value: config.type,
-      label: config.label,
-    })),
-  ];
+export const requestFilterTabs: { value: MyRequestsTab; label: string }[] = [
+  { value: "all", label: "همه" },
+  ...requestTypeConfigs.map((config) => ({
+    value: config.type,
+    label: config.label,
+  })),
+  { value: "complaints", label: "شکایات" },
+];
 
 export function getRequestTypeConfig(type: RequestType): RequestTypeConfig {
   const config = requestTypeConfigs.find((item) => item.type === type);

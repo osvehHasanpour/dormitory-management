@@ -26,6 +26,12 @@ export interface ComplaintAuthorSummary {
   last_name: string;
 }
 
+export type ComplaintStatus =
+  | "pending"
+  | "reviewed"
+  | "answered"
+  | "rejected";
+
 export interface ComplaintRequestResponse {
   id: number;
   type: "complaint";
@@ -42,4 +48,32 @@ export interface ComplaintRequestResponse {
   responded_at?: string | null;
   responded_within_sla?: boolean | null;
   author: ComplaintAuthorSummary;
+}
+
+export interface MyComplaintListItem {
+  id: number;
+  title: string;
+  description: string;
+  category: string | null;
+  category_display: string | null;
+  status: ComplaintStatus;
+  status_display: string;
+  supervisor_response: string;
+  response_text?: string;
+  created_at: string;
+  responded_at?: string | null;
+}
+
+export interface MyComplaintDetail extends MyComplaintListItem {
+  type: "complaint";
+  type_display: string;
+  responded_within_sla?: boolean | null;
+  author: ComplaintAuthorSummary;
+}
+
+export interface PaginatedComplaintsData {
+  count?: number;
+  next?: string | null;
+  previous?: string | null;
+  results: MyComplaintListItem[];
 }

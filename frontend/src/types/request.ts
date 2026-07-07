@@ -5,6 +5,8 @@ export type RequestStatus =
 
 export type RequestFilterValue = "all" | RequestType;
 
+export type MyRequestsTab = RequestFilterValue | "complaints";
+
 export interface UserSummary {
   id: number;
   personnel_code: string;
