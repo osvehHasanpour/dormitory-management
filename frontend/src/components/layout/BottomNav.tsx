@@ -5,6 +5,7 @@ import { bottomNavItems } from "../../data/dashboardItems";
 import { supervisorBottomNavItems } from "../../data/supervisorDashboardItems";
 import { useAuth } from "../../hooks/useAuth";
 import type { BottomNavTab } from "../../types/dashboard";
+import { logoutRequest } from "../../services/authService";
 import {
   LogoutConfirmDialog,
   type DialogAnchor,
@@ -20,7 +21,7 @@ export function BottomNav({
   variant = "student",
 }: BottomNavProps) {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, tokens } = useAuth();
   const [logoutAnchor, setLogoutAnchor] = useState<DialogAnchor | null>(null);
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
 
@@ -34,11 +35,14 @@ export function BottomNav({
     setLogoutAnchor(null);
   }, []);
 
-  const confirmLogout = useCallback(() => {
+  const confirmLogout = useCallback(async () => {
     closeLogoutDialog();
     navigate("/login", { replace: true });
+    if (tokens?.refresh) {
+      await logoutRequest(tokens.refresh);
+    }
     logout();
-  }, [closeLogoutDialog, logout, navigate]);
+  }, [closeLogoutDialog, logout, navigate, tokens?.refresh]);
 
   const navItems =
     variant === "supervisor" ? supervisorBottomNavItems : bottomNavItems;
