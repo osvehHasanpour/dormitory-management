@@ -18,6 +18,11 @@ export interface LoginResult {
   user: AuthUser;
 }
 
+export interface RefreshTokensResult {
+  access: string;
+  refresh?: string;
+}
+
 function extractErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error) && error.response?.data) {
     const data = error.response.data as ApiErrorResponse;
@@ -50,6 +55,42 @@ export async function login(
     };
   } catch (error) {
     throw new Error(extractErrorMessage(error), { cause: error });
+  }
+}
+
+export async function refreshTokens(
+  refreshToken: string,
+): Promise<RefreshTokensResult> {
+  try {
+    const response = await apiClient.post<
+      ApiSuccessResponse<Record<string, unknown>>
+    >("/v1/auth/token/refresh/", { refresh: refreshToken });
+
+    const data = response.data.data;
+    const access = typeof data.access === "string" ? data.access : "";
+    const refresh = typeof data.refresh === "string" ? data.refresh : undefined;
+
+    if (!access.trim()) {
+      throw new Error("توکن دسترسی جدید دریافت نشد.");
+    }
+
+    return { access, refresh };
+  } catch (error) {
+    throw new Error(
+      extractErrorMessage(error) || "تازه‌سازی توکن ناموفق بود.",
+      { cause: error },
+    );
+  }
+}
+
+export async function logoutRequest(refreshToken: string): Promise<void> {
+  try {
+    await apiClient.post<ApiSuccessResponse<Record<string, never>>>(
+      "/v1/auth/logout/",
+      { refresh: refreshToken },
+    );
+  } catch {
+    // Best-effort: local logout should still succeed even if API fails.
   }
 }
 
