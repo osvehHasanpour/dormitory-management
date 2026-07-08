@@ -55,6 +55,11 @@ export function SupervisorIdeasComplaintsPage() {
     rejectIdea,
   } = useSupervisorFeedbackResponse({ onSuccess: handleFeedbackUpdated });
 
+  const handleCloseDetail = () => {
+    clearMessages();
+    closeDetail();
+  };
+
   const displaySource = detail ?? preview;
   const activeTabLabel =
     feedbackFilterTabs.find((tab) => tab.value === activeFilter)?.label ??
@@ -110,7 +115,7 @@ export function SupervisorIdeasComplaintsPage() {
 
       <BottomSheet
         isOpen={selectedId !== null}
-        onClose={closeDetail}
+        onClose={handleCloseDetail}
         title={displaySource?.title ?? "جزئیات"}
         subtitle={
           displaySource

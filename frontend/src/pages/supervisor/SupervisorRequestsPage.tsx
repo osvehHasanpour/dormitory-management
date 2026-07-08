@@ -50,6 +50,11 @@ export function SupervisorRequestsPage() {
   const { form, isSubmitting, toastMessage, clearMessages, submit } =
     useSupervisorRequestUpdate({ onSuccess: handleRequestUpdated });
 
+  const handleCloseDetail = () => {
+    clearMessages();
+    closeDetail();
+  };
+
   const displaySource = detail ?? preview;
   const sheetTitle = displaySource
     ? getRequestDetailTitle(displaySource)
@@ -116,7 +121,7 @@ export function SupervisorRequestsPage() {
 
       <BottomSheet
         isOpen={selectedId !== null}
-        onClose={closeDetail}
+        onClose={handleCloseDetail}
         title={sheetTitle}
         subtitle={sheetSubtitle}
       >
