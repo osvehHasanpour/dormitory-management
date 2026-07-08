@@ -38,9 +38,14 @@ class SupervisorFeedbackListView(EnvelopedAPIViewMixin, APIView):
 
     @extend_schema(
         tags=['Supervisor Feedback'],
-        summary='لیست ایده‌ها، شکایات و پیشنهادات (سرپرست)',
+        summary='لیست ایده‌ها و شکایات (سرپرست)',
         parameters=[
-            OpenApiParameter(name='type', description='idea، complaint، suggestion', required=False, type=str),
+            OpenApiParameter(
+                name='type',
+                description='idea (شامل پیشنهادهای قدیمی)، complaint',
+                required=False,
+                type=str,
+            ),
             OpenApiParameter(name='status', description='pending، reviewed، answered، rejected', required=False, type=str),
             OpenApiParameter(name='category', description='دسته‌بندی', required=False, type=str),
             OpenApiParameter(name='date_from', description='از تاریخ (YYYY-MM-DD)', required=False, type=str),
@@ -94,7 +99,7 @@ class SupervisorFeedbackDetailView(EnvelopedAPIViewMixin, APIView):
 
     @extend_schema(
         tags=['Supervisor Feedback'],
-        summary='جزئیات ایده / شکایت / پیشنهاد (سرپرست)',
+        summary='جزئیات ایده / شکایت (سرپرست)',
         responses={
             200: OpenApiResponse(SupervisorFeedbackDetailSerializer),
             404: OpenApiResponse(description='یافت نشد'),
@@ -155,7 +160,7 @@ class SupervisorFeedbackRespondView(EnvelopedAPIViewMixin, APIView):
 
     @extend_schema(
         tags=['Supervisor Feedback'],
-        summary='پاسخ به شکایت یا پیشنهاد (سرپرست)',
+        summary='پاسخ به شکایت (سرپرست)',
         request=FeedbackResponseSerializer,
         responses={
             200: OpenApiResponse(SupervisorFeedbackDetailSerializer),
@@ -192,7 +197,7 @@ class SupervisorFeedbackRejectView(EnvelopedAPIViewMixin, APIView):
 
     @extend_schema(
         tags=['Supervisor Feedback'],
-        summary='رد شکایت یا پیشنهاد (سرپرست)',
+        summary='رد شکایت (سرپرست)',
         request=FeedbackRejectSerializer,
         responses={
             200: OpenApiResponse(SupervisorFeedbackDetailSerializer),
@@ -229,7 +234,7 @@ class SupervisorFeedbackMarkReviewView(EnvelopedAPIViewMixin, APIView):
 
     @extend_schema(
         tags=['Supervisor Feedback'],
-        summary='علامت‌گذاری شکایت/پیشنهاد به «در حال بررسی» (سرپرست)',
+        summary='علامت‌گذاری شکایت به «در حال بررسی» (سرپرست)',
         responses={
             200: OpenApiResponse(SupervisorFeedbackDetailSerializer),
             400: OpenApiResponse(description='خطای اعتبارسنجی'),

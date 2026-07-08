@@ -38,7 +38,11 @@ class SupervisorFeedbackSelector:
     ):
         queryset = cls._base_queryset()
 
-        if feedback_type:
+        if feedback_type == IdeaComplaint.Type.IDEA:
+            queryset = queryset.filter(
+                type__in=[IdeaComplaint.Type.IDEA, IdeaComplaint.Type.SUGGESTION],
+            )
+        elif feedback_type:
             queryset = queryset.filter(type=feedback_type)
 
         if status:
@@ -104,11 +108,18 @@ class SupervisorFeedbackSelector:
         }
 
     @classmethod
+    def _normalize_supervisor_type(cls, item):
+        if item.type == IdeaComplaint.Type.SUGGESTION:
+            return IdeaComplaint.Type.IDEA, IdeaComplaint.Type.IDEA.label
+        return item.type, item.get_type_display()
+
+    @classmethod
     def build_supervisor_payload(cls, item):
+        feedback_type, type_display = cls._normalize_supervisor_type(item)
         return {
             'id': item.id,
-            'type': item.type,
-            'type_display': item.get_type_display(),
+            'type': feedback_type,
+            'type_display': type_display,
             'category': item.category or None,
             'category_display': item.get_category_display() if item.category else None,
             'title': item.title,
