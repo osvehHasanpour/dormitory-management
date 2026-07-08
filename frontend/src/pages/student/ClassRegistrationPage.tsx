@@ -68,7 +68,6 @@ export function ClassRegistrationPage() {
         >
           ‹
         </button>
-        <span className="mt-2 h-3 w-3 rounded-full bg-primary ring-4 ring-primary/20" />
       </header>
 
       <main className="mx-auto w-full max-w-lg px-4 sm:px-6">

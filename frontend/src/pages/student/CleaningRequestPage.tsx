@@ -22,10 +22,8 @@ export function CleaningRequestPage() {
       <main className="mx-auto w-full max-w-lg px-4 sm:px-6">
         <section className="mb-6 text-center">
           <h1 className="text-heading-xl text-ink">ثبت جزئیات درخواست نظافت</h1>
-          <div className="mt-4 flex items-center gap-3">
-            <span className="h-px flex-1 bg-hairline" aria-hidden="true" />
+          <div className="mt-4">
             <h2 className="text-heading-lg text-mute">درخواست نظافت</h2>
-            <span className="h-px flex-1 bg-hairline" aria-hidden="true" />
           </div>
         </section>
 
