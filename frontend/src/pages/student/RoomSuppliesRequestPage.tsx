@@ -17,19 +17,13 @@ export function RoomSuppliesRequestPage() {
         >
           ‹
         </button>
-        <span
-          className="mt-2 h-3 w-3 rounded-full bg-primary ring-4 ring-primary/20"
-          aria-label="اعلان جدید"
-        />
       </header>
 
       <main className="mx-auto w-full max-w-lg px-4 sm:px-6">
         <section className="mb-6 text-center">
           <h1 className="text-heading-xl text-ink">ثبت جزئیات درخواست لوازم</h1>
-          <div className="mt-4 flex items-center gap-3">
-            <span className="h-px flex-1 bg-hairline" aria-hidden="true" />
+          <div className="mt-4">
             <h2 className="text-heading-lg text-mute">درخواست لوازم اتاق</h2>
-            <span className="h-px flex-1 bg-hairline" aria-hidden="true" />
           </div>
         </section>
 
