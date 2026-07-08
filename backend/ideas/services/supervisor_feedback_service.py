@@ -54,7 +54,7 @@ class SupervisorFeedbackService:
 
         item = SupervisorFeedbackSelector.get_for_supervisor_update(item_id)
 
-        if item.type != IdeaComplaint.Type.IDEA:
+        if item.type not in (IdeaComplaint.Type.IDEA, IdeaComplaint.Type.SUGGESTION):
             raise IdeaServiceError(
                 'این عملیات فقط برای ایده‌ها مجاز است.',
                 {'type': ['عملیات بررسی فقط برای ایده‌ها قابل انجام است.']},
@@ -112,13 +112,10 @@ class SupervisorFeedbackService:
 
         item = SupervisorFeedbackSelector.get_for_supervisor_update(item_id)
 
-        if item.type not in (
-            IdeaComplaint.Type.COMPLAINT,
-            IdeaComplaint.Type.SUGGESTION,
-        ):
+        if item.type != IdeaComplaint.Type.COMPLAINT:
             raise IdeaServiceError(
-                'این عملیات فقط برای شکایت و پیشنهاد مجاز است.',
-                {'type': ['پاسخ‌دهی فقط برای شکایت و پیشنهاد قابل انجام است.']},
+                'این عملیات فقط برای شکایت مجاز است.',
+                {'type': ['پاسخ‌دهی فقط برای شکایت قابل انجام است.']},
             )
 
         if item.status not in (
@@ -151,13 +148,10 @@ class SupervisorFeedbackService:
 
         item = SupervisorFeedbackSelector.get_for_supervisor_update(item_id)
 
-        if item.type not in (
-            IdeaComplaint.Type.COMPLAINT,
-            IdeaComplaint.Type.SUGGESTION,
-        ):
+        if item.type != IdeaComplaint.Type.COMPLAINT:
             raise IdeaServiceError(
-                'این عملیات فقط برای شکایت و پیشنهاد مجاز است.',
-                {'type': ['رد کردن فقط برای شکایت و پیشنهاد قابل انجام است.']},
+                'این عملیات فقط برای شکایت مجاز است.',
+                {'type': ['رد کردن فقط برای شکایت قابل انجام است.']},
             )
 
         if item.status not in (
@@ -196,13 +190,10 @@ class SupervisorFeedbackService:
 
         item = SupervisorFeedbackSelector.get_for_supervisor_update(item_id)
 
-        if item.type not in (
-            IdeaComplaint.Type.COMPLAINT,
-            IdeaComplaint.Type.SUGGESTION,
-        ):
+        if item.type != IdeaComplaint.Type.COMPLAINT:
             raise IdeaServiceError(
-                'این عملیات فقط برای شکایت و پیشنهاد مجاز است.',
-                {'type': ['علامت‌گذاری «در حال بررسی» فقط برای شکایت و پیشنهاد است.']},
+                'این عملیات فقط برای شکایت مجاز است.',
+                {'type': ['علامت‌گذاری «در حال بررسی» فقط برای شکایت است.']},
             )
 
         if item.status != IdeaComplaint.Status.PENDING:

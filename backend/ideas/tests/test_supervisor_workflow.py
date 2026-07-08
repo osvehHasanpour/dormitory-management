@@ -107,6 +107,47 @@ class SupervisorFeedbackWorkflowTests(SupervisorFeedbackTestBase):
         self.assertEqual(results[0]['type'], IdeaComplaint.Type.COMPLAINT)
         self.assertEqual(results[0]['category'], IdeaComplaint.Category.SECURITY)
 
+    def test_idea_filter_includes_legacy_suggestions(self):
+        self._create_complaint()
+        idea = self._create_idea()
+        legacy_suggestion = IdeaComplaint.objects.create(
+            user=self.student,
+            type=IdeaComplaint.Type.SUGGESTION,
+            title='کلاس زبان',
+            description='کلاس مکالمه انگلیسی',
+            status=IdeaComplaint.Status.PENDING,
+        )
+
+        self.auth_as(self.supervisor)
+        response = self.client.get(
+            reverse('supervisor_feedback:feedback-list'),
+            {'type': IdeaComplaint.Type.IDEA},
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        ids = [item['id'] for item in response.data['data']['results']]
+        self.assertIn(idea.id, ids)
+        self.assertIn(legacy_suggestion.id, ids)
+
+    def test_legacy_suggestion_mapped_to_idea_in_payload(self):
+        legacy_suggestion = IdeaComplaint.objects.create(
+            user=self.student,
+            type=IdeaComplaint.Type.SUGGESTION,
+            title='کلاس زبان',
+            description='کلاس مکالمه انگلیسی',
+            status=IdeaComplaint.Status.PENDING,
+        )
+
+        self.auth_as(self.supervisor)
+        response = self.client.get(
+            reverse('supervisor_feedback:feedback-detail', kwargs={'pk': legacy_suggestion.pk}),
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.data['data']
+        self.assertEqual(data['type'], IdeaComplaint.Type.IDEA)
+        self.assertEqual(data['type_display'], 'ایده')
+
     def test_supervisor_can_filter_by_category(self):
         self._create_complaint()
         IdeaComplaint.objects.create(

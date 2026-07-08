@@ -8,7 +8,10 @@ import { FeedbackEmptyState } from "../../components/supervisor-feedback/Feedbac
 import { FeedbackFilterTabs } from "../../components/supervisor-feedback/FeedbackFilterTabs";
 import { BottomSheet } from "../../components/ui/BottomSheet";
 import { Toast } from "../../components/ui/Toast";
-import { feedbackFilterTabs } from "../../data/supervisorFeedbackItems";
+import {
+  feedbackFilterTabs,
+  getFeedbackTypeBadgeConfig,
+} from "../../data/supervisorFeedbackItems";
 import { useSupervisorFeedbackDetail } from "../../hooks/useSupervisorFeedbackDetail";
 import { useSupervisorFeedbackFeed } from "../../hooks/useSupervisorFeedbackFeed";
 import { useSupervisorFeedbackResponse } from "../../hooks/useSupervisorFeedbackResponse";
@@ -109,7 +112,11 @@ export function SupervisorIdeasComplaintsPage() {
         isOpen={selectedId !== null}
         onClose={closeDetail}
         title={displaySource?.title ?? "جزئیات"}
-        subtitle={displaySource ? displaySource.type_display : null}
+        subtitle={
+          displaySource
+            ? getFeedbackTypeBadgeConfig(displaySource.type).label
+            : null
+        }
       >
         <FeedbackDetailSheet
           item={detail}

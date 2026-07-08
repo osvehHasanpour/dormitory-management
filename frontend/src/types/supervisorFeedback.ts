@@ -1,8 +1,11 @@
-export type FeedbackType = "idea" | "complaint" | "suggestion";
+export type FeedbackType = "idea" | "complaint";
+
+/** Legacy API value; normalized to `idea` in supervisor UI. */
+export type LegacyFeedbackType = FeedbackType | "suggestion";
 
 export type FeedbackStatus = "pending" | "reviewed" | "answered" | "rejected";
 
-export type FeedbackFilterValue = "all" | "complaint" | "suggestion";
+export type FeedbackFilterValue = "all" | "complaint" | "idea";
 
 export interface FeedbackAuthorSummary {
   id: number;
@@ -14,7 +17,7 @@ export interface FeedbackAuthorSummary {
 
 export interface SupervisorFeedbackItem {
   id: number;
-  type: FeedbackType;
+  type: LegacyFeedbackType;
   type_display: string;
   category: string | null;
   category_display: string | null;

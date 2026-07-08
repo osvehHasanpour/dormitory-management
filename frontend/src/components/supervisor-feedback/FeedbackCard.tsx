@@ -1,4 +1,4 @@
-import { feedbackTypeBadgeConfig } from "../../data/supervisorFeedbackItems";
+import { getFeedbackTypeBadgeConfig } from "../../data/supervisorFeedbackItems";
 import type { SupervisorFeedbackItem } from "../../types/supervisorFeedback";
 import { formatPersianDateShort } from "../../utils/formatRelativeDate";
 import {
@@ -13,7 +13,7 @@ interface FeedbackCardProps {
 }
 
 export function FeedbackCard({ item, onClick }: FeedbackCardProps) {
-  const typeConfig = feedbackTypeBadgeConfig[item.type];
+  const typeConfig = getFeedbackTypeBadgeConfig(item.type);
   const preview = buildFeedbackPreview(item.description);
 
   return (
