@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -51,6 +51,21 @@ export function useBoothRequest(): UseBoothRequestResult {
     setError(null);
     setSuccessMessage(null);
   };
+
+  useEffect(() => {
+    const message = error ?? successMessage;
+    if (!message) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      clearMessages();
+    }, 2600);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [error, successMessage]);
 
   const submitRequest = async (values: BoothRequestFormValues) => {
     clearMessages();
