@@ -27,6 +27,14 @@ class SupervisorClassSelector:
             ratings_count=Count('ratings'),
         )
 
+    @staticmethod
+    def sync_completed_status():
+        """Ensure classes whose end time has passed are no longer marked active."""
+        Class.objects.filter(
+            status=Class.Status.ACTIVE,
+            end_datetime__lte=timezone.now(),
+        ).update(status=Class.Status.COMPLETED)
+
     @classmethod
     def get_supervisor_list(
         cls,
@@ -36,13 +44,15 @@ class SupervisorClassSelector:
         search=None,
         ordering='newest',
     ):
+        cls.sync_completed_status()
+
         queryset = cls._base_queryset()
         queryset = cls.annotate_aggregates(queryset)
 
-        if status_filter:
+        if status_filter == 'finished':
+            queryset = queryset.exclude(status=Class.Status.ACTIVE)
+        elif status_filter:
             queryset = queryset.filter(status=status_filter)
-            if status_filter == Class.Status.ACTIVE:
-                queryset = queryset.filter(end_datetime__gt=timezone.now())
 
         if category:
             queryset = queryset.filter(category=category)

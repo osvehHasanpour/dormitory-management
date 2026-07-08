@@ -48,10 +48,7 @@ export function useSupervisorClasses(): UseSupervisorClassesResult {
     setError(null);
 
     try {
-      const data = await fetchSupervisorClasses(
-        accessToken,
-        activeTab === "active" ? "active" : undefined,
-      );
+      const data = await fetchSupervisorClasses(accessToken, activeTab);
       setItems(data.results ?? []);
     } catch (loadError) {
       setError(

@@ -3,11 +3,9 @@ import "@testing-library/jest-dom";
 import { TextDecoder, TextEncoder } from "node:util";
 
 if (!globalThis.TextEncoder) {
-  // @ts-expect-error - polyfill for jsdom environment
-  globalThis.TextEncoder = TextEncoder;
+  globalThis.TextEncoder = TextEncoder as typeof globalThis.TextEncoder;
 }
 
 if (!globalThis.TextDecoder) {
-  // @ts-expect-error - polyfill for jsdom environment
-  globalThis.TextDecoder = TextDecoder;
+  globalThis.TextDecoder = TextDecoder as typeof globalThis.TextDecoder;
 }

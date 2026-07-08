@@ -5,6 +5,7 @@ import type { ApiSuccessResponse } from "../types/auth";
 import type {
   SupervisorClassCreatePayload,
   SupervisorClassItem,
+  SupervisorClassTabValue,
   SupervisorClassUpdatePayload,
   SupervisorClassesData,
 } from "../types/supervisorClass";
@@ -22,14 +23,14 @@ function extractApiError(error: unknown, fallback: string): string {
 
 export async function fetchSupervisorClasses(
   accessToken: string,
-  statusFilter?: "active",
+  tab: SupervisorClassTabValue = "active",
 ): Promise<SupervisorClassesData> {
   try {
     const response = await apiClient.get<
       ApiSuccessResponse<SupervisorClassesData>
     >("/v1/supervisor/classes/", {
       headers: { Authorization: `Bearer ${accessToken}` },
-      params: statusFilter ? { status: statusFilter } : undefined,
+      params: { status: tab === "finished" ? "finished" : "active" },
     });
 
     return response.data.data;

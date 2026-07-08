@@ -1,9 +1,9 @@
-import type { RequestFilterValue } from "../../types/request";
+import type { MyRequestsTab } from "../../types/request";
 import { requestFilterTabs } from "../../data/requestItems";
 
 interface RequestFilterTabsProps {
-  activeFilter: RequestFilterValue;
-  onChange: (filter: RequestFilterValue) => void;
+  activeFilter: MyRequestsTab;
+  onChange: (filter: MyRequestsTab) => void;
 }
 
 export function RequestFilterTabs({

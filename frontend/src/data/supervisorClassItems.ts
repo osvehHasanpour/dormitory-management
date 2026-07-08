@@ -8,7 +8,7 @@ export interface SupervisorClassTab {
 
 export const supervisorClassTabs: SupervisorClassTab[] = [
   { value: "active", label: "کلاس‌های فعال" },
-  { value: "all", label: "همه کلاس‌ها" },
+  { value: "finished", label: "کلاس‌های پایان‌یافته" },
 ];
 
 // Default category sent on create (form does not expose category selection).
