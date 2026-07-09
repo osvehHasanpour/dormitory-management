@@ -28,12 +28,10 @@ function readRefreshToken(): string | null {
   }
 }
 
-function writeTokens(tokens: { access: string; refresh?: string }) {
+function writeTokens(tokens: { access: string; refresh: string }) {
   try {
     localStorage.setItem(ACCESS_TOKEN_KEY, tokens.access);
-    if (tokens.refresh) {
-      localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refresh);
-    }
+    localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refresh);
   } catch {
     // ignore storage failures
   }

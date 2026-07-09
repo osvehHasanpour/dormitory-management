@@ -20,7 +20,7 @@ export interface LoginResult {
 
 export interface RefreshTokensResult {
   access: string;
-  refresh?: string;
+  refresh: string;
 }
 
 function extractErrorMessage(error: unknown): string {
@@ -68,10 +68,14 @@ export async function refreshTokens(
 
     const data = response.data.data;
     const access = typeof data.access === "string" ? data.access : "";
-    const refresh = typeof data.refresh === "string" ? data.refresh : undefined;
+    const refresh = typeof data.refresh === "string" ? data.refresh : "";
 
     if (!access.trim()) {
       throw new Error("توکن دسترسی جدید دریافت نشد.");
+    }
+
+    if (!refresh.trim()) {
+      throw new Error("توکن تازه‌سازی جدید دریافت نشد.");
     }
 
     return { access, refresh };
