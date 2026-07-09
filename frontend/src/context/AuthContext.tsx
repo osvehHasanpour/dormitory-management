@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 
 import type { AuthTokens, AuthUser } from "../types/auth";
 import { AuthContext } from "./authContext";
@@ -6,6 +6,8 @@ import { AuthContext } from "./authContext";
 const ACCESS_TOKEN_KEY = "dormitory_access_token";
 const REFRESH_TOKEN_KEY = "dormitory_refresh_token";
 const USER_KEY = "dormitory_user";
+const TOKENS_UPDATED_EVENT = "dormitory-auth:tokens-updated";
+const LOGGED_OUT_EVENT = "dormitory-auth:logged-out";
 
 function readStoredAuth(): {
   tokens: AuthTokens | null;
@@ -49,6 +51,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setTokens(null);
     setUser(null);
   }, []);
+
+  useEffect(() => {
+    const syncTokensFromStorage = () => {
+      try {
+        const access = localStorage.getItem(ACCESS_TOKEN_KEY);
+        const refresh = localStorage.getItem(REFRESH_TOKEN_KEY);
+        if (!access || !refresh) return;
+        setTokens((current) => {
+          if (current?.access === access && current?.refresh === refresh) {
+            return current;
+          }
+          return { access, refresh };
+        });
+      } catch {
+        // ignore storage failures
+      }
+    };
+
+    const handleTokensUpdated = () => syncTokensFromStorage();
+    const handleLoggedOut = () => logout();
+
+    window.addEventListener(TOKENS_UPDATED_EVENT, handleTokensUpdated);
+    window.addEventListener(LOGGED_OUT_EVENT, handleLoggedOut);
+
+    return () => {
+      window.removeEventListener(TOKENS_UPDATED_EVENT, handleTokensUpdated);
+      window.removeEventListener(LOGGED_OUT_EVENT, handleLoggedOut);
+    };
+  }, [logout]);
 
   const value = useMemo(
     () => ({
