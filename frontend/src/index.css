@@ -142,6 +142,20 @@
     z-index: 1;
     min-height: 100vh;
   }
+
+  input[type="datetime-local"],
+  input[type="time"],
+  input.date-time-input {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  input[type="datetime-local"]::-webkit-datetime-edit,
+  input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper {
+    min-width: 0;
+  }
 }
 
 @layer components {

@@ -87,7 +87,7 @@ export function BottomSheet({
             </div>
           </header>
 
-          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-7">
+          <div className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-5 py-4 sm:px-7">
             {children}
           </div>
 

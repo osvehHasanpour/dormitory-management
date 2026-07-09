@@ -20,7 +20,9 @@ interface SupervisorClassFormSheetProps {
 }
 
 const fieldClassName =
-  "w-full rounded-md border border-stone bg-canvas px-4 py-3 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30";
+  "w-full min-w-0 max-w-full rounded-md border border-stone bg-canvas px-4 py-3 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30";
+
+const dateTimeFieldClassName = `${fieldClassName} date-time-input`;
 
 export function SupervisorClassFormSheet({
   isOpen,
@@ -66,7 +68,7 @@ export function SupervisorClassFormSheet({
       }
     >
       <form
-        className="space-y-4"
+        className="min-w-0 space-y-4"
         onSubmit={(event) => {
           event.preventDefault();
           void submit({ mode, classId: initialClass?.id });
@@ -110,16 +112,18 @@ export function SupervisorClassFormSheet({
           ) : null}
         </label>
 
-        <label className="block">
+        <label className="block min-w-0">
           <span className="mb-2 block text-body-sm-strong text-ink">
             تاریخ شروع
           </span>
-          <input
-            type="datetime-local"
-            className={fieldClassName}
-            disabled={isSubmitting}
-            {...register("start_datetime", { onChange: clearMessages })}
-          />
+          <div className="min-w-0 overflow-hidden">
+            <input
+              type="datetime-local"
+              className={dateTimeFieldClassName}
+              disabled={isSubmitting}
+              {...register("start_datetime", { onChange: clearMessages })}
+            />
+          </div>
           {errors.start_datetime?.message ? (
             <p className="mt-2 text-body-sm text-error">
               {errors.start_datetime.message}
@@ -127,16 +131,18 @@ export function SupervisorClassFormSheet({
           ) : null}
         </label>
 
-        <label className="block">
+        <label className="block min-w-0">
           <span className="mb-2 block text-body-sm-strong text-ink">
             تاریخ پایان
           </span>
-          <input
-            type="datetime-local"
-            className={fieldClassName}
-            disabled={isSubmitting}
-            {...register("end_datetime", { onChange: clearMessages })}
-          />
+          <div className="min-w-0 overflow-hidden">
+            <input
+              type="datetime-local"
+              className={dateTimeFieldClassName}
+              disabled={isSubmitting}
+              {...register("end_datetime", { onChange: clearMessages })}
+            />
+          </div>
           {errors.end_datetime?.message ? (
             <p className="mt-2 text-body-sm text-error">
               {errors.end_datetime.message}
@@ -167,16 +173,18 @@ export function SupervisorClassFormSheet({
           ) : null}
         </label>
 
-        <label className="block">
+        <label className="block min-w-0">
           <span className="mb-2 block text-body-sm-strong text-ink">
             زمان شروع کلاس
           </span>
-          <input
-            type="time"
-            className={fieldClassName}
-            disabled={isSubmitting}
-            {...register("start_time", { onChange: clearMessages })}
-          />
+          <div className="min-w-0 overflow-hidden">
+            <input
+              type="time"
+              className={dateTimeFieldClassName}
+              disabled={isSubmitting}
+              {...register("start_time", { onChange: clearMessages })}
+            />
+          </div>
           {watch("start_time") ? (
             <p className="mt-1 text-caption-md text-mute">
               {formatPersianTime(watch("start_time"))}
@@ -189,16 +197,18 @@ export function SupervisorClassFormSheet({
           ) : null}
         </label>
 
-        <label className="block">
+        <label className="block min-w-0">
           <span className="mb-2 block text-body-sm-strong text-ink">
             زمان پایان کلاس
           </span>
-          <input
-            type="time"
-            className={fieldClassName}
-            disabled={isSubmitting}
-            {...register("end_time", { onChange: clearMessages })}
-          />
+          <div className="min-w-0 overflow-hidden">
+            <input
+              type="time"
+              className={dateTimeFieldClassName}
+              disabled={isSubmitting}
+              {...register("end_time", { onChange: clearMessages })}
+            />
+          </div>
           {watch("end_time") ? (
             <p className="mt-1 text-caption-md text-mute">
               {formatPersianTime(watch("end_time"))}
