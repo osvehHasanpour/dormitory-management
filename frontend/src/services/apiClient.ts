@@ -4,6 +4,8 @@ import { refreshTokens } from "./authService";
 
 const ACCESS_TOKEN_KEY = "dormitory_access_token";
 const REFRESH_TOKEN_KEY = "dormitory_refresh_token";
+const TOKENS_UPDATED_EVENT = "dormitory-auth:tokens-updated";
+const LOGGED_OUT_EVENT = "dormitory-auth:logged-out";
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000/api",
@@ -28,12 +30,11 @@ function readRefreshToken(): string | null {
   }
 }
 
-function writeTokens(tokens: { access: string; refresh?: string }) {
+function writeTokens(tokens: { access: string; refresh: string }) {
   try {
     localStorage.setItem(ACCESS_TOKEN_KEY, tokens.access);
-    if (tokens.refresh) {
-      localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refresh);
-    }
+    localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refresh);
+    window.dispatchEvent(new CustomEvent(TOKENS_UPDATED_EVENT));
   } catch {
     // ignore storage failures
   }
@@ -43,6 +44,7 @@ function clearStoredTokens() {
   try {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
+    window.dispatchEvent(new CustomEvent(LOGGED_OUT_EVENT));
   } catch {
     // ignore storage failures
   }
@@ -67,6 +69,14 @@ function flushQueue(error: unknown, token: string | null) {
 }
 
 apiClient.interceptors.request.use((config) => {
+  const maybeSkipAuth = (config as unknown as { skipAuth?: boolean }).skipAuth;
+  if (maybeSkipAuth) return config;
+
+  const url = config.url;
+  const isRefreshEndpoint =
+    typeof url === "string" && url.includes("/v1/auth/token/refresh/");
+  if (isRefreshEndpoint) return config;
+
   const existing = config.headers?.Authorization;
   if (existing) return config;
 

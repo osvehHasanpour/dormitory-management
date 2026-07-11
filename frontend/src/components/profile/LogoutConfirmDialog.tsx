@@ -33,6 +33,12 @@ export function LogoutConfirmDialog({
       return;
     }
 
+    const prefersDesktopLayout = window.matchMedia("(min-width: 640px)").matches;
+    if (!prefersDesktopLayout) {
+      setTransformOrigin("center center");
+      return;
+    }
+
     const rect = panelRef.current.getBoundingClientRect();
     const originX = anchor.x - rect.left;
     const originY = anchor.y - rect.top;
@@ -70,7 +76,7 @@ export function LogoutConfirmDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center px-4">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center px-4 pb-20 sm:pb-0">
       <button
         type="button"
         aria-label="بستن"
@@ -85,7 +91,7 @@ export function LogoutConfirmDialog({
         aria-labelledby="logout-confirm-title"
         aria-describedby="logout-confirm-description"
         style={panelStyle}
-        className="relative z-10 w-full max-w-sm animate-modal-pop glass-card-modal rounded-lg px-7 py-7 text-center"
+        className="relative z-10 w-full max-w-sm animate-modal-pop glass-card-modal rounded-lg px-4 py-6 text-center sm:px-7 sm:py-7"
       >
         <h2 id="logout-confirm-title" className="text-heading-lg text-ink">
           آیا از خروج اطمینان دارید؟
@@ -101,9 +107,9 @@ export function LogoutConfirmDialog({
           <button
             type="button"
             onClick={onCancel}
-            className="h-10 flex-1 rounded-md bg-secondary-bg px-5 text-button-md text-on-secondary transition-colors active:bg-secondary-pressed sm:max-w-[140px]"
+            className="h-10 max-sm:h-12 flex-1 rounded-md bg-secondary-bg px-5 text-button-md text-on-secondary transition-colors active:bg-secondary-pressed sm:max-w-[140px]"
           >
-            خیر
+            انصراف
           </button>
           <button
             type="button"
@@ -111,9 +117,9 @@ export function LogoutConfirmDialog({
               event.stopPropagation();
               onConfirm();
             }}
-            className="h-10 flex-1 rounded-md bg-primary px-5 text-button-md text-on-primary transition-colors active:bg-primary-pressed sm:max-w-[140px]"
+            className="h-10 max-sm:h-12 flex-1 rounded-md bg-primary px-5 text-button-md text-on-primary transition-colors active:bg-primary-pressed sm:max-w-[140px]"
           >
-            بله
+            بله خروج
           </button>
         </div>
       </div>

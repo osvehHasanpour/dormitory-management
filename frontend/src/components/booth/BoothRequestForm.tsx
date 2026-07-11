@@ -2,9 +2,7 @@ import { Controller } from "react-hook-form";
 
 import { useBoothRequest } from "../../hooks/useBoothRequest";
 import { boothCategories, tableCountOptions } from "../../types/booth";
-
-const selectClassName =
-  "h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30";
+import { ResponsiveDropdown } from "../ui/ResponsiveDropdown";
 
 export function BoothRequestForm() {
   const {
@@ -53,22 +51,17 @@ export function BoothRequestForm() {
             <span className="mb-3 block text-body-sm-strong text-ink">
               دسته‌بندی محصولات
             </span>
-            <select
+            <ResponsiveDropdown
               value={field.value}
-              onChange={(event) => {
+              onChange={(nextValue) => {
                 clearMessages();
-                field.onChange(event.target.value);
+                field.onChange(nextValue);
               }}
               onBlur={field.onBlur}
-              className={selectClassName}
-            >
-              <option value="">انتخاب دسته‌بندی</option>
-              {boothCategories.map((category) => (
-                <option key={category.value} value={category.value}>
-                  {category.label}
-                </option>
-              ))}
-            </select>
+              options={boothCategories}
+              placeholder="انتخاب دسته‌بندی"
+              panelTitle="دسته‌بندی محصولات"
+            />
             {errors.category?.message ? (
               <p className="mt-2 text-body-sm text-error">
                 {errors.category.message}
@@ -86,22 +79,17 @@ export function BoothRequestForm() {
             <span className="mb-3 block text-body-sm-strong text-ink">
               تعداد میز
             </span>
-            <select
+            <ResponsiveDropdown
               value={field.value}
-              onChange={(event) => {
+              onChange={(nextValue) => {
                 clearMessages();
-                field.onChange(event.target.value);
+                field.onChange(nextValue);
               }}
               onBlur={field.onBlur}
-              className={selectClassName}
-            >
-              <option value="">انتخاب تعداد میز</option>
-              {tableCountOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              options={tableCountOptions}
+              placeholder="انتخاب تعداد میز"
+              panelTitle="تعداد میز"
+            />
             {errors.tableCount?.message ? (
               <p className="mt-2 text-body-sm text-error">
                 {errors.tableCount.message}

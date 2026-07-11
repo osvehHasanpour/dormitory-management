@@ -5,6 +5,7 @@ import { BlockFloorSelector } from "./BlockFloorSelector";
 import { useCleaningRequest } from "../../hooks/useCleaningRequest";
 import type { Block, Floor } from "../../types/cleaning";
 import { cleaningLines, cleaningSpaceTypes } from "../../types/cleaning";
+import { ResponsiveDropdown } from "../ui/ResponsiveDropdown";
 
 export function CleaningRequestForm() {
   const {
@@ -44,9 +45,6 @@ export function CleaningRequestForm() {
       floorLabel: selectedFloor.label,
     });
   });
-
-  const selectClassName =
-    "h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30";
 
   return (
     <form className="flex w-full flex-col gap-4" onSubmit={onSubmit}>
@@ -90,22 +88,17 @@ export function CleaningRequestForm() {
             <span className="mb-3 block text-body-sm-strong text-ink">
               انتخاب لاین
             </span>
-            <select
+            <ResponsiveDropdown
               value={field.value}
-              onChange={(event) => {
+              onChange={(nextValue) => {
                 clearMessages();
-                field.onChange(event.target.value);
+                field.onChange(nextValue);
               }}
               onBlur={field.onBlur}
-              className={selectClassName}
-            >
-              <option value="">همه لاین‌ها</option>
-              {cleaningLines.map((line) => (
-                <option key={line.value} value={line.value}>
-                  {line.label}
-                </option>
-              ))}
-            </select>
+              options={cleaningLines}
+              placeholder="همه لاین‌ها"
+              panelTitle="انتخاب لاین"
+            />
             {errors.line?.message ? (
               <p className="mt-2 text-body-sm text-error">
                 {errors.line.message}
@@ -123,22 +116,17 @@ export function CleaningRequestForm() {
             <span className="mb-3 block text-body-sm-strong text-ink">
               انتخاب فضا
             </span>
-            <select
+            <ResponsiveDropdown
               value={field.value}
-              onChange={(event) => {
+              onChange={(nextValue) => {
                 clearMessages();
-                field.onChange(event.target.value);
+                field.onChange(nextValue);
               }}
               onBlur={field.onBlur}
-              className={selectClassName}
-            >
-              <option value="">انتخاب فضای مورد نظر</option>
-              {cleaningSpaceTypes.map((space) => (
-                <option key={space.value} value={space.value}>
-                  {space.label}
-                </option>
-              ))}
-            </select>
+              options={cleaningSpaceTypes}
+              placeholder="انتخاب فضای مورد نظر"
+              panelTitle="انتخاب فضا"
+            />
             {errors.spaceType?.message ? (
               <p className="mt-2 text-body-sm text-error">
                 {errors.spaceType.message}

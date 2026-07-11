@@ -1,3 +1,4 @@
+import { Controller } from "react-hook-form";
 import { useEffect } from "react";
 
 import {
@@ -9,6 +10,10 @@ import { PERSIAN_WEEKDAYS } from "../../data/supervisorClassItems";
 import type { SupervisorClassItem } from "../../types/supervisorClass";
 import { formatPersianTime } from "../../utils/formatClassSchedule";
 import { BottomSheet } from "../ui/BottomSheet";
+import { fieldInputClassName } from "../ui/formStyles";
+import { ResponsiveDatePicker } from "../ui/ResponsiveDatePicker";
+import { ResponsiveDropdown } from "../ui/ResponsiveDropdown";
+import { ResponsiveTimePicker } from "../ui/ResponsiveTimePicker";
 import { Toast } from "../ui/Toast";
 
 interface SupervisorClassFormSheetProps {
@@ -18,9 +23,6 @@ interface SupervisorClassFormSheetProps {
   onClose: () => void;
   onSuccess: (item: SupervisorClassItem, mode: "create" | "edit") => void;
 }
-
-const fieldClassName =
-  "w-full rounded-md border border-stone bg-canvas px-4 py-3 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30";
 
 export function SupervisorClassFormSheet({
   isOpen,
@@ -37,6 +39,7 @@ export function SupervisorClassFormSheet({
     register,
     reset,
     watch,
+    control,
     formState: { errors },
   } = form;
 
@@ -66,7 +69,7 @@ export function SupervisorClassFormSheet({
       }
     >
       <form
-        className="space-y-4"
+        className="min-w-0 space-y-4"
         onSubmit={(event) => {
           event.preventDefault();
           void submit({ mode, classId: initialClass?.id });
@@ -79,7 +82,7 @@ export function SupervisorClassFormSheet({
           <input
             type="text"
             placeholder="عنوان کلاس را وارد کنید"
-            className={fieldClassName}
+            className={fieldInputClassName}
             disabled={isSubmitting}
             {...register("title", { onChange: clearMessages })}
           />
@@ -99,7 +102,7 @@ export function SupervisorClassFormSheet({
             inputMode="numeric"
             min={1}
             placeholder="شناسه کاربری مدرس"
-            className={fieldClassName}
+            className={fieldInputClassName}
             disabled={isSubmitting}
             {...register("teacher_id", { onChange: clearMessages })}
           />
@@ -110,15 +113,26 @@ export function SupervisorClassFormSheet({
           ) : null}
         </label>
 
-        <label className="block">
+        <label className="block min-w-0">
           <span className="mb-2 block text-body-sm-strong text-ink">
             تاریخ شروع
           </span>
-          <input
-            type="datetime-local"
-            className={fieldClassName}
-            disabled={isSubmitting}
-            {...register("start_datetime", { onChange: clearMessages })}
+          <Controller
+            control={control}
+            name="start_datetime"
+            render={({ field }) => (
+              <ResponsiveDatePicker
+                value={field.value}
+                onChange={(nextValue) => {
+                  clearMessages();
+                  field.onChange(nextValue);
+                }}
+                onBlur={field.onBlur}
+                disabled={isSubmitting}
+                elevated
+                placeholder="انتخاب تاریخ شروع"
+              />
+            )}
           />
           {errors.start_datetime?.message ? (
             <p className="mt-2 text-body-sm text-error">
@@ -127,15 +141,26 @@ export function SupervisorClassFormSheet({
           ) : null}
         </label>
 
-        <label className="block">
+        <label className="block min-w-0">
           <span className="mb-2 block text-body-sm-strong text-ink">
             تاریخ پایان
           </span>
-          <input
-            type="datetime-local"
-            className={fieldClassName}
-            disabled={isSubmitting}
-            {...register("end_datetime", { onChange: clearMessages })}
+          <Controller
+            control={control}
+            name="end_datetime"
+            render={({ field }) => (
+              <ResponsiveDatePicker
+                value={field.value}
+                onChange={(nextValue) => {
+                  clearMessages();
+                  field.onChange(nextValue);
+                }}
+                onBlur={field.onBlur}
+                disabled={isSubmitting}
+                elevated
+                placeholder="انتخاب تاریخ پایان"
+              />
+            )}
           />
           {errors.end_datetime?.message ? (
             <p className="mt-2 text-body-sm text-error">
@@ -148,18 +173,25 @@ export function SupervisorClassFormSheet({
           <span className="mb-2 block text-body-sm-strong text-ink">
             روز برگزاری
           </span>
-          <select
-            className={fieldClassName}
-            disabled={isSubmitting}
-            {...register("day_of_week", { onChange: clearMessages })}
-          >
-            <option value="">انتخاب روز</option>
-            {PERSIAN_WEEKDAYS.map((day) => (
-              <option key={day.value} value={day.value}>
-                {day.label}
-              </option>
-            ))}
-          </select>
+          <Controller
+            control={control}
+            name="day_of_week"
+            render={({ field }) => (
+              <ResponsiveDropdown
+                value={field.value}
+                onChange={(nextValue) => {
+                  clearMessages();
+                  field.onChange(nextValue);
+                }}
+                onBlur={field.onBlur}
+                disabled={isSubmitting}
+                elevated
+                options={PERSIAN_WEEKDAYS}
+                placeholder="انتخاب روز"
+                panelTitle="روز برگزاری"
+              />
+            )}
+          />
           {errors.day_of_week?.message ? (
             <p className="mt-2 text-body-sm text-error">
               {errors.day_of_week.message}
@@ -167,15 +199,26 @@ export function SupervisorClassFormSheet({
           ) : null}
         </label>
 
-        <label className="block">
+        <label className="block min-w-0">
           <span className="mb-2 block text-body-sm-strong text-ink">
             زمان شروع کلاس
           </span>
-          <input
-            type="time"
-            className={fieldClassName}
-            disabled={isSubmitting}
-            {...register("start_time", { onChange: clearMessages })}
+          <Controller
+            control={control}
+            name="start_time"
+            render={({ field }) => (
+              <ResponsiveTimePicker
+                value={field.value}
+                onChange={(nextValue) => {
+                  clearMessages();
+                  field.onChange(nextValue);
+                }}
+                onBlur={field.onBlur}
+                disabled={isSubmitting}
+                elevated
+                placeholder="انتخاب زمان شروع"
+              />
+            )}
           />
           {watch("start_time") ? (
             <p className="mt-1 text-caption-md text-mute">
@@ -189,15 +232,26 @@ export function SupervisorClassFormSheet({
           ) : null}
         </label>
 
-        <label className="block">
+        <label className="block min-w-0">
           <span className="mb-2 block text-body-sm-strong text-ink">
             زمان پایان کلاس
           </span>
-          <input
-            type="time"
-            className={fieldClassName}
-            disabled={isSubmitting}
-            {...register("end_time", { onChange: clearMessages })}
+          <Controller
+            control={control}
+            name="end_time"
+            render={({ field }) => (
+              <ResponsiveTimePicker
+                value={field.value}
+                onChange={(nextValue) => {
+                  clearMessages();
+                  field.onChange(nextValue);
+                }}
+                onBlur={field.onBlur}
+                disabled={isSubmitting}
+                elevated
+                placeholder="انتخاب زمان پایان"
+              />
+            )}
           />
           {watch("end_time") ? (
             <p className="mt-1 text-caption-md text-mute">
@@ -218,7 +272,7 @@ export function SupervisorClassFormSheet({
           <input
             type="text"
             placeholder="مکان برگزاری (اختیاری)"
-            className={fieldClassName}
+            className={fieldInputClassName}
             disabled={isSubmitting}
             {...register("location", { onChange: clearMessages })}
           />
@@ -236,7 +290,7 @@ export function SupervisorClassFormSheet({
             inputMode="numeric"
             min={1}
             placeholder="ظرفیت کلاس"
-            className={fieldClassName}
+            className={fieldInputClassName}
             disabled={isSubmitting}
             {...register("capacity", { onChange: clearMessages })}
           />
