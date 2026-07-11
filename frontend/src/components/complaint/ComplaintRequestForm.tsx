@@ -2,6 +2,7 @@ import { Controller } from "react-hook-form";
 
 import { useComplaintRequest } from "../../hooks/useComplaintRequest";
 import { complaintCategoryOptions } from "../../types/complaint";
+import { ResponsiveDropdown } from "../ui/ResponsiveDropdown";
 import { Toast } from "../ui/Toast";
 
 const inputClassName =
@@ -34,22 +35,17 @@ export function ComplaintRequestForm() {
               <span className="mb-3 block text-body-sm-strong text-ink">
                 دسته‌بندی موضوع
               </span>
-              <select
+              <ResponsiveDropdown
                 value={field.value}
-                onChange={(event) => {
+                onChange={(nextValue) => {
                   clearMessages();
-                  field.onChange(event.target.value);
+                  field.onChange(nextValue);
                 }}
                 onBlur={field.onBlur}
-                className={inputClassName}
-              >
-                <option value="">انتخاب دسته‌بندی موضوع</option>
-                {complaintCategoryOptions.map((category) => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
-                  </option>
-                ))}
-              </select>
+                options={complaintCategoryOptions}
+                placeholder="انتخاب دسته‌بندی موضوع"
+                panelTitle="دسته‌بندی موضوع"
+              />
               {errors.category?.message ? (
                 <p className="mt-2 text-body-sm text-error">
                   {errors.category.message}

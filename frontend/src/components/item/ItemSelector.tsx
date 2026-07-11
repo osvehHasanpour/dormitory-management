@@ -4,6 +4,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { fetchInventoryItems } from "../../services/itemService";
 import { MAX_ITEM_QUANTITY, MIN_ITEM_QUANTITY } from "../../types/item";
 import type { InventoryItem } from "../../types/item";
+import { ResponsiveDropdown } from "../ui/ResponsiveDropdown";
 
 interface ItemSelectorProps {
   itemId: string;
@@ -109,6 +110,17 @@ export function ItemSelector({
     onItemChange(nextItemId, nextMaxQuantity);
   };
 
+  const itemOptions = items.map((item) => ({
+    value: String(item.id),
+    label: `${item.item_name} (${item.category})`,
+    disabled: item.quantity < MIN_ITEM_QUANTITY,
+  }));
+
+  const quantityDropdownOptions = quantityOptions.map((option) => ({
+    value: String(option),
+    label: `${option} عدد`,
+  }));
+
   return (
     <div className="flex flex-col gap-4">
       <label className="block glass-card p-4">
@@ -124,23 +136,14 @@ export function ItemSelector({
         ) : items.length === 0 ? (
           <p className="text-body-sm text-mute">کالایی در انبار موجود نیست.</p>
         ) : (
-          <select
+          <ResponsiveDropdown
             value={itemId}
-            onChange={(event) => handleItemChange(event.target.value)}
+            onChange={handleItemChange}
             onBlur={onItemBlur}
-            className="h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30"
-          >
-            <option value="">انتخاب اقلام مورد نظر</option>
-            {items.map((item) => (
-              <option
-                key={item.id}
-                value={String(item.id)}
-                disabled={item.quantity < MIN_ITEM_QUANTITY}
-              >
-                {item.item_name} ({item.category})
-              </option>
-            ))}
-          </select>
+            options={itemOptions}
+            placeholder="انتخاب اقلام مورد نظر"
+            panelTitle="لیست اقلام"
+          />
         )}
         {itemError ? (
           <p className="mt-2 text-body-sm text-error">{itemError}</p>
@@ -149,23 +152,15 @@ export function ItemSelector({
 
       <label className="block glass-card p-4">
         <span className="mb-3 block text-body-sm-strong text-ink">تعداد</span>
-        <select
-          value={quantity}
-          onChange={(event) => onQuantityChange(Number(event.target.value))}
+        <ResponsiveDropdown
+          value={String(quantity)}
+          onChange={(nextValue) => onQuantityChange(Number(nextValue))}
           onBlur={onQuantityBlur}
           disabled={!itemId || quantityOptions.length === 0}
-          className="h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30 disabled:cursor-not-allowed disabled:bg-surface-soft disabled:text-ash"
-        >
-          {quantityOptions.length === 0 ? (
-            <option value={MIN_ITEM_QUANTITY}>ابتدا کالا را انتخاب کنید</option>
-          ) : (
-            quantityOptions.map((option) => (
-              <option key={option} value={option}>
-                {option} عدد
-              </option>
-            ))
-          )}
-        </select>
+          options={quantityDropdownOptions}
+          placeholder="ابتدا کالا را انتخاب کنید"
+          panelTitle="تعداد"
+        />
         {selectedItem && maxQuantity < MAX_ITEM_QUANTITY ? (
           <p className="mt-2 text-body-sm text-mute">
             حداکثر {maxQuantity} عدد بر اساس موجودی انبار
