@@ -125,7 +125,10 @@ export function ResponsiveDatePicker({
           !value ? "text-ash" : ""
         }`}
       >
-        <Calendar className="h-4 w-4 shrink-0 text-primary-deep" aria-hidden="true" />
+        <Calendar
+          className="h-4 w-4 shrink-0 text-primary-deep"
+          aria-hidden="true"
+        />
         <span className="min-w-0 flex-1 truncate">{displayLabel}</span>
         <ChevronDown
           className={`h-4 w-4 shrink-0 text-mute transition-transform duration-200 ${
@@ -143,10 +146,7 @@ export function ResponsiveDatePicker({
         contentClassName="pb-2"
         elevated={elevated}
       >
-        <GregorianCalendar
-          selectedDate={draftDate}
-          onSelect={setDraftDate}
-        />
+        <GregorianCalendar selectedDate={draftDate} onSelect={setDraftDate} />
 
         <div className="border-t border-hairline/40 px-4 py-3">
           <p className="mb-2 text-body-sm-strong text-ink">ساعت</p>

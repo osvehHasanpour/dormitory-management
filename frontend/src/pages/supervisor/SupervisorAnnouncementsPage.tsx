@@ -17,10 +17,7 @@ export function SupervisorAnnouncementsPage() {
 
   return (
     <PageShell bottomSpacing="nav-cta">
-      <PageHeader
-        breadcrumb="مدیریت اطلاعیه‌ها"
-        onBack={() => navigate(-1)}
-      />
+      <PageHeader breadcrumb="مدیریت اطلاعیه‌ها" onBack={() => navigate(-1)} />
 
       <ContentContainer as="main">
         <section className="mb-6 text-center">

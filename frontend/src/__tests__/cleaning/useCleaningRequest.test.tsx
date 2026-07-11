@@ -104,7 +104,6 @@ describe("Cleaning Requests – Scenario 2: Submit with Missing Required Informa
     ).toBeInTheDocument();
     expect(await screen.findByText("توضیحات الزامی است.")).toBeInTheDocument();
   });
-
 });
 
 describe("Cleaning Requests – Scenario 1: Submit a Cleaning Request", () => {

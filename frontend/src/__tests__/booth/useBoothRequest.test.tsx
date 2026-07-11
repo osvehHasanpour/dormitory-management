@@ -83,6 +83,8 @@ describe("Booth Request – Scenario 1: Submit a Booth Request", () => {
       jest.advanceTimersByTime(900);
     });
 
-    expect(mockNavigate).toHaveBeenCalledWith("/my-requests", { replace: true });
+    expect(mockNavigate).toHaveBeenCalledWith("/my-requests", {
+      replace: true,
+    });
   });
 });

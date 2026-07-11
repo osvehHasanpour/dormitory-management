@@ -107,9 +107,9 @@ describe("Authentication – Scenario 2: Invalid Login", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "ورود" }));
 
-    expect(
-      await screen.findByRole("alert"),
-    ).toHaveTextContent("نام کاربری یا رمز عبور اشتباه است.");
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "نام کاربری یا رمز عبور اشتباه است.",
+    );
     expect(mockNavigate).not.toHaveBeenCalled();
     expect(screen.getByRole("button", { name: "ورود" })).toBeInTheDocument();
   });

@@ -70,10 +70,7 @@ export function SupervisorRequestsPage() {
 
   return (
     <PageShell>
-      <PageHeader
-        breadcrumb="داشبورد درخواست‌ها"
-        onBack={() => navigate(-1)}
-      />
+      <PageHeader breadcrumb="داشبورد درخواست‌ها" onBack={() => navigate(-1)} />
 
       <ContentContainer as="main">
         <section className="mb-6 text-center">

@@ -57,7 +57,10 @@ describe("Announcements – Scenario 2: View Announcements", () => {
     mockFetchAnnouncements.mockResolvedValue({ results: [sampleAnnouncement] });
 
     render(
-      <TestProviders auth={createStudentAuth()} initialEntries={["/announcements"]}>
+      <TestProviders
+        auth={createStudentAuth()}
+        initialEntries={["/announcements"]}
+      >
         <AnnouncementsPage />
       </TestProviders>,
     );

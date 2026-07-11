@@ -78,9 +78,9 @@ describe("Announcements – Scenario 1: Create an Announcement", () => {
       );
     });
 
-    expect(
-      await screen.findByRole("alert"),
-    ).toHaveTextContent("اطلاعیه با موفقیت ثبت و ارسال شد");
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "اطلاعیه با موفقیت ثبت و ارسال شد",
+    );
 
     jest.advanceTimersByTime(900);
 

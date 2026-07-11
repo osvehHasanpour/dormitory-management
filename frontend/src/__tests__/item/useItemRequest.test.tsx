@@ -94,6 +94,8 @@ describe("Room Equipment Request – Scenario 1: Submit an Equipment Request", (
       jest.advanceTimersByTime(900);
     });
 
-    expect(mockNavigate).toHaveBeenCalledWith("/my-requests", { replace: true });
+    expect(mockNavigate).toHaveBeenCalledWith("/my-requests", {
+      replace: true,
+    });
   });
 });

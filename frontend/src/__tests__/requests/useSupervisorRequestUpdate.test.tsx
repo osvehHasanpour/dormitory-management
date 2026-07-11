@@ -82,10 +82,7 @@ describe("Request Management – Scenario 1: Update Request Status", () => {
 
     act(() => {
       result.current.form.setValue("status", "in_progress");
-      result.current.form.setValue(
-        "supervisor_response",
-        "در حال پیگیری",
-      );
+      result.current.form.setValue("supervisor_response", "در حال پیگیری");
     });
 
     await act(async () => {

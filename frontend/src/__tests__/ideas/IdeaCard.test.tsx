@@ -27,9 +27,7 @@ describe("Ideas & Voting – Scenario 1: Like an Idea", () => {
   it("records a like when the student clicks the vote button", () => {
     const onVote = jest.fn();
 
-    render(
-      <IdeaCard idea={sampleIdea} isVoting={false} onVote={onVote} />,
-    );
+    render(<IdeaCard idea={sampleIdea} isVoting={false} onVote={onVote} />);
 
     expect(screen.getByText("ایده بهبود فضای سبز")).toBeInTheDocument();
     expect(screen.getByText("۳")).toBeInTheDocument();

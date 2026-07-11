@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import type { UseFormReturn } from "react-hook-form";
 
-import { getFeedbackTypeBadgeConfig, normalizeFeedbackType } from "../../data/supervisorFeedbackItems";
+import {
+  getFeedbackTypeBadgeConfig,
+  normalizeFeedbackType,
+} from "../../data/supervisorFeedbackItems";
 import type {
   FeedbackResponseFormValues,
   FeedbackStatusAction,

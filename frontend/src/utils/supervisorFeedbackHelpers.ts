@@ -43,7 +43,8 @@ export function buildFeedbackPreview(
 
 export function canMarkReviewed(item: SupervisorFeedbackItem): boolean {
   return (
-    normalizeFeedbackType(item.type) === "complaint" && item.status === "pending"
+    normalizeFeedbackType(item.type) === "complaint" &&
+    item.status === "pending"
   );
 }
 

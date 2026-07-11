@@ -28,7 +28,9 @@ export function RequestCard({ request, onClick }: RequestCardProps) {
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="break-words text-heading-md text-ink">{typeConfig.label}</p>
+          <p className="break-words text-heading-md text-ink">
+            {typeConfig.label}
+          </p>
           <p className="mt-1 line-clamp-2 break-words text-body-sm text-body-text">
             {request.description}
           </p>

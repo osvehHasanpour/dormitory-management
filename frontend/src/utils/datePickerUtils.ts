@@ -34,7 +34,10 @@ export function getDaysInMonth(year: number, month: number): number {
 }
 
 /** Gregorian labels — used only inside the date picker UI */
-export function formatGregorianMonthYearLabel(year: number, month: number): string {
+export function formatGregorianMonthYearLabel(
+  year: number,
+  month: number,
+): string {
   return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "long",

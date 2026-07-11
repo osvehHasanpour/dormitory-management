@@ -33,7 +33,8 @@ export function LogoutConfirmDialog({
       return;
     }
 
-    const prefersDesktopLayout = window.matchMedia("(min-width: 640px)").matches;
+    const prefersDesktopLayout =
+      window.matchMedia("(min-width: 640px)").matches;
     if (!prefersDesktopLayout) {
       setTransformOrigin("center center");
       return;

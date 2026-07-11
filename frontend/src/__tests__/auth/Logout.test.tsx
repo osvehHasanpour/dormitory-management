@@ -31,7 +31,10 @@ function createLoggedInAuth(overrides?: Partial<AuthContextValue>) {
     full_name: "Test User",
     is_active: true,
   };
-  const tokens: AuthTokens = { access: "access-token", refresh: "refresh-token" };
+  const tokens: AuthTokens = {
+    access: "access-token",
+    refresh: "refresh-token",
+  };
 
   return {
     user,
