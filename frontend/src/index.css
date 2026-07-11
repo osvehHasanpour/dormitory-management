@@ -484,4 +484,3 @@
 @utility animate-modal-pop {
   animation: modal-pop-in 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-

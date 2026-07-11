@@ -8,5 +8,7 @@ module.exports = {
   },
   moduleNameMapper: {
     "\\.(css|less|scss|sass)$": "<rootDir>/src/test/styleMock.cjs",
+    "\\.(jpg|jpeg|png|gif|webp|svg)$": "<rootDir>/src/test/fileMock.cjs",
+    "^@media/(.*)$": "<rootDir>/src/test/fileMock.cjs",
   },
 };

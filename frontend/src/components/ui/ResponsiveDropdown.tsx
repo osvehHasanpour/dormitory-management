@@ -1,11 +1,5 @@
 import { ChevronDown, Check } from "lucide-react";
-import {
-  useCallback,
-  useId,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import { useCallback, useId, useRef, useState, type ReactNode } from "react";
 
 import { FloatingPanel } from "./FloatingPanel";
 import { selectTriggerClassName, panelOptionClassName } from "./formStyles";

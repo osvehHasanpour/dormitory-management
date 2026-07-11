@@ -14,7 +14,10 @@ export function DashboardPage() {
     <PageShell>
       <DashboardBanner />
 
-      <ContentContainer as="main" className="relative -mt-4 pb-8 pt-6 md:-mt-6 md:pt-8">
+      <ContentContainer
+        as="main"
+        className="relative -mt-4 pb-8 pt-6 md:-mt-6 md:pt-8"
+      >
         <section className="section-gap">
           <SectionHeader title={serviceSection.title} />
           <div className="mt-6 grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 md:grid-cols-3 md:gap-6">

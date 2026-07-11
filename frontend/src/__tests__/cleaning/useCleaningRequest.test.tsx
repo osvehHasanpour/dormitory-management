@@ -63,7 +63,7 @@ function wrapperFactory(auth: AuthContextValue) {
   };
 }
 
-describe("useCleaningRequest", () => {
+describe("Cleaning Requests – Scenario 2: Submit with Missing Required Information", () => {
   beforeEach(() => {
     mockNavigate.mockReset();
     mockSubmitCleaningRequest.mockReset();
@@ -74,7 +74,7 @@ describe("useCleaningRequest", () => {
     jest.useRealTimers();
   });
 
-  it("shows validation errors when required information is missing", async () => {
+  it("blocks submission and shows validation messages on the form", async () => {
     const auth = createAuthValue({
       isAuthenticated: true,
       tokens: { access: "t", refresh: "r" },
@@ -103,6 +103,18 @@ describe("useCleaningRequest", () => {
       await screen.findByText("انتخاب فضا الزامی است."),
     ).toBeInTheDocument();
     expect(await screen.findByText("توضیحات الزامی است.")).toBeInTheDocument();
+  });
+});
+
+describe("Cleaning Requests – Scenario 1: Submit a Cleaning Request", () => {
+  beforeEach(() => {
+    mockNavigate.mockReset();
+    mockSubmitCleaningRequest.mockReset();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it("blocks submit when unauthenticated", async () => {
@@ -133,7 +145,7 @@ describe("useCleaningRequest", () => {
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it("submits successfully and navigates after success delay", async () => {
+  it("submits successfully and navigates to my requests", async () => {
     const auth = createAuthValue({
       isAuthenticated: true,
       tokens: { access: "access-token", refresh: "refresh-token" },

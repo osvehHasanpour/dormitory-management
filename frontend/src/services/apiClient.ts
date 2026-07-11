@@ -93,8 +93,7 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error?.config as
-      | (typeof error.config & { _retry?: boolean })
-      | undefined;
+      (typeof error.config & { _retry?: boolean }) | undefined;
 
     const status = error?.response?.status;
     const url: string | undefined = originalRequest?.url;

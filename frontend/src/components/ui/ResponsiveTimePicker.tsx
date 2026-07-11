@@ -122,7 +122,10 @@ export function ResponsiveTimePicker({
           !value ? "text-ash" : ""
         }`}
       >
-        <Clock3 className="h-4 w-4 shrink-0 text-primary-deep" aria-hidden="true" />
+        <Clock3
+          className="h-4 w-4 shrink-0 text-primary-deep"
+          aria-hidden="true"
+        />
         <span className="min-w-0 flex-1 truncate">{displayLabel}</span>
         <ChevronDown
           className={`h-4 w-4 shrink-0 text-mute transition-transform duration-200 ${

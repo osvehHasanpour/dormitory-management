@@ -16,7 +16,8 @@ function sortComplaintsNewestFirst(
 ): MyComplaintListItem[] {
   return [...complaints].sort(
     (left, right) =>
-      new Date(right.created_at).getTime() - new Date(left.created_at).getTime(),
+      new Date(right.created_at).getTime() -
+      new Date(left.created_at).getTime(),
   );
 }
 

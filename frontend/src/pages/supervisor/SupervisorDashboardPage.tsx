@@ -10,7 +10,10 @@ export function SupervisorDashboardPage() {
     <PageShell>
       <DashboardBanner />
 
-      <ContentContainer as="main" className="relative -mt-4 pb-8 pt-6 md:-mt-6 md:pt-8">
+      <ContentContainer
+        as="main"
+        className="relative -mt-4 pb-8 pt-6 md:-mt-6 md:pt-8"
+      >
         <div className="glass-card rounded-lg p-4 shadow-elevated sm:p-6 md:mx-auto md:max-w-2xl lg:max-w-3xl">
           <div className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 md:gap-6">
             {supervisorDashboardItems.map((item) => (

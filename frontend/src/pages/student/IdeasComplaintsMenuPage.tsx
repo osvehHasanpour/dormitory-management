@@ -28,7 +28,9 @@ function OptionCard({ title, description, image, onClick }: OptionCardProps) {
       />
       <span className="flex min-w-0 flex-1 flex-col gap-1.5">
         <span className="break-words text-heading-md text-ink">{title}</span>
-        <span className="break-words text-body-sm text-mute">{description}</span>
+        <span className="break-words text-body-sm text-mute">
+          {description}
+        </span>
       </span>
       <span aria-hidden="true" className="shrink-0 text-heading-lg text-mute">
         ‹

@@ -94,11 +94,7 @@ export function FloatingPanel({
     const rect = triggerRef.current.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-    const width = clamp(
-      rect.width,
-      220,
-      viewportWidth - VIEWPORT_PADDING * 2,
-    );
+    const width = clamp(rect.width, 220, viewportWidth - VIEWPORT_PADDING * 2);
 
     let left: number;
     if (isRtlDocument()) {

@@ -72,7 +72,9 @@ export function ClassRegistrationPage() {
         <ClassTabs activeTab={activeTab} onChange={handleTabChange} />
 
         <section className="mt-5">
-          <h2 className="text-heading-lg text-mute">{sectionTitles[activeTab]}</h2>
+          <h2 className="text-heading-lg text-mute">
+            {sectionTitles[activeTab]}
+          </h2>
         </section>
 
         <section className="mt-4 space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">

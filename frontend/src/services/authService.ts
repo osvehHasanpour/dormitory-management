@@ -64,11 +64,9 @@ export async function refreshTokens(
   try {
     const response = await apiClient.post<
       ApiSuccessResponse<Record<string, unknown>>
-    >(
-      "/v1/auth/token/refresh/",
-      { refresh: refreshToken },
-      { skipAuth: true } as unknown as Record<string, unknown>,
-    );
+    >("/v1/auth/token/refresh/", { refresh: refreshToken }, {
+      skipAuth: true,
+    } as unknown as Record<string, unknown>);
 
     const data = response.data.data;
     const access = typeof data.access === "string" ? data.access : "";

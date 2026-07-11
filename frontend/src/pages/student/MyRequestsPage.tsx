@@ -91,7 +91,10 @@ export function MyRequestsPage() {
           <h1 className="text-page-title text-ink">درخواست‌های من</h1>
         </section>
 
-        <RequestFilterTabs activeFilter={activeTab} onChange={handleTabChange} />
+        <RequestFilterTabs
+          activeFilter={activeTab}
+          onChange={handleTabChange}
+        />
 
         {isComplaintsTab ? (
           <section className={listClassName}>

@@ -26,11 +26,7 @@ export interface ComplaintAuthorSummary {
   last_name: string;
 }
 
-export type ComplaintStatus =
-  | "pending"
-  | "reviewed"
-  | "answered"
-  | "rejected";
+export type ComplaintStatus = "pending" | "reviewed" | "answered" | "rejected";
 
 export interface ComplaintRequestResponse {
   id: number;
