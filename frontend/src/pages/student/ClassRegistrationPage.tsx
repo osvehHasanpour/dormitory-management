@@ -7,6 +7,9 @@ import { ClassesEmptyState } from "../../components/classes/ClassesEmptyState";
 import { ClassTabs } from "../../components/classes/ClassTabs";
 import { RatingBottomSheetContent } from "../../components/classes/RatingBottomSheetContent";
 import { BottomNav } from "../../components/layout/BottomNav";
+import { ContentContainer } from "../../components/layout/ContentContainer";
+import { PageHeader } from "../../components/layout/PageHeader";
+import { PageShell } from "../../components/layout/PageShell";
 import { BottomSheet } from "../../components/ui/BottomSheet";
 import { Toast } from "../../components/ui/Toast";
 import { useClassRegistration } from "../../hooks/useClassRegistration";
@@ -58,32 +61,21 @@ export function ClassRegistrationPage() {
   const toastMessage = error ?? feedbackMessage;
 
   return (
-    <div className="page-gradient min-h-screen pb-32">
-      <header className="relative mx-auto flex w-full max-w-lg items-center justify-center px-4 pb-4 pt-5 sm:px-6">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="absolute right-4 top-5 flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/30 text-heading-lg text-ink backdrop-blur-sm active:bg-white/45 sm:right-6"
-          aria-label="بازگشت"
-        >
-          ‹
-        </button>
-      </header>
+    <PageShell bottomSpacing="nav-fab">
+      <PageHeader onBack={() => navigate(-1)} />
 
-      <main className="mx-auto w-full max-w-lg px-4 sm:px-6">
+      <ContentContainer as="main">
         <section className="mb-6 text-center">
-          <h1 className="text-heading-xl text-ink">ثبت نام در کلاس</h1>
+          <h1 className="text-page-title text-ink">ثبت نام در کلاس</h1>
         </section>
 
         <ClassTabs activeTab={activeTab} onChange={handleTabChange} />
 
         <section className="mt-5">
-          <h2 className="text-heading-lg text-mute">
-            {sectionTitles[activeTab]}
-          </h2>
+          <h2 className="text-heading-lg text-mute">{sectionTitles[activeTab]}</h2>
         </section>
 
-        <section className="mt-4 space-y-3">
+        <section className="mt-4 space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
           {isLoading
             ? Array.from({ length: 3 }, (_, index) => (
                 <ClassCardSkeleton key={index} />
@@ -91,7 +83,9 @@ export function ClassRegistrationPage() {
             : null}
 
           {!isLoading && classes.length === 0 ? (
-            <ClassesEmptyState tab={activeTab} />
+            <div className="md:col-span-2">
+              <ClassesEmptyState tab={activeTab} />
+            </div>
           ) : null}
 
           {!isLoading
@@ -112,7 +106,7 @@ export function ClassRegistrationPage() {
               ))
             : null}
         </section>
-      </main>
+      </ContentContainer>
 
       {toastMessage ? (
         <Toast message={toastMessage} onRetry={error ? retry : undefined} />
@@ -135,6 +129,6 @@ export function ClassRegistrationPage() {
       </BottomSheet>
 
       <BottomNav activeTab="home" />
-    </div>
+    </PageShell>
   );
 }

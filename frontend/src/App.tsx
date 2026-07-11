@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   Navigate,
   Route,
@@ -5,9 +6,9 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { useEffect } from "react";
 
 import { useAuth } from "./hooks/useAuth";
+import { PageShell } from "./components/layout/PageShell";
 import { LoginPage } from "./pages/auth/LoginPage";
 import { DashboardPage } from "./pages/student/DashboardPage";
 import { CleaningRequestPage } from "./pages/student/CleaningRequestPage";
@@ -32,9 +33,11 @@ import { SupervisorProfilePage } from "./pages/supervisor/SupervisorProfilePage"
 
 function PagePlaceholder({ title }: { title: string }) {
   return (
-    <main className="page-gradient flex min-h-screen items-center justify-center px-4 pb-24">
-      <p className="text-heading-xl text-ink">{title}</p>
-    </main>
+    <PageShell bottomSpacing="nav">
+      <main className="flex min-h-[60vh] items-center justify-center px-4">
+        <p className="text-page-title text-ink">{title}</p>
+      </main>
+    </PageShell>
   );
 }
 

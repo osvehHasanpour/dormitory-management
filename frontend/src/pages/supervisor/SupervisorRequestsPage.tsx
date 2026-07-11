@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 
 import { BottomNav } from "../../components/layout/BottomNav";
+import { ContentContainer } from "../../components/layout/ContentContainer";
+import { PageHeader } from "../../components/layout/PageHeader";
+import { PageShell } from "../../components/layout/PageShell";
 import { SupervisorRequestCard } from "../../components/supervisor-requests/SupervisorRequestCard";
 import { SupervisorRequestCardSkeleton } from "../../components/supervisor-requests/SupervisorRequestCardSkeleton";
 import { SupervisorRequestDetailSheet } from "../../components/supervisor-requests/SupervisorRequestDetailSheet";
@@ -66,24 +69,15 @@ export function SupervisorRequestsPage() {
     supervisorRequestTabs.find((tab) => tab.value === activeType)?.label ?? "";
 
   return (
-    <div className="page-gradient min-h-screen pb-28">
-      <header className="relative mx-auto flex w-full max-w-lg items-center justify-center px-4 pb-4 pt-5 sm:px-6">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="absolute right-4 top-5 flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/30 text-heading-lg text-ink backdrop-blur-sm active:bg-white/45 sm:right-6"
-          aria-label="بازگشت"
-        >
-          ‹
-        </button>
-        <span className="inline-flex rounded-full bg-surface-card px-4 py-1.5 text-caption-md font-medium text-ink">
-          داشبورد درخواست‌ها
-        </span>
-      </header>
+    <PageShell>
+      <PageHeader
+        breadcrumb="داشبورد درخواست‌ها"
+        onBack={() => navigate(-1)}
+      />
 
-      <main className="mx-auto w-full max-w-lg px-4 sm:px-6">
+      <ContentContainer as="main">
         <section className="mb-6 text-center">
-          <h1 className="text-heading-xl text-ink">درخواست‌های خوابگاه</h1>
+          <h1 className="text-page-title text-ink">درخواست‌های خوابگاه</h1>
         </section>
 
         <SupervisorRequestTabs
@@ -91,7 +85,7 @@ export function SupervisorRequestsPage() {
           onChange={setActiveType}
         />
 
-        <section className="mt-6 space-y-3">
+        <section className="mt-6 space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
           {isLoading
             ? Array.from({ length: 4 }, (_, index) => (
                 <SupervisorRequestCardSkeleton key={index} />
@@ -99,7 +93,9 @@ export function SupervisorRequestsPage() {
             : null}
 
           {!isLoading && !error && items.length === 0 ? (
-            <SupervisorRequestEmptyState filterLabel={activeTabLabel} />
+            <div className="md:col-span-2">
+              <SupervisorRequestEmptyState filterLabel={activeTabLabel} />
+            </div>
           ) : null}
 
           {!isLoading && !error
@@ -112,7 +108,7 @@ export function SupervisorRequestsPage() {
               ))
             : null}
         </section>
-      </main>
+      </ContentContainer>
 
       {error ? <Toast message={error} onRetry={retry} /> : null}
       {detailError ? (
@@ -145,6 +141,6 @@ export function SupervisorRequestsPage() {
       </BottomSheet>
 
       <BottomNav variant="supervisor" activeTab="home" />
-    </div>
+    </PageShell>
   );
 }

@@ -67,22 +67,22 @@ export function AnnouncementCard({ announcement }: AnnouncementCardProps) {
         aria-expanded={isExpanded}
         className="w-full text-right"
       >
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-col gap-2 min-[480px]:flex-row min-[480px]:items-start min-[480px]:justify-between">
           <div className="flex min-w-0 flex-1 items-start gap-3">
             <span className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-card text-ink">
               <SpeakerFilledIcon className="h-7 w-7 text-ink" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-heading-md text-ink">
+              <span className="block break-words text-heading-md text-ink">
                 {announcement.title}
               </span>
-              <span className="mt-1 block line-clamp-2 text-body-sm text-body-text">
+              <span className="mt-1 block line-clamp-2 break-words text-body-sm text-body-text">
                 {previewText}
               </span>
             </span>
           </div>
 
-          <span className="flex shrink-0 items-center gap-2">
+          <span className="flex shrink-0 items-center justify-between gap-2 min-[480px]:flex-col min-[480px]:items-end">
             <span className="text-caption-sm text-mute">
               {formatPersianDateShort(announcement.created_at)}
             </span>

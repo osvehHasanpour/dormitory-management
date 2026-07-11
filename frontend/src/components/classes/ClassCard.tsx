@@ -184,8 +184,8 @@ export function ClassCard({
         </div>
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-3">
-        <div>
+      <div className="flex flex-col gap-3 min-[480px]:flex-row min-[480px]:items-end min-[480px]:justify-between">
+        <div className="min-w-0">
           <div className="flex items-center gap-1 text-heading-md leading-none text-warning">
             {buildRatingStars(classItem.average_rating).map((star, index) => (
               <span key={index} aria-hidden="true">
@@ -200,7 +200,7 @@ export function ClassCard({
           type="button"
           onClick={actionConfig.onClick}
           disabled={!actionConfig.onClick || actionConfig.isPending}
-          className={`inline-flex h-10 min-w-[110px] items-center justify-center gap-2 rounded-md px-4 text-button-md transition-colors disabled:cursor-not-allowed disabled:hover:bg-inherit ${actionClass}`}
+          className={`inline-flex h-10 w-full min-w-0 items-center justify-center gap-2 rounded-md px-4 text-button-md transition-colors disabled:cursor-not-allowed disabled:hover:bg-inherit min-[480px]:w-auto min-[480px]:min-w-[6.875rem] ${actionClass}`}
         >
           {actionConfig.isPending ? (
             <span

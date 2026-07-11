@@ -129,7 +129,7 @@ export function SupervisorClassCard({
       </div>
 
       {canManage ? (
-        <div className="mt-4 flex items-center gap-2 border-t border-hairline pt-4">
+        <div className="mt-4 flex flex-col gap-2 min-[480px]:flex-row">
           <button
             type="button"
             onClick={() => onEdit(classItem)}

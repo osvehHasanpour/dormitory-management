@@ -14,7 +14,7 @@ export function LoginForm() {
 
   return (
     <form
-      className="flex w-full flex-col gap-4 px-4 pb-6 pt-4"
+      className="flex w-full flex-col gap-4 px-4 pb-6 pt-4 sm:px-5 md:gap-5 md:px-8 md:pb-8 md:pt-5 lg:px-8 lg:py-8"
       onSubmit={handleSubmit}
     >
       <label className="sr-only" htmlFor="username">
@@ -31,7 +31,7 @@ export function LoginForm() {
           clearError();
           setUsername(event.target.value);
         }}
-        className="h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30"
+        className="h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30 md:h-12"
       />
 
       <label className="sr-only" htmlFor="password">
@@ -48,7 +48,7 @@ export function LoginForm() {
           clearError();
           setPassword(event.target.value);
         }}
-        className="h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30"
+        className="h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30 md:h-12"
       />
 
       {error ? (
@@ -63,7 +63,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="flex h-11 w-full items-center justify-center rounded-md bg-primary text-button-md text-on-primary transition-colors hover:bg-primary-pressed disabled:cursor-not-allowed disabled:bg-surface-card disabled:text-ash"
+        className="flex h-11 w-full items-center justify-center rounded-md bg-primary text-button-md text-on-primary transition-colors hover:bg-primary-pressed disabled:cursor-not-allowed disabled:bg-surface-card disabled:text-ash md:h-12"
       >
         {isSubmitting ? "در حال ورود..." : "ورود"}
       </button>

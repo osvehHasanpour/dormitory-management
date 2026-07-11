@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { BottomNav } from "../../components/layout/BottomNav";
+import { ContentContainer } from "../../components/layout/ContentContainer";
+import { PageHeader } from "../../components/layout/PageHeader";
+import { PageShell } from "../../components/layout/PageShell";
 import { ComplaintCard } from "../../components/requests/ComplaintCard";
 import { ComplaintDetailSheet } from "../../components/requests/ComplaintDetailSheet";
 import { RequestCard } from "../../components/requests/RequestCard";
@@ -76,28 +79,22 @@ export function MyRequestsPage() {
   const complaintSheetSubtitle =
     complaintSource?.category_display?.trim() || null;
 
-  return (
-    <div className="page-gradient min-h-screen pb-28">
-      <header className="relative mx-auto flex w-full max-w-lg items-center justify-center px-4 pb-4 pt-5 sm:px-6 md:max-w-3xl lg:max-w-5xl">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="absolute right-4 top-5 flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/30 text-heading-lg text-ink backdrop-blur-sm active:bg-white/45 sm:right-6"
-          aria-label="بازگشت"
-        >
-          ‹
-        </button>
-      </header>
+  const listClassName =
+    "mt-6 space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 lg:grid-cols-2";
 
-      <main className="mx-auto w-full max-w-lg px-4 sm:px-6 md:max-w-3xl lg:max-w-5xl">
+  return (
+    <PageShell>
+      <PageHeader onBack={() => navigate(-1)} />
+
+      <ContentContainer as="main">
         <section className="mb-6 text-center">
-          <h1 className="text-heading-xl text-ink">درخواست‌های من</h1>
+          <h1 className="text-page-title text-ink">درخواست‌های من</h1>
         </section>
 
         <RequestFilterTabs activeFilter={activeTab} onChange={handleTabChange} />
 
         {isComplaintsTab ? (
-          <section className="mt-6 space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 lg:grid-cols-2">
+          <section className={listClassName}>
             {isComplaintsLoading
               ? Array.from({ length: 4 }, (_, index) => (
                   <RequestCardSkeleton key={index} />
@@ -137,7 +134,7 @@ export function MyRequestsPage() {
               : null}
           </section>
         ) : (
-          <section className="mt-6 space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 lg:grid-cols-2">
+          <section className={listClassName}>
             {isLoading
               ? Array.from({ length: 4 }, (_, index) => (
                   <RequestCardSkeleton key={index} />
@@ -161,7 +158,7 @@ export function MyRequestsPage() {
               : null}
           </section>
         )}
-      </main>
+      </ContentContainer>
 
       {!isComplaintsTab && error ? (
         <Toast message={error} onRetry={retry} />
@@ -207,6 +204,6 @@ export function MyRequestsPage() {
       </BottomSheet>
 
       <BottomNav activeTab="requests" />
-    </div>
+    </PageShell>
   );
 }

@@ -166,7 +166,7 @@ export function IdeaCard({ idea, isVoting, onVote }: IdeaCardProps) {
         className="w-full text-right"
       >
         <div className="flex items-center justify-between gap-3">
-          <span className="min-w-0 flex-1 text-heading-md text-ink">
+          <span className="min-w-0 flex-1 break-words text-heading-md text-ink">
             {idea.title}
           </span>
           <ChevronDownIcon

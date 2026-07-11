@@ -4,6 +4,10 @@ import { AnnouncementCard } from "../../components/announcement/AnnouncementCard
 import { AnnouncementCardSkeleton } from "../../components/announcement/AnnouncementCardSkeleton";
 import { AnnouncementsEmptyState } from "../../components/announcement/AnnouncementsEmptyState";
 import { BottomNav } from "../../components/layout/BottomNav";
+import { ContentContainer } from "../../components/layout/ContentContainer";
+import { FixedBottomAction } from "../../components/layout/FixedBottomAction";
+import { PageHeader } from "../../components/layout/PageHeader";
+import { PageShell } from "../../components/layout/PageShell";
 import { Toast } from "../../components/ui/Toast";
 import { useAnnouncementsFeed } from "../../hooks/useAnnouncementsFeed";
 
@@ -12,24 +16,21 @@ export function SupervisorAnnouncementsPage() {
   const { announcements, isLoading, error, retry } = useAnnouncementsFeed();
 
   return (
-    <div className="page-gradient min-h-screen pb-40">
-      <header className="relative mx-auto flex w-full max-w-lg items-center justify-center px-4 pb-4 pt-5 sm:px-6">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="absolute right-4 top-5 flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/30 text-heading-lg text-ink backdrop-blur-sm active:bg-white/45 sm:right-6"
-          aria-label="بازگشت"
-        >
-          ‹
-        </button>
-      </header>
+    <PageShell bottomSpacing="nav-cta">
+      <PageHeader
+        breadcrumb="مدیریت اطلاعیه‌ها"
+        onBack={() => navigate(-1)}
+      />
 
-      <main className="mx-auto w-full max-w-lg px-4 sm:px-6">
+      <ContentContainer as="main">
         <section className="mb-6 text-center">
-          <h1 className="text-heading-xl text-ink">اطلاعیه‌های خوابگاه</h1>
+          <h1 className="text-page-title text-ink">اطلاعیه‌های خوابگاه</h1>
+          <p className="mt-2 text-body-sm text-mute">
+            مدیریت و ارسال اطلاعیه‌های جدید
+          </p>
         </section>
 
-        <section className="space-y-3">
+        <section className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
           {isLoading
             ? Array.from({ length: 4 }, (_, index) => (
                 <AnnouncementCardSkeleton key={index} />
@@ -37,7 +38,9 @@ export function SupervisorAnnouncementsPage() {
             : null}
 
           {!isLoading && !error && announcements.length === 0 ? (
-            <AnnouncementsEmptyState />
+            <div className="md:col-span-2">
+              <AnnouncementsEmptyState />
+            </div>
           ) : null}
 
           {!isLoading && !error
@@ -49,23 +52,21 @@ export function SupervisorAnnouncementsPage() {
               ))
             : null}
         </section>
-      </main>
+      </ContentContainer>
 
       {error ? <Toast message={error} onRetry={retry} /> : null}
 
-      <div className="fixed inset-x-0 bottom-24 z-40 px-4 sm:bottom-28 sm:px-6">
-        <div className="mx-auto w-full max-w-lg">
-          <button
-            type="button"
-            onClick={() => navigate("/supervisor/announcements/new")}
-            className="flex h-11 w-full items-center justify-center rounded-md bg-primary text-button-md text-on-primary shadow-elevated transition-colors hover:bg-primary-pressed"
-          >
-            + ثبت اطلاعیه جدید
-          </button>
-        </div>
-      </div>
+      <FixedBottomAction>
+        <button
+          type="button"
+          onClick={() => navigate("/supervisor/announcements/new")}
+          className="flex h-11 w-full items-center justify-center rounded-md bg-primary text-button-md text-on-primary shadow-elevated transition-colors hover:bg-primary-pressed lg:max-w-md"
+        >
+          + ثبت اطلاعیه جدید
+        </button>
+      </FixedBottomAction>
 
       <BottomNav variant="supervisor" activeTab="home" />
-    </div>
+    </PageShell>
   );
 }

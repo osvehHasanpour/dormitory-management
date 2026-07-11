@@ -7,7 +7,7 @@ export function Toast({ message, onRetry }: ToastProps) {
   return (
     <div
       role="alert"
-      className="fixed bottom-24 left-4 right-4 z-[60] mx-auto flex max-w-lg items-center justify-between gap-3 rounded-md bg-ink px-4 py-3 text-body-sm text-on-primary shadow-elevated sm:bottom-28"
+      className="fixed bottom-24 left-4 right-4 z-[60] mx-auto flex max-w-lg min-w-0 items-center justify-between gap-3 rounded-md bg-ink px-4 py-3 text-body-sm text-on-primary shadow-elevated sm:bottom-28"
     >
       <span>{message}</span>
       {onRetry ? (

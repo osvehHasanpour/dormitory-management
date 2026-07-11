@@ -10,6 +10,7 @@ import {
   LogoutConfirmDialog,
   type DialogAnchor,
 } from "../profile/LogoutConfirmDialog";
+import { ContentContainer } from "./ContentContainer";
 
 interface BottomNavProps {
   activeTab?: BottomNavTab | null;
@@ -70,44 +71,46 @@ export function BottomNav({
   return (
     <>
       <nav
-        className="fixed inset-x-0 bottom-0 z-50 rounded-t-lg bg-surface-dark px-2 pb-[env(safe-area-inset-bottom)] pt-2"
+        className="fixed inset-x-0 bottom-0 z-50 rounded-t-lg bg-surface-dark px-1 pb-[env(safe-area-inset-bottom)] pt-2 sm:px-2"
         aria-label="ناوبری اصلی"
       >
-        <ul className="mx-auto flex max-w-lg items-end justify-around">
-          {navItems.map((item) => {
-            const isActive = activeTab != null && item.id === activeTab;
+        <ContentContainer className="max-w-lg lg:max-w-2xl">
+          <ul className="flex items-end justify-around gap-0.5 sm:gap-1">
+            {navItems.map((item) => {
+              const isActive = activeTab != null && item.id === activeTab;
 
-            return (
-              <li key={item.id}>
-                <button
-                  type="button"
-                  onClick={(event) =>
-                    handleTabClick(item.id, item.route, event.currentTarget)
-                  }
-                  className="flex min-w-[64px] flex-col items-center gap-1 px-2 py-1"
-                  aria-current={isActive ? "page" : undefined}
-                >
-                  <img
-                    src={item.image}
-                    alt=""
-                    className={`h-10 w-10 object-contain transition-opacity sm:h-11 sm:w-11 ${
-                      isActive ? "opacity-100" : "opacity-70"
-                    }`}
-                  />
-                  <span
-                    className={`text-caption-sm leading-tight ${
-                      isActive
-                        ? "font-semibold text-primary"
-                        : "text-on-dark/80"
-                    }`}
+              return (
+                <li key={item.id} className="min-w-0 flex-1">
+                  <button
+                    type="button"
+                    onClick={(event) =>
+                      handleTabClick(item.id, item.route, event.currentTarget)
+                    }
+                    className="mx-auto flex min-h-11 min-w-0 max-w-[5.5rem] flex-col items-center gap-0.5 px-1 py-1 sm:gap-1 sm:px-2"
+                    aria-current={isActive ? "page" : undefined}
                   >
-                    {item.label}
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+                    <img
+                      src={item.image}
+                      alt=""
+                      className={`h-9 w-9 object-contain transition-opacity sm:h-10 sm:w-10 ${
+                        isActive ? "opacity-100" : "opacity-70"
+                      }`}
+                    />
+                    <span
+                      className={`max-w-full truncate text-[10px] leading-tight sm:text-caption-sm ${
+                        isActive
+                          ? "font-semibold text-primary"
+                          : "text-on-dark/80"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </ContentContainer>
       </nav>
 
       <LogoutConfirmDialog

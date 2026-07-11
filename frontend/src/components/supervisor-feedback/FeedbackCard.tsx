@@ -35,7 +35,7 @@ export function FeedbackCard({ item, onClick }: FeedbackCardProps) {
       </div>
 
       <div>
-        <p className="text-heading-md text-ink">{item.title}</p>
+        <p className="break-words text-heading-md text-ink">{item.title}</p>
       </div>
 
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-caption-sm text-mute">

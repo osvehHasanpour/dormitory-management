@@ -236,8 +236,8 @@ function getPanelClassName(
   }
 
   if (layout === "modal") {
-    return `relative z-10 flex max-h-[min(80vh,560px)] w-[calc(100%-2rem)] max-w-md flex-col animate-modal-pop rounded-lg ${surface} ${className}`;
+    return `relative z-10 flex max-h-[min(80vh,560px)] w-[calc(100%-1rem)] max-w-md flex-col animate-modal-pop rounded-lg min-[480px]:w-[calc(100%-2rem)] md:max-w-xl ${surface} ${className}`;
   }
 
-  return `relative z-10 flex max-h-[min(78vh,520px)] w-full max-w-lg flex-col animate-sheet-panel rounded-t-lg pb-[env(safe-area-inset-bottom)] ${surface} ${className}`;
+  return `relative z-10 flex max-h-[min(78vh,520px)] w-full max-w-lg flex-col animate-sheet-panel rounded-t-lg pb-[env(safe-area-inset-bottom)] min-[480px]:max-w-xl md:max-w-2xl ${surface} ${className}`;
 }

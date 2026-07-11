@@ -48,7 +48,7 @@ function TimelineIcon({ step }: { step: TimelineStep }) {
 
 export function RequestTimeline({ steps }: RequestTimelineProps) {
   return (
-    <ol className="glass-card space-y-0 overflow-hidden px-4 py-2">
+    <ol className="glass-card space-y-0 overflow-hidden px-3 py-2 min-[480px]:px-4">
       {steps.map((step, index) => {
         const isLast = index === steps.length - 1;
         const connectorActive =
