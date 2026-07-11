@@ -60,7 +60,7 @@ describe("LogoutConfirmDialog", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "بله" }));
+    fireEvent.click(screen.getByRole("button", { name: "بله خروج" }));
     expect(onConfirm).toHaveBeenCalledTimes(1);
   });
 });
