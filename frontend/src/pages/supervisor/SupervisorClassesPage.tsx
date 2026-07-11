@@ -3,6 +3,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { BottomNav } from "../../components/layout/BottomNav";
+import { ContentContainer } from "../../components/layout/ContentContainer";
+import { FixedBottomAction } from "../../components/layout/FixedBottomAction";
+import { PageHeader } from "../../components/layout/PageHeader";
+import { PageShell } from "../../components/layout/PageShell";
 import { DeleteClassConfirm } from "../../components/supervisor-classes/DeleteClassConfirm";
 import { SupervisorClassCard } from "../../components/supervisor-classes/SupervisorClassCard";
 import { SupervisorClassCardSkeleton } from "../../components/supervisor-classes/SupervisorClassCardSkeleton";
@@ -85,23 +89,13 @@ export function SupervisorClassesPage() {
   };
 
   return (
-    <div className="page-gradient min-h-screen pb-32">
-      <header className="relative mx-auto flex w-full max-w-lg items-center justify-center px-4 pb-4 pt-5 sm:px-6">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="absolute right-4 top-5 flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/30 text-heading-lg text-ink backdrop-blur-sm active:bg-white/45 sm:right-6"
-          aria-label="بازگشت"
-        >
-          ‹
-        </button>
-        <h1 className="text-heading-lg text-ink">مدیریت کلاس‌ها</h1>
-      </header>
+    <PageShell bottomSpacing="nav-fab">
+      <PageHeader title="مدیریت کلاس‌ها" onBack={() => navigate(-1)} />
 
-      <main className="mx-auto w-full max-w-lg px-4 sm:px-6">
+      <ContentContainer as="main">
         <SupervisorClassTabs activeTab={activeTab} onChange={setActiveTab} />
 
-        <section className="mt-6 space-y-3">
+        <section className="mt-6 space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
           {isLoading
             ? Array.from({ length: 4 }, (_, index) => (
                 <SupervisorClassCardSkeleton key={index} />
@@ -109,7 +103,9 @@ export function SupervisorClassesPage() {
             : null}
 
           {!isLoading && !error && items.length === 0 ? (
-            <SupervisorClassEmptyState filterLabel={activeTabLabel} />
+            <div className="md:col-span-2">
+              <SupervisorClassEmptyState filterLabel={activeTabLabel} />
+            </div>
           ) : null}
 
           {!isLoading && !error
@@ -124,20 +120,18 @@ export function SupervisorClassesPage() {
               ))
             : null}
         </section>
-      </main>
+      </ContentContainer>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-24 z-40 px-4 sm:px-6">
-        <div className="pointer-events-auto mx-auto flex max-w-lg justify-start">
-          <button
-            type="button"
-            onClick={openCreate}
-            className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-5 text-button-md text-on-primary shadow-elevated transition-colors hover:bg-primary-pressed"
-          >
-            <Plus className="h-5 w-5" strokeWidth={2.5} aria-hidden="true" />
-            <span>ثبت کلاس جدید</span>
-          </button>
-        </div>
-      </div>
+      <FixedBottomAction align="start">
+        <button
+          type="button"
+          onClick={openCreate}
+          className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-5 text-button-md text-on-primary shadow-elevated transition-colors hover:bg-primary-pressed"
+        >
+          <Plus className="h-5 w-5" strokeWidth={2.5} aria-hidden="true" />
+          <span>ثبت کلاس جدید</span>
+        </button>
+      </FixedBottomAction>
 
       {error ? <Toast message={error} onRetry={retry} /> : null}
       {!error && feedbackMessage ? <Toast message={feedbackMessage} /> : null}
@@ -159,6 +153,6 @@ export function SupervisorClassesPage() {
       />
 
       <BottomNav variant="supervisor" activeTab="home" />
-    </div>
+    </PageShell>
   );
 }

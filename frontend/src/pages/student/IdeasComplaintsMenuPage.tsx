@@ -3,6 +3,9 @@ import ideaImage from "@media/idea.png";
 import { useNavigate } from "react-router-dom";
 
 import { BottomNav } from "../../components/layout/BottomNav";
+import { ContentContainer } from "../../components/layout/ContentContainer";
+import { PageHeader } from "../../components/layout/PageHeader";
+import { PageShell } from "../../components/layout/PageShell";
 
 interface OptionCardProps {
   title: string;
@@ -16,18 +19,18 @@ function OptionCard({ title, description, image, onClick }: OptionCardProps) {
     <button
       type="button"
       onClick={onClick}
-      className="glass-card flex w-full items-center gap-4 rounded-lg p-5 text-right transition-colors active:bg-white/60"
+      className="glass-card flex w-full min-w-0 items-center gap-4 rounded-lg p-5 text-right transition-colors active:bg-white/60"
     >
       <img
         src={image}
         alt=""
-        className="h-16 w-16 flex-shrink-0 rounded-full border border-hairline bg-surface-soft object-cover p-1"
+        className="h-14 w-14 shrink-0 rounded-full border border-hairline bg-surface-soft object-cover p-1 sm:h-16 sm:w-16"
       />
-      <span className="flex flex-1 flex-col gap-1.5">
-        <span className="text-heading-md text-ink">{title}</span>
-        <span className="text-body-sm text-mute">{description}</span>
+      <span className="flex min-w-0 flex-1 flex-col gap-1.5">
+        <span className="break-words text-heading-md text-ink">{title}</span>
+        <span className="break-words text-body-sm text-mute">{description}</span>
       </span>
-      <span aria-hidden="true" className="text-heading-lg text-mute">
+      <span aria-hidden="true" className="shrink-0 text-heading-lg text-mute">
         ‹
       </span>
     </button>
@@ -38,24 +41,15 @@ export function IdeasComplaintsMenuPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="page-gradient min-h-screen pb-32">
-      <header className="relative mx-auto flex w-full max-w-lg items-center justify-center px-4 pb-4 pt-5 sm:px-6">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="absolute right-4 top-5 flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/30 text-heading-lg text-ink backdrop-blur-sm active:bg-white/45 sm:right-6"
-          aria-label="بازگشت"
-        >
-          ‹
-        </button>
-      </header>
+    <PageShell bottomSpacing="nav-fab">
+      <PageHeader onBack={() => navigate(-1)} />
 
-      <main className="mx-auto flex w-full max-w-xl flex-col px-4 sm:px-6">
+      <ContentContainer as="main" className="max-w-xl">
         <p className="mb-7 text-center text-body-md text-ink">
           لطفاً یکی از گزینه‌های زیر را انتخاب کنید
         </p>
 
-        <div className="mx-auto flex w-full max-w-xl flex-col gap-5">
+        <div className="mx-auto flex w-full flex-col gap-5">
           <OptionCard
             title="ثبت ایده جدید"
             description="ایده‌ها و نظرات سازنده خود را با ما به اشتراک بگذارید."
@@ -69,9 +63,9 @@ export function IdeasComplaintsMenuPage() {
             onClick={() => navigate("/complaints")}
           />
         </div>
-      </main>
+      </ContentContainer>
 
       <BottomNav activeTab="home" />
-    </div>
+    </PageShell>
   );
 }

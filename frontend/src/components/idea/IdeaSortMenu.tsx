@@ -29,25 +29,23 @@ function SortIcon({ className = "" }: { className?: string }) {
 
 export function IdeaSortMenu({ activeOrdering, onChange }: IdeaSortMenuProps) {
   return (
-    <div className="absolute left-4 top-5 z-20 sm:left-6">
-      <ResponsiveDropdown
-        value={activeOrdering}
-        onChange={(value) => onChange(value as IdeaOrdering)}
-        options={ideaSortOptions}
-        placeholder="مرتب‌سازی"
-        panelTitle="مرتب‌سازی ایده‌ها"
-        ariaLabel="مرتب‌سازی ایده‌ها"
-        variant="compact"
-        renderCompactTrigger={({ isOpen }) => (
-          <span
-            className={`flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/30 text-ink backdrop-blur-sm transition-colors active:bg-white/45 ${
-              isOpen ? "bg-white/50" : ""
-            }`}
-          >
-            <SortIcon className="h-5 w-5" />
-          </span>
-        )}
-      />
-    </div>
+    <ResponsiveDropdown
+      value={activeOrdering}
+      onChange={(value) => onChange(value as IdeaOrdering)}
+      options={ideaSortOptions}
+      placeholder="مرتب‌سازی"
+      panelTitle="مرتب‌سازی ایده‌ها"
+      ariaLabel="مرتب‌سازی ایده‌ها"
+      variant="compact"
+      renderCompactTrigger={({ isOpen }) => (
+        <span
+          className={`flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/30 text-ink backdrop-blur-sm transition-colors active:bg-white/45 ${
+            isOpen ? "bg-white/50" : ""
+          }`}
+        >
+          <SortIcon className="h-5 w-5" />
+        </span>
+      )}
+    />
   );
 }

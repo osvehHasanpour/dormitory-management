@@ -25,12 +25,21 @@ export function useMediaQuery(query: string): boolean {
   );
 }
 
+/** Design breakpoints from design-en.md */
+export const BREAKPOINTS = {
+  mobileNarrow: 320,
+  mobile: 480,
+  tablet: 768,
+  desktop: 1280,
+  desktopLarge: 1440,
+} as const;
+
 /** Bottom sheet on phones, centered modal on tablet, anchored panel on desktop */
 export type PanelLayout = "sheet" | "modal" | "dropdown";
 
 export function usePanelLayout(): PanelLayout {
-  const isDesktop = useMediaQuery("(min-width: 1024px)");
-  const isTablet = useMediaQuery("(min-width: 640px)");
+  const isDesktop = useMediaQuery(`(min-width: ${BREAKPOINTS.desktop}px)`);
+  const isTablet = useMediaQuery(`(min-width: ${BREAKPOINTS.tablet}px)`);
 
   if (isDesktop) {
     return "dropdown";
@@ -45,5 +54,5 @@ export function usePanelLayout(): PanelLayout {
 
 /** @deprecated Use usePanelLayout instead */
 export function useIsMobilePanel(): boolean {
-  return !useMediaQuery("(min-width: 1024px)");
+  return !useMediaQuery(`(min-width: ${BREAKPOINTS.desktop}px)`);
 }

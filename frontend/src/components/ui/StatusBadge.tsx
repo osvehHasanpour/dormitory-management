@@ -15,7 +15,7 @@ const variantClasses: Record<StatusBadgeVariant, string> = {
 export function StatusBadge({ label, variant }: StatusBadgeProps) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-caption-md font-medium ${variantClasses[variant]}`}
+      className={`inline-flex max-w-full shrink-0 items-center truncate rounded-full px-2.5 py-1 text-caption-md font-medium ${variantClasses[variant]}`}
     >
       {label}
     </span>
