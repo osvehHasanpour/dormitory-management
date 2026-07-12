@@ -2,7 +2,7 @@ import { Skeleton } from "../ui/Skeleton";
 
 export function IdeaCardSkeleton() {
   return (
-    <div className="glass-card rounded-md border border-hairline p-4 shadow-elevated">
+    <div className="glass-card flex h-full min-h-[8.5rem] flex-col rounded-md border border-hairline p-4 shadow-elevated">
       <div className="flex items-center justify-between gap-4">
         <Skeleton className="h-5 w-40" />
         <Skeleton className="h-5 w-5 shrink-0 rounded-full" />
