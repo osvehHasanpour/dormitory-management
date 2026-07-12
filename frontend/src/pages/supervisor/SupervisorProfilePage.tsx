@@ -6,9 +6,9 @@ import { BottomNav } from "../../components/layout/BottomNav";
 import { ContentContainer } from "../../components/layout/ContentContainer";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { PageShell } from "../../components/layout/PageShell";
+import { FloatingThemeButton } from "../../components/profile/FloatingThemeButton";
 import { ProfileAvatar } from "../../components/profile/ProfileAvatar";
 import { ProfileInfoList } from "../../components/profile/ProfileInfoList";
-import { ThemeToggle } from "../../components/profile/ThemeToggle";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { useProfile } from "../../hooks/useProfile";
 import { formatProfileValue, getProfileFullName } from "../../types/auth";
@@ -41,7 +41,11 @@ export function SupervisorProfilePage() {
 
   return (
     <PageShell>
-      <PageHeader title="پروفایل" onBack={() => navigate(-1)} />
+      <PageHeader
+        title="پروفایل"
+        onBack={() => navigate(-1)}
+        leftAction={<FloatingThemeButton />}
+      />
 
       <ContentContainer as="main" className="space-y-4 md:max-w-xl">
         {error ? (
@@ -67,7 +71,6 @@ export function SupervisorProfilePage() {
           </>
         ) : profile ? (
           <>
-            <ThemeToggle />
             <ProfileAvatar imageUrl={avatarUrl} alt="تصویر پروفایل" />
             <ProfileInfoList items={profileItems} />
           </>
