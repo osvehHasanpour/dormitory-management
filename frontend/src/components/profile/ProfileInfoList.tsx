@@ -20,7 +20,7 @@ export function ProfileInfoList({ items }: ProfileInfoListProps) {
           <div key={item.label}>
             <div className="flex items-center gap-4 px-4 py-4">
               <div
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/30"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-overlay-bg"
                 aria-hidden="true"
               >
                 <Icon className="h-5 w-5 text-primary" strokeWidth={1.75} />

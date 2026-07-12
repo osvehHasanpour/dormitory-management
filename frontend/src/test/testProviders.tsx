@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { MemoryRouter } from "react-router-dom";
 
 import { AuthContext, type AuthContextValue } from "../context/authContext";
+import { ThemeProvider } from "../context/ThemeContext";
 
 export function TestProviders({
   auth,
@@ -13,8 +14,10 @@ export function TestProviders({
   children: ReactNode;
 }) {
   return (
-    <AuthContext.Provider value={auth}>
-      <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
-    </AuthContext.Provider>
+    <ThemeProvider>
+      <AuthContext.Provider value={auth}>
+        <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
+      </AuthContext.Provider>
+    </ThemeProvider>
   );
 }

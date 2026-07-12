@@ -28,7 +28,7 @@ export function PageHeader({
           <button
             type="button"
             onClick={onBack}
-            className="absolute right-0 top-0 flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/30 text-heading-lg text-ink backdrop-blur-sm active:bg-white/45"
+            className="absolute right-0 top-0 flex h-10 w-10 items-center justify-center rounded-full border border-overlay-border bg-overlay-bg text-heading-lg text-ink backdrop-blur-sm transition-colors active:bg-overlay-press"
             aria-label={backLabel}
           >
             ‹

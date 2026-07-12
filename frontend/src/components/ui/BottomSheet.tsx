@@ -47,7 +47,7 @@ export function BottomSheet({
       <button
         type="button"
         aria-label="بستن"
-        className="absolute inset-0 bg-ink/55 backdrop-blur-[2px] animate-sheet-scrim"
+        className="absolute inset-0 bg-scrim-strong backdrop-blur-[2px] animate-sheet-scrim"
         onClick={onClose}
       />
 
@@ -68,7 +68,7 @@ export function BottomSheet({
               type="button"
               onClick={onClose}
               aria-label="بستن"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-on-dark transition-colors hover:bg-white/20"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-overlay-bg text-on-dark transition-colors hover:bg-overlay-bg-strong"
             >
               <X className="h-4 w-4" strokeWidth={2.25} />
             </button>
@@ -91,7 +91,7 @@ export function BottomSheet({
             {children}
           </div>
 
-          <footer className="shrink-0 border-t border-white/35 px-5 py-4 sm:px-7 sm:pb-6">
+          <footer className="shrink-0 border-t border-hairline/50 px-5 py-4 sm:px-7 sm:pb-6">
             <button
               type="button"
               onClick={onClose}

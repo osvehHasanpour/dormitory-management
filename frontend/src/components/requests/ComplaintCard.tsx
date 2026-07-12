@@ -16,7 +16,7 @@ export function ComplaintCard({ complaint, onClick }: ComplaintCardProps) {
     <button
       type="button"
       onClick={() => onClick(complaint)}
-      className="flex w-full min-w-0 flex-col gap-3 glass-card p-4 text-right transition-colors hover:bg-white/55 active:bg-white/65 min-[480px]:flex-row min-[480px]:items-start"
+      className="flex w-full min-w-0 flex-col gap-3 glass-card p-4 text-right transition-colors hover:bg-interactive-soft active:bg-interactive-soft-strong min-[480px]:flex-row min-[480px]:items-start"
     >
       <div className="min-w-0 flex-1">
         <p className="break-words text-heading-md text-ink">

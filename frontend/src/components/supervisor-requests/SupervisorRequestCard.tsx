@@ -29,7 +29,7 @@ export function SupervisorRequestCard({
     <button
       type="button"
       onClick={() => onClick(request)}
-      className="flex w-full flex-col gap-3 glass-card p-4 text-right transition-colors hover:bg-white/55 active:bg-white/65"
+      className="flex w-full flex-col gap-3 glass-card p-4 text-right transition-colors hover:bg-interactive-soft active:bg-interactive-soft-strong"
     >
       <div className="flex items-start justify-between gap-3">
         <p className="min-w-0 flex-1 break-words text-heading-md text-ink">

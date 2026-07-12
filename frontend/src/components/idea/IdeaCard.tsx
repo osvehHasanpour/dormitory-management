@@ -104,7 +104,7 @@ function VoteButton({
       disabled={isVoting}
       aria-label={label}
       aria-pressed={isActive}
-      className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-body-md text-[#2E1145] transition-colors duration-500 ${
+      className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-body-md text-ink transition-colors duration-500 ${
         isActive ? "bg-primary/30" : "bg-transparent hover:bg-primary/15"
       } ${isVoting ? "cursor-not-allowed opacity-60" : "active:bg-primary/25"}`}
     >

@@ -214,7 +214,7 @@ export function FeedbackDetailSheet({
                   type="button"
                   disabled={isSubmitting}
                   onClick={() => onStatusAction("reviewed")}
-                  className="flex h-10 flex-1 items-center justify-center rounded-md bg-[#ede4f7] px-4 text-button-sm text-[#582281] transition-colors hover:bg-[#e0d4f0] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex h-10 flex-1 items-center justify-center rounded-md bg-info-pale px-4 text-button-sm text-info transition-colors hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   در حال بررسی
                 </button>
@@ -234,7 +234,7 @@ export function FeedbackDetailSheet({
                   type="button"
                   disabled={isSubmitting}
                   onClick={() => onStatusAction("rejected")}
-                  className="flex h-10 flex-1 items-center justify-center rounded-md border border-error bg-error-pale text-button-sm text-error transition-colors hover:bg-[#f9d4d4] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex h-10 flex-1 items-center justify-center rounded-md border border-error bg-error-pale text-button-sm text-error transition-colors hover:bg-error/20 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   رد شده
                 </button>
@@ -259,7 +259,7 @@ export function FeedbackDetailSheet({
                   type="button"
                   disabled={isSubmitting}
                   onClick={onRejectIdea}
-                  className="flex h-10 flex-1 items-center justify-center rounded-md border border-error bg-error-pale text-button-sm text-error transition-colors hover:bg-[#f9d4d4] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex h-10 flex-1 items-center justify-center rounded-md border border-error bg-error-pale text-button-sm text-error transition-colors hover:bg-error/20 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   رد ایده
                 </button>
