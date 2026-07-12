@@ -1,4 +1,4 @@
-import { Moon, Sparkles, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 
 import { useTheme } from "../../hooks/useTheme";
 
@@ -55,21 +55,6 @@ export function FloatingThemeButton() {
         />
       </span>
 
-      <span
-        aria-hidden="true"
-        className={`absolute left-2 top-2 z-10 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full ring-1 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          isDark
-            ? "bg-surface-card/90 ring-primary/35 opacity-100 scale-100"
-            : "bg-canvas/85 ring-hairline/70 opacity-80 scale-90 group-hover:scale-100 group-hover:opacity-100"
-        }`}
-      >
-        <Sparkles
-          className={`h-2.5 w-2.5 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            isDark ? "text-primary rotate-0" : "text-warning rotate-12"
-          }`}
-          strokeWidth={2.4}
-        />
-      </span>
     </button>
   );
 }
