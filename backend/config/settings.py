@@ -8,6 +8,19 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+# Resolve the repository/project root in a container-safe way.
+# - In this repository, BASE_DIR points to /workspace/backend.
+# - We default to BASE_DIR.parent (/workspace) so logs are stored at project root.
+# - PROJECT_ROOT can be overridden via env var for custom deployment layouts.
+PROJECT_ROOT = Path(
+    os.environ.get('PROJECT_ROOT', str(BASE_DIR.parent))
+).expanduser().resolve()
+
+# Centralized logs directory for all runtime logs.
+# mkdir(..., exist_ok=True) guarantees startup does not fail when the directory
+# already exists, and parents=True handles nested path creation safely.
+LOGS_DIR = PROJECT_ROOT / 'logs'
+LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-only-secret-key-change-in-production')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
@@ -137,6 +150,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    # Route DRF errors through a central handler that logs full tracebacks while
+    # returning sanitized responses for unexpected internal failures.
+    'EXCEPTION_HANDLER': 'core.exception_handler.custom_exception_handler',
 }
 
 SIMPLE_JWT = {
@@ -180,4 +196,95 @@ SPECTACULAR_SETTINGS = {
 
 GRAPHENE = {
     'SCHEMA': 'dormitory.schema.schema',
+}
+
+# Django logging configuration
+# Reference: https://docs.djangoproject.com/en/stable/topics/logging/
+LOGGING = {
+    # Logging config schema version required by Python's logging.config.dictConfig.
+    'version': 1,
+    # Keep Django/default library loggers active unless explicitly overridden.
+    'disable_existing_loggers': False,
+    # Reusable log message formats used by handlers below.
+    'formatters': {
+        # Verbose formatter for file logs and console debugging.
+        # Includes timestamp, severity, logger name, source location,
+        # process/thread IDs, and message text.
+        'verbose': {
+            'format': (
+                '[{asctime}] {levelname} {name} '
+                '({module}.{funcName}:{lineno}) '
+                '[pid:{process} tid:{thread}] - {message}'
+            ),
+            'style': '{',
+        },
+    },
+    # Output destinations for log records.
+    'handlers': {
+        # Development-friendly console logging for quick local diagnostics.
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'formatter': 'verbose',
+        },
+        # Rotating app log (INFO and above) for operational visibility.
+        # Rotation prevents unbounded disk growth.
+        'app_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'formatter': 'verbose',
+            'filename': str(LOGS_DIR / 'app.log'),
+            'maxBytes': 10 * 1024 * 1024,  # 10 MB per file
+            'backupCount': 5,  # Keep 5 rolled files
+            'encoding': 'utf-8',
+        },
+        # Rotating error log (ERROR and above) for incidents and tracebacks.
+        'error_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'ERROR',
+            'formatter': 'verbose',
+            'filename': str(LOGS_DIR / 'error.log'),
+            'maxBytes': 10 * 1024 * 1024,  # 10 MB per file
+            'backupCount': 5,  # Keep 5 rolled files
+            'encoding': 'utf-8',
+        },
+    },
+    # Logger routing rules by namespace.
+    'loggers': {
+        # Django core logs (startup/runtime messages and framework events).
+        'django': {
+            'handlers': ['console', 'app_file', 'error_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        # Unhandled request exceptions (500s) emitted by Django request cycle.
+        'django.request': {
+            'handlers': ['console', 'app_file', 'error_file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        # HTTP server/runtime errors from Django's server logger.
+        'django.server': {
+            'handlers': ['console', 'app_file', 'error_file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        # Database backend errors (query/connection failures).
+        'django.db.backends': {
+            'handlers': ['console', 'app_file', 'error_file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        # DRF and API-layer exceptions, including custom handler emissions.
+        'rest_framework': {
+            'handlers': ['console', 'app_file', 'error_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+    # Root logger catches anything not matched above.
+    'root': {
+        'handlers': ['console', 'app_file', 'error_file'],
+        'level': 'INFO',
+    },
 }
