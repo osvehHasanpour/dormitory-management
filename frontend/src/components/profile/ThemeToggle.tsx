@@ -1,4 +1,4 @@
-import type { ThemePreference } from "../../context/ThemeContext";
+import type { ThemePreference } from "../../context/themeContext";
 import { useTheme } from "../../hooks/useTheme";
 
 const options: Array<{ value: ThemePreference; label: string }> = [

@@ -3,7 +3,8 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
 import { AuthProvider } from "./context/AuthContext.tsx";
-import { ThemeProvider, initializeThemeClass } from "./context/ThemeContext.tsx";
+import { ThemeProvider } from "./context/ThemeContext.tsx";
+import { initializeThemeClass } from "./utils/theme.ts";
 import App from "./App.tsx";
 import "./index.css";
 
