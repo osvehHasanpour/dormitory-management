@@ -2,6 +2,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -16,17 +17,45 @@ import {
   resolveTheme,
 } from "./themeContext";
 
-function applyThemeClass(resolvedTheme: "light" | "dark") {
+const THEME_TRANSITION_CLASS = "theme-switching";
+const THEME_TRANSITION_DURATION_MS = 420;
+let themeTransitionTimer: number | undefined;
+
+function applyThemeClass(
+  resolvedTheme: "light" | "dark",
+  options?: { animate?: boolean },
+) {
   if (typeof document === "undefined") {
     return;
   }
 
-  document.documentElement.classList.toggle("dark", resolvedTheme === "dark");
+  const shouldAnimate = options?.animate ?? false;
+  const root = document.documentElement;
+
+  if (!shouldAnimate) {
+    root.classList.toggle("dark", resolvedTheme === "dark");
+    return;
+  }
+
+  root.classList.add(THEME_TRANSITION_CLASS);
+  // Ensure transition class is applied before toggling theme class.
+  void root.offsetWidth;
+  root.classList.toggle("dark", resolvedTheme === "dark");
+
+  if (typeof window !== "undefined") {
+    if (themeTransitionTimer !== undefined) {
+      window.clearTimeout(themeTransitionTimer);
+    }
+    themeTransitionTimer = window.setTimeout(() => {
+      root.classList.remove(THEME_TRANSITION_CLASS);
+    }, THEME_TRANSITION_DURATION_MS);
+  }
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [preference, setPreference] = useState(readStoredPreference);
   const [systemTheme, setSystemTheme] = useState(getSystemTheme);
+  const hasMountedRef = useRef(false);
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
@@ -76,7 +105,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const resolvedTheme = resolveTheme(preference, systemTheme);
 
   useEffect(() => {
-    applyThemeClass(resolvedTheme);
+    if (!hasMountedRef.current) {
+      applyThemeClass(resolvedTheme);
+      hasMountedRef.current = true;
+      return;
+    }
+
+    applyThemeClass(resolvedTheme, { animate: true });
   }, [resolvedTheme]);
 
   const handleToggleTheme = useCallback(() => {
