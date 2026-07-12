@@ -8,6 +8,7 @@ import { PageHeader } from "../../components/layout/PageHeader";
 import { PageShell } from "../../components/layout/PageShell";
 import { ProfileAvatar } from "../../components/profile/ProfileAvatar";
 import { ProfileInfoList } from "../../components/profile/ProfileInfoList";
+import { ThemeToggle } from "../../components/profile/ThemeToggle";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { useProfile } from "../../hooks/useProfile";
 import { formatProfileValue, getProfileFullName } from "../../types/auth";
@@ -66,6 +67,7 @@ export function SupervisorProfilePage() {
           </>
         ) : profile ? (
           <>
+            <ThemeToggle />
             <ProfileAvatar imageUrl={avatarUrl} alt="تصویر پروفایل" />
             <ProfileInfoList items={profileItems} />
           </>

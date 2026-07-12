@@ -19,7 +19,7 @@ function OptionCard({ title, description, image, onClick }: OptionCardProps) {
     <button
       type="button"
       onClick={onClick}
-      className="glass-card flex w-full min-w-0 items-center gap-4 rounded-lg p-5 text-right transition-colors active:bg-white/60"
+      className="glass-card flex w-full min-w-0 items-center gap-4 rounded-lg p-5 text-right transition-colors active:bg-interactive-soft"
     >
       <img
         src={image}

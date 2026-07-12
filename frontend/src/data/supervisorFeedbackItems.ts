@@ -27,11 +27,11 @@ export const feedbackTypeBadgeConfig: Record<
 > = {
   idea: {
     label: "ایده",
-    className: "bg-[#d4f0f0] text-[#1a5c5c]",
+    className: "bg-idea-pale text-idea-deep",
   },
   complaint: {
     label: "شکایت",
-    className: "bg-[#fde8e0] text-[#8b3a2a]",
+    className: "bg-complaint-pale text-complaint-deep",
   },
 };
 

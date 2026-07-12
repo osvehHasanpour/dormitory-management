@@ -26,7 +26,7 @@ export function ProfileAvatar({ imageUrl, alt }: ProfileAvatarProps) {
 
       <button
         type="button"
-        className="absolute bottom-0 left-0 flex h-9 w-9 items-center justify-center rounded-full glass-card text-ink transition-colors active:bg-white/95"
+        className="absolute bottom-0 left-0 flex h-9 w-9 items-center justify-center rounded-full glass-card text-ink transition-colors active:bg-overlay-bg-strong"
         aria-label="ویرایش تصویر پروفایل"
       >
         <Camera className="h-4 w-4" strokeWidth={2} aria-hidden="true" />

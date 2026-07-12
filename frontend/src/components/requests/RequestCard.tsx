@@ -16,7 +16,7 @@ export function RequestCard({ request, onClick }: RequestCardProps) {
     <button
       type="button"
       onClick={() => onClick(request)}
-      className="flex w-full min-w-0 flex-col gap-3 glass-card p-4 text-right transition-colors hover:bg-white/55 active:bg-white/65 min-[480px]:flex-row min-[480px]:items-center"
+      className="flex w-full min-w-0 flex-col gap-3 glass-card p-4 text-right transition-colors hover:bg-interactive-soft active:bg-interactive-soft-strong min-[480px]:flex-row min-[480px]:items-center"
     >
       <div className="flex min-w-0 items-center gap-3">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-surface-card">

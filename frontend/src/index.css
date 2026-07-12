@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --breakpoint-mobile-narrow: 320px;
@@ -45,6 +46,33 @@
   --color-glass-bg: rgba(255, 255, 255, 0.45);
   --color-glass-border: rgba(255, 255, 255, 0.55);
   --color-glass-divider: rgba(255, 255, 255, 0.35);
+  --color-overlay-bg: rgba(255, 255, 255, 0.3);
+  --color-overlay-bg-strong: rgba(255, 255, 255, 0.5);
+  --color-overlay-border: rgba(255, 255, 255, 0.5);
+  --color-overlay-border-strong: rgba(255, 255, 255, 0.6);
+  --color-overlay-press: rgba(255, 255, 255, 0.45);
+  --color-interactive-soft: rgba(255, 255, 255, 0.55);
+  --color-interactive-soft-strong: rgba(255, 255, 255, 0.65);
+  --color-scrim-soft: rgba(46, 17, 69, 0.45);
+  --color-scrim-strong: rgba(46, 17, 69, 0.55);
+  --color-info: #582281;
+  --color-info-pale: #ede4f7;
+  --color-idea-deep: #1a5c5c;
+  --color-idea-pale: #d4f0f0;
+  --color-complaint-deep: #8b3a2a;
+  --color-complaint-pale: #fde8e0;
+
+  --color-modal-bg: rgba(255, 255, 255, 0.94);
+  --color-modal-border: rgba(255, 255, 255, 0.85);
+  --shadow-modal: 0 12px 48px rgba(46, 17, 69, 0.16);
+  --shadow-panel: 0 12px 48px rgba(46, 17, 69, 0.16);
+
+  --bg-orb-1: rgba(198, 165, 223, 0.5);
+  --bg-orb-2: rgba(237, 224, 247, 0.75);
+  --bg-orb-3: rgba(123, 79, 166, 0.22);
+  --bg-orb-4: rgba(198, 165, 223, 0.32);
+  --bg-orb-5: rgba(237, 224, 247, 0.45);
+  --noise-opacity: 0.025;
 
   --font-sans: "Vazirmatn", Tahoma, Arial, sans-serif;
 
@@ -117,6 +145,65 @@
     overflow-x: clip;
   }
 
+  html.dark {
+    color-scheme: dark;
+    --color-primary: #8c64b3;
+    --color-primary-deep: #744f98;
+    --color-primary-light: #b796d2;
+    --color-primary-ultra-light: #2f2140;
+    --color-primary-pressed: #7a579f;
+    --color-ink: #f3e9ff;
+    --color-body: #e8dbf7;
+    --color-body-text: #d8c8eb;
+    --color-mute: #bea5d9;
+    --color-ash: #8a75a2;
+    --color-stone: #5f4b76;
+    --color-hairline: #5f4b76;
+    --color-canvas: #1a1326;
+    --color-surface-soft: #10091a;
+    --color-surface-card: #261a37;
+    --color-surface-dark: #130d1d;
+    --color-on-primary: #f8f3ff;
+    --color-on-secondary: #f3e9ff;
+    --color-secondary-bg: #3a2852;
+    --color-secondary-pressed: #4d346f;
+    --color-on-dark: #f6eeff;
+    --color-success-deep: #d7f7e6;
+    --color-success-pale: #1f4a36;
+    --color-warning: #ffe7b3;
+    --color-warning-pale: #6a4706;
+    --color-error: #ffd7d7;
+    --color-error-pale: #692626;
+    --color-glass-bg: rgba(30, 20, 45, 0.78);
+    --color-glass-border: rgba(198, 165, 223, 0.3);
+    --color-glass-divider: rgba(198, 165, 223, 0.24);
+    --color-overlay-bg: rgba(198, 165, 223, 0.2);
+    --color-overlay-bg-strong: rgba(198, 165, 223, 0.32);
+    --color-overlay-border: rgba(198, 165, 223, 0.38);
+    --color-overlay-border-strong: rgba(198, 165, 223, 0.5);
+    --color-overlay-press: rgba(198, 165, 223, 0.42);
+    --color-interactive-soft: rgba(198, 165, 223, 0.2);
+    --color-interactive-soft-strong: rgba(198, 165, 223, 0.3);
+    --color-scrim-soft: rgba(6, 4, 10, 0.64);
+    --color-scrim-strong: rgba(6, 4, 10, 0.74);
+    --color-info: #d9c2f3;
+    --color-info-pale: #3c2c52;
+    --color-idea-deep: #c9f4f4;
+    --color-idea-pale: #1f4f4f;
+    --color-complaint-deep: #ffd8d0;
+    --color-complaint-pale: #6d2f25;
+    --color-modal-bg: rgba(26, 19, 38, 0.96);
+    --color-modal-border: rgba(198, 165, 223, 0.32);
+    --shadow-modal: 0 18px 56px rgba(0, 0, 0, 0.5);
+    --shadow-panel: 0 18px 56px rgba(0, 0, 0, 0.5);
+    --bg-orb-1: rgba(123, 79, 166, 0.25);
+    --bg-orb-2: rgba(46, 17, 69, 0.22);
+    --bg-orb-3: rgba(198, 165, 223, 0.16);
+    --bg-orb-4: rgba(123, 79, 166, 0.18);
+    --bg-orb-5: rgba(198, 165, 223, 0.12);
+    --noise-opacity: 0.04;
+  }
+
   body {
     margin: 0;
     min-height: 100vh;
@@ -127,27 +214,27 @@
     background-image:
       radial-gradient(
         ellipse 90% 70% at 88% 8%,
-        rgba(198, 165, 223, 0.5) 0%,
+        var(--bg-orb-1) 0%,
         transparent 58%
       ),
       radial-gradient(
         ellipse 75% 55% at 8% 28%,
-        rgba(237, 224, 247, 0.75) 0%,
+        var(--bg-orb-2) 0%,
         transparent 52%
       ),
       radial-gradient(
         ellipse 65% 60% at 72% 82%,
-        rgba(123, 79, 166, 0.22) 0%,
+        var(--bg-orb-3) 0%,
         transparent 48%
       ),
       radial-gradient(
         ellipse 80% 65% at 18% 88%,
-        rgba(198, 165, 223, 0.32) 0%,
+        var(--bg-orb-4) 0%,
         transparent 52%
       ),
       radial-gradient(
         ellipse 55% 45% at 48% 42%,
-        rgba(237, 224, 247, 0.45) 0%,
+        var(--bg-orb-5) 0%,
         transparent 68%
       );
     background-attachment: fixed;
@@ -161,7 +248,7 @@
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.025;
+    opacity: var(--noise-opacity);
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
@@ -204,27 +291,27 @@
     background-image:
       radial-gradient(
         ellipse 90% 70% at 88% 8%,
-        rgba(198, 165, 223, 0.5) 0%,
+        var(--bg-orb-1) 0%,
         transparent 58%
       ),
       radial-gradient(
         ellipse 75% 55% at 8% 28%,
-        rgba(237, 224, 247, 0.75) 0%,
+        var(--bg-orb-2) 0%,
         transparent 52%
       ),
       radial-gradient(
         ellipse 65% 60% at 72% 82%,
-        rgba(123, 79, 166, 0.22) 0%,
+        var(--bg-orb-3) 0%,
         transparent 48%
       ),
       radial-gradient(
         ellipse 80% 65% at 18% 88%,
-        rgba(198, 165, 223, 0.32) 0%,
+        var(--bg-orb-4) 0%,
         transparent 52%
       ),
       radial-gradient(
         ellipse 55% 45% at 48% 42%,
-        rgba(237, 224, 247, 0.45) 0%,
+        var(--bg-orb-5) 0%,
         transparent 68%
       );
     background-attachment: fixed;
@@ -241,12 +328,12 @@
   }
 
   .glass-card-modal {
-    background: rgba(255, 255, 255, 0.94);
+    background: var(--color-modal-bg);
     backdrop-filter: blur(28px);
     -webkit-backdrop-filter: blur(28px);
-    border: 1px solid rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--color-modal-border);
     border-radius: var(--radius-lg);
-    box-shadow: 0 12px 48px rgba(46, 17, 69, 0.16);
+    box-shadow: var(--shadow-modal);
     color: var(--color-ink);
   }
 
@@ -301,6 +388,10 @@
 
 @utility shadow-elevated {
   box-shadow: var(--shadow-elevated);
+}
+
+@utility shadow-panel {
+  box-shadow: var(--shadow-panel);
 }
 
 @utility rounded-md {

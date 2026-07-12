@@ -7,7 +7,7 @@ interface StatusBadgeProps {
 
 const variantClasses: Record<StatusBadgeVariant, string> = {
   pending: "bg-warning-pale text-warning",
-  reviewed: "bg-[#ede4f7] text-[#582281]",
+  reviewed: "bg-info-pale text-info",
   approved: "bg-success-pale text-success-deep",
   rejected: "bg-error-pale text-error",
 };

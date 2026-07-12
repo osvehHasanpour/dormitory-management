@@ -20,7 +20,7 @@ export function FeedbackCard({ item, onClick }: FeedbackCardProps) {
     <button
       type="button"
       onClick={() => onClick(item)}
-      className="flex w-full flex-col gap-3 glass-card p-4 text-right transition-colors hover:bg-white/55 active:bg-white/65"
+      className="flex w-full flex-col gap-3 glass-card p-4 text-right transition-colors hover:bg-interactive-soft active:bg-interactive-soft-strong"
     >
       <div className="flex items-start justify-between gap-3">
         <span

@@ -81,7 +81,7 @@ export function LogoutConfirmDialog({
       <button
         type="button"
         aria-label="بستن"
-        className="absolute inset-0 bg-ink/40 backdrop-blur-[1px] animate-modal-scrim"
+        className="absolute inset-0 bg-scrim-soft backdrop-blur-[1px] animate-modal-scrim"
         onClick={onCancel}
       />
 

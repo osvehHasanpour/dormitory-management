@@ -7,6 +7,7 @@ import { PageHeader } from "../../components/layout/PageHeader";
 import { PageShell } from "../../components/layout/PageShell";
 import { ProfileHeaderCard } from "../../components/profile/ProfileHeaderCard";
 import { ProfileInfoList } from "../../components/profile/ProfileInfoList";
+import { ThemeToggle } from "../../components/profile/ThemeToggle";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { useProfile } from "../../hooks/useProfile";
 import { formatProfileValue, getProfileFullName } from "../../types/auth";
@@ -53,6 +54,7 @@ export function ProfilePage() {
           </>
         ) : profile ? (
           <>
+            <ThemeToggle />
             <ProfileHeaderCard
               name={getProfileFullName(profile)}
               subtitle={formatProfileValue(profile.personnel_code)}
