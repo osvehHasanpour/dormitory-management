@@ -1,3 +1,5 @@
+import logging
+
 from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema, inline_serializer
 from django.db.models import Prefetch
 from rest_framework import permissions, serializers, status
@@ -9,6 +11,10 @@ from dorms.models import RoomAssignment
 from users.models import User
 from users.serializers import LoginSerializer, UserProfileSerializer
 from users.services.auth_service import AuthService, AuthServiceError
+
+api_logger = logging.getLogger('rest_framework')
+auth_logger = logging.getLogger('auth')
+security_logger = logging.getLogger('security')
 
 
 def get_profile_user_queryset():
@@ -33,6 +39,26 @@ def _normalize_errors(errors):
     return str(errors)
 
 
+def _request_metadata(request):
+    if not request:
+        return 'UNKNOWN', 'unknown-path', 'anonymous', '-', '-'
+
+    forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    client_ip = (
+        forwarded_for.split(',')[0].strip()
+        if forwarded_for
+        else request.META.get('REMOTE_ADDR', '-')
+    )
+    user = getattr(request, 'user', None)
+    user_id = (
+        str(getattr(user, 'id', 'unknown'))
+        if user and getattr(user, 'is_authenticated', False)
+        else 'anonymous'
+    )
+    personnel_code = (request.data.get('personnel_code') or '-')
+    return request.method, request.path, user_id, client_ip, personnel_code
+
+
 def _success_response(message, data=None, status_code=status.HTTP_200_OK):
     return Response(
         {
@@ -44,12 +70,56 @@ def _success_response(message, data=None, status_code=status.HTTP_200_OK):
     )
 
 
-def _error_response(message, errors=None, status_code=status.HTTP_400_BAD_REQUEST):
+def _error_response(
+    message,
+    errors=None,
+    status_code=status.HTTP_400_BAD_REQUEST,
+    request=None,
+):
+    normalized_errors = _normalize_errors(errors or {})
+    method, path, user_id, client_ip, personnel_code = _request_metadata(request)
+
+    if status_code >= status.HTTP_500_INTERNAL_SERVER_ERROR:
+        api_logger.error(
+            'Auth API error response method=%s path=%s status=%s user_id=%s ip=%s message=%s errors=%s',
+            method,
+            path,
+            status_code,
+            user_id,
+            client_ip,
+            message,
+            normalized_errors,
+        )
+    elif status_code in (status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN):
+        security_logger.warning(
+            'Auth security response method=%s path=%s status=%s user_id=%s ip=%s personnel_code=%s message=%s errors=%s',
+            method,
+            path,
+            status_code,
+            user_id,
+            client_ip,
+            personnel_code,
+            message,
+            normalized_errors,
+        )
+    elif status_code >= status.HTTP_400_BAD_REQUEST:
+        api_logger.warning(
+            'Auth client error response method=%s path=%s status=%s user_id=%s ip=%s personnel_code=%s message=%s errors=%s',
+            method,
+            path,
+            status_code,
+            user_id,
+            client_ip,
+            personnel_code,
+            message,
+            normalized_errors,
+        )
+
     return Response(
         {
             'success': False,
             'message': message,
-            'errors': _normalize_errors(errors or {}),
+            'errors': normalized_errors,
         },
         status=status_code,
     )
@@ -124,20 +194,41 @@ LogoutResponseSerializer = inline_serializer(
 
 class AuthAPIView(APIView):
     def handle_exception(self, exc):
+        request = getattr(self, 'request', None)
+        method, path, user_id, client_ip, _ = _request_metadata(request)
+
         if isinstance(exc, (AuthenticationFailed, NotAuthenticated)):
             message = 'اطلاعات احراز هویت نامعتبر است.'
+            security_logger.warning(
+                'Authentication exception method=%s path=%s user_id=%s ip=%s exception=%s',
+                method,
+                path,
+                user_id,
+                client_ip,
+                exc.__class__.__name__,
+            )
             return _error_response(
                 message,
                 {'authentication': [message]},
                 status.HTTP_401_UNAUTHORIZED,
+                request=request,
             )
 
         if isinstance(exc, PermissionDenied):
             message = 'شما مجوز انجام این عملیات را ندارید.'
+            security_logger.warning(
+                'Permission exception method=%s path=%s user_id=%s ip=%s exception=%s',
+                method,
+                path,
+                user_id,
+                client_ip,
+                exc.__class__.__name__,
+            )
             return _error_response(
                 message,
                 {'permission': [message]},
                 status.HTTP_403_FORBIDDEN,
+                request=request,
             )
 
         return super().handle_exception(exc)
@@ -181,10 +272,18 @@ class LoginView(AuthAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
+            _, _, _, client_ip, personnel_code = _request_metadata(request)
+            auth_logger.warning(
+                'Login validation failed personnel_code=%s ip=%s errors=%s',
+                personnel_code,
+                client_ip,
+                _normalize_errors(serializer.errors),
+            )
             return _error_response(
                 'اطلاعات ارسال‌شده نامعتبر است.',
                 serializer.errors,
                 status.HTTP_400_BAD_REQUEST,
+                request=request,
             )
 
         try:
@@ -194,10 +293,31 @@ class LoginView(AuthAPIView):
                 request=request,
             )
         except AuthServiceError as exc:
-            return _error_response(exc.message, exc.errors, exc.status_code)
+            _, _, _, client_ip, personnel_code = _request_metadata(request)
+            auth_logger.warning(
+                'Login failed personnel_code=%s ip=%s status=%s reason=%s',
+                personnel_code,
+                client_ip,
+                exc.status_code,
+                exc.message,
+            )
+            return _error_response(
+                exc.message,
+                exc.errors,
+                exc.status_code,
+                request=request,
+            )
 
         user = get_profile_user_queryset().get(pk=result.user.pk)
         user_data = UserProfileSerializer(user).data
+        _, _, _, client_ip, personnel_code = _request_metadata(request)
+        auth_logger.info(
+            'Login succeeded user_id=%s personnel_code=%s role=%s ip=%s',
+            user.id,
+            personnel_code,
+            user.role.name if user.role_id else 'unknown',
+            client_ip,
+        )
         return _success_response(
             'ورود با موفقیت انجام شد.',
             {
@@ -223,8 +343,31 @@ class LogoutView(AuthAPIView):
         try:
             AuthService.blacklist_refresh_token(request.data.get('refresh'))
         except AuthServiceError as exc:
-            return _error_response(exc.message, exc.errors, exc.status_code)
+            method, path, user_id, client_ip, _ = _request_metadata(request)
+            auth_logger.warning(
+                'Logout failed method=%s path=%s user_id=%s ip=%s status=%s reason=%s',
+                method,
+                path,
+                user_id,
+                client_ip,
+                exc.status_code,
+                exc.message,
+            )
+            return _error_response(
+                exc.message,
+                exc.errors,
+                exc.status_code,
+                request=request,
+            )
 
+        method, path, user_id, client_ip, _ = _request_metadata(request)
+        auth_logger.info(
+            'Logout succeeded method=%s path=%s user_id=%s ip=%s',
+            method,
+            path,
+            user_id,
+            client_ip,
+        )
         return _success_response('خروج با موفقیت انجام شد.')
 
 
@@ -262,6 +405,29 @@ class TokenRefreshView(AuthAPIView):
         try:
             tokens = AuthService.refresh_tokens(request.data.get('refresh'))
         except AuthServiceError as exc:
-            return _error_response(exc.message, exc.errors, exc.status_code)
+            method, path, user_id, client_ip, _ = _request_metadata(request)
+            auth_logger.warning(
+                'Token refresh failed method=%s path=%s user_id=%s ip=%s status=%s reason=%s',
+                method,
+                path,
+                user_id,
+                client_ip,
+                exc.status_code,
+                exc.message,
+            )
+            return _error_response(
+                exc.message,
+                exc.errors,
+                exc.status_code,
+                request=request,
+            )
 
+        method, path, user_id, client_ip, _ = _request_metadata(request)
+        auth_logger.info(
+            'Token refresh succeeded method=%s path=%s user_id=%s ip=%s',
+            method,
+            path,
+            user_id,
+            client_ip,
+        )
         return _success_response('توکن با موفقیت تازه‌سازی شد.', tokens)
