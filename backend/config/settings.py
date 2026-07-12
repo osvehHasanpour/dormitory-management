@@ -53,6 +53,8 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    # Request lifecycle logging middleware (status codes, duration, client/user metadata).
+    'core.middleware.ApiRequestLoggingMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -279,6 +281,30 @@ LOGGING = {
         'rest_framework': {
             'handlers': ['console', 'app_file', 'error_file'],
             'level': 'INFO',
+            'propagate': False,
+        },
+        # Access logs for normal request/response lifecycle entries.
+        'api.access': {
+            'handlers': ['console', 'app_file', 'error_file'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        # Authentication lifecycle logs (login/logout/token events).
+        'auth': {
+            'handlers': ['console', 'app_file', 'error_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        # Security-focused logs (authentication/authorization failures).
+        'security': {
+            'handlers': ['console', 'app_file', 'error_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        # Built-in Django security-related events (CSRF, suspicious operations, etc.).
+        'django.security': {
+            'handlers': ['console', 'app_file', 'error_file'],
+            'level': 'WARNING',
             'propagate': False,
         },
     },
