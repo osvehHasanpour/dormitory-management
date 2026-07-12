@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { fetchSupervisorRequests } from "../services/requestService";
+import { fetchSupervisorRequestsGraphql } from "../services/supervisorRequestGraphqlService";
 import { supervisorRequestTabs } from "../data/supervisorRequestItems";
 import { useAuth } from "./useAuth";
 import type { RequestType, StudentRequestDetail } from "../types/request";
@@ -38,7 +38,9 @@ export function useSupervisorRequestsFeed(): UseSupervisorRequestsFeedResult {
     setError(null);
 
     try {
-      const data = await fetchSupervisorRequests(accessToken, activeType);
+      const data = await fetchSupervisorRequestsGraphql(accessToken, {
+        requestType: activeType,
+      });
       setItems(data.results ?? []);
     } catch (loadError) {
       setError(

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { fetchSupervisorRequestDetail } from "../services/requestService";
+import { fetchSupervisorRequestDetailGraphql } from "../services/supervisorRequestGraphqlService";
 import { useAuth } from "./useAuth";
 import type { RequestType, StudentRequestDetail } from "../types/request";
 
@@ -63,7 +63,7 @@ export function useSupervisorRequestDetail(): UseSupervisorRequestDetailResult {
     setIsLoading(true);
     setError(null);
 
-    void fetchSupervisorRequestDetail(tokens.access, selectedType, selectedId)
+    void fetchSupervisorRequestDetailGraphql(tokens.access, selectedType, selectedId)
       .then((data) => {
         if (!cancelled) {
           setDetail(data);

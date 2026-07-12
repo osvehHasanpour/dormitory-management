@@ -5,11 +5,11 @@ import { AuthContext, type AuthContextValue } from "../../context/authContext";
 import { useSupervisorRequestUpdate } from "../../hooks/useSupervisorRequestUpdate";
 import type { StudentRequestDetail } from "../../types/request";
 
-const mockUpdateSupervisorRequestStatus = jest.fn();
+const mockUpdateSupervisorRequestStatusGraphql = jest.fn();
 
-jest.mock("../../services/requestService", () => ({
-  updateSupervisorRequestStatus: (...args: unknown[]) =>
-    mockUpdateSupervisorRequestStatus(...args),
+jest.mock("../../services/supervisorRequestGraphqlService", () => ({
+  updateSupervisorRequestStatusGraphql: (...args: unknown[]) =>
+    mockUpdateSupervisorRequestStatusGraphql(...args),
 }));
 
 function createAuthValue(
@@ -57,7 +57,7 @@ const requestItem: StudentRequestDetail = {
 
 describe("Request Management – Scenario 1: Update Request Status", () => {
   beforeEach(() => {
-    mockUpdateSupervisorRequestStatus.mockReset();
+    mockUpdateSupervisorRequestStatusGraphql.mockReset();
   });
 
   it("updates request status and shows a success message", async () => {
@@ -73,7 +73,7 @@ describe("Request Management – Scenario 1: Update Request Status", () => {
       supervisor_response: "در حال پیگیری",
     };
 
-    mockUpdateSupervisorRequestStatus.mockResolvedValue(updatedItem);
+    mockUpdateSupervisorRequestStatusGraphql.mockResolvedValue(updatedItem);
 
     const { result } = renderHook(
       () => useSupervisorRequestUpdate({ onSuccess }),
@@ -89,9 +89,8 @@ describe("Request Management – Scenario 1: Update Request Status", () => {
       await result.current.submit(requestItem);
     });
 
-    expect(mockUpdateSupervisorRequestStatus).toHaveBeenCalledWith(
+    expect(mockUpdateSupervisorRequestStatusGraphql).toHaveBeenCalledWith(
       "access-token",
-      "cleaning",
       10,
       {
         status: "in_progress",

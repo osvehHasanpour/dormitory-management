@@ -80,6 +80,7 @@ export interface RequestStatusChangePayload {
   supervisor_response?: string;
   rejection_reason?: string;
   comment?: string;
+  assigned_staff_id?: number;
 }
 
 export type TimelineStepState =

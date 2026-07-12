@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { updateSupervisorRequestStatus } from "../services/requestService";
+import { updateSupervisorRequestStatusGraphql } from "../services/supervisorRequestGraphqlService";
 import { useAuth } from "./useAuth";
 import type {
   RequestStatus,
@@ -97,9 +97,8 @@ export function useSupervisorRequestUpdate({
     setIsSubmitting(true);
 
     try {
-      const updated = await updateSupervisorRequestStatus(
+      const updated = await updateSupervisorRequestStatusGraphql(
         tokens.access,
-        item.request_type,
         item.id,
         payload,
       );
