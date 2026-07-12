@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import type { UseFormReturn } from "react-hook-form";
 
-import { feedbackTypeBadgeConfig } from "../../data/supervisorFeedbackItems";
+import {
+  getFeedbackTypeBadgeConfig,
+  normalizeFeedbackType,
+} from "../../data/supervisorFeedbackItems";
 import type {
   FeedbackResponseFormValues,
   FeedbackStatusAction,
@@ -114,11 +117,11 @@ export function FeedbackDetailSheet({
     return null;
   }
 
-  const typeConfig = feedbackTypeBadgeConfig[display.type];
+  const typeConfig = getFeedbackTypeBadgeConfig(display.type);
   const source = item ?? display;
   const showComplaintActions =
-    source.type === "complaint" || source.type === "suggestion";
-  const showIdeaActions = source.type === "idea";
+    normalizeFeedbackType(source.type) === "complaint";
+  const showIdeaActions = normalizeFeedbackType(source.type) === "idea";
   const showActions = item != null && hasAvailableFeedbackActions(item);
 
   return (

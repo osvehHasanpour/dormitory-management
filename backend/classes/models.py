@@ -15,12 +15,30 @@ class Class(models.Model):
         COMPLETED = 'completed', 'پایان‌یافته'
         CANCELLED = 'cancelled', 'لغو شده'
 
+    class DayOfWeek(models.TextChoices):
+        SATURDAY = 'saturday', 'شنبه'
+        SUNDAY = 'sunday', 'یکشنبه'
+        MONDAY = 'monday', 'دوشنبه'
+        TUESDAY = 'tuesday', 'سه‌شنبه'
+        WEDNESDAY = 'wednesday', 'چهارشنبه'
+        THURSDAY = 'thursday', 'پنج‌شنبه'
+        FRIDAY = 'friday', 'جمعه'
+
     title = models.CharField(max_length=200, verbose_name='عنوان')
     description = models.TextField(blank=True, verbose_name='توضیحات')
     location = models.CharField(max_length=200, blank=True, verbose_name='مکان')
     capacity = models.PositiveIntegerField(verbose_name='ظرفیت')
     start_datetime = models.DateTimeField(verbose_name='زمان شروع')
     end_datetime = models.DateTimeField(verbose_name='زمان پایان')
+    day_of_week = models.CharField(
+        max_length=20,
+        choices=DayOfWeek.choices,
+        blank=True,
+        default='',
+        verbose_name='روز برگزاری',
+    )
+    start_time = models.TimeField(null=True, blank=True, verbose_name='زمان شروع کلاس')
+    end_time = models.TimeField(null=True, blank=True, verbose_name='زمان پایان کلاس')
     status = models.CharField(
         max_length=20,
         choices=Status.choices,

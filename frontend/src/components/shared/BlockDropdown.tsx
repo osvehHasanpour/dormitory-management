@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { fetchBlocks } from "../../services/blockService";
 import type { Block } from "../../services/blockService";
+import { ResponsiveDropdown } from "../ui/ResponsiveDropdown";
 
 interface BlockDropdownProps {
   blockId: string;
@@ -70,8 +71,10 @@ export function BlockDropdown({
     onBlockSelect?.(selected);
   }, [blockId, blocks, onBlockSelect]);
 
-  const selectClassName =
-    "h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30";
+  const blockOptions = blocks.map((block) => ({
+    value: String(block.id),
+    label: block.name,
+  }));
 
   return (
     <label className="block glass-card p-4">
@@ -94,19 +97,14 @@ export function BlockDropdown({
           </button>
         </div>
       ) : (
-        <select
+        <ResponsiveDropdown
           value={blockId}
-          onChange={(event) => onChange(event.target.value)}
+          onChange={onChange}
           onBlur={onBlur}
-          className={selectClassName}
-        >
-          <option value="">{placeholder}</option>
-          {blocks.map((block) => (
-            <option key={block.id} value={String(block.id)}>
-              {block.name}
-            </option>
-          ))}
-        </select>
+          options={blockOptions}
+          placeholder={placeholder}
+          panelTitle="انتخاب بلوک"
+        />
       )}
       {error ? <p className="mt-2 text-body-sm text-error">{error}</p> : null}
     </label>

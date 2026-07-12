@@ -41,7 +41,7 @@ class SupervisorClassListView(EnvelopedAPIViewMixin, APIView):
         tags=['Supervisor Classes'],
         summary='لیست کلاس‌ها (سرپرست)',
         parameters=[
-            OpenApiParameter(name='status', description='active، completed، cancelled', required=False, type=str),
+            OpenApiParameter(name='status', description='active، completed، cancelled، finished (همه به‌جز active)', required=False, type=str),
             OpenApiParameter(name='category', description='دسته‌بندی', required=False, type=str),
             OpenApiParameter(name='search', description='جستجو در عنوان و توضیحات', required=False, type=str),
             OpenApiParameter(name='ordering', description='newest یا oldest', required=False, type=str),

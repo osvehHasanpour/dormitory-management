@@ -27,6 +27,14 @@ class SupervisorClassSelector:
             ratings_count=Count('ratings'),
         )
 
+    @staticmethod
+    def sync_completed_status():
+        """Ensure classes whose end time has passed are no longer marked active."""
+        Class.objects.filter(
+            status=Class.Status.ACTIVE,
+            end_datetime__lte=timezone.now(),
+        ).update(status=Class.Status.COMPLETED)
+
     @classmethod
     def get_supervisor_list(
         cls,
@@ -36,10 +44,14 @@ class SupervisorClassSelector:
         search=None,
         ordering='newest',
     ):
+        cls.sync_completed_status()
+
         queryset = cls._base_queryset()
         queryset = cls.annotate_aggregates(queryset)
 
-        if status_filter:
+        if status_filter == 'finished':
+            queryset = queryset.exclude(status=Class.Status.ACTIVE)
+        elif status_filter:
             queryset = queryset.filter(status=status_filter)
 
         if category:
@@ -113,6 +125,10 @@ class SupervisorClassSelector:
             'is_full': enrolled_count >= class_obj.capacity,
             'start_datetime': class_obj.start_datetime,
             'end_datetime': class_obj.end_datetime,
+            'day_of_week': class_obj.day_of_week,
+            'day_of_week_display': class_obj.get_day_of_week_display() if class_obj.day_of_week else '',
+            'start_time': class_obj.start_time,
+            'end_time': class_obj.end_time,
             'teacher': cls._serialize_user(class_obj.teacher),
             'created_by': cls._serialize_user(class_obj.created_by),
             'average_rating': average_rating,

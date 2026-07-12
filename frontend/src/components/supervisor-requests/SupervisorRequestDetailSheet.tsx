@@ -19,6 +19,7 @@ import {
 } from "../../utils/requestHelpers";
 import { Skeleton } from "../ui/Skeleton";
 import { StatusBadge } from "../ui/StatusBadge";
+import { ResponsiveDropdown } from "../ui/ResponsiveDropdown";
 import { Toast } from "../ui/Toast";
 
 interface SupervisorRequestDetailSheetProps {
@@ -89,6 +90,9 @@ export function SupervisorRequestDetailSheet({
   const displayRequest = request ?? preview;
   const {
     register,
+    watch,
+    setValue,
+    trigger,
     formState: { errors },
   } = form;
 
@@ -140,6 +144,10 @@ export function SupervisorRequestDetailSheet({
   );
   const isFinalized = allowedStatuses.length === 0;
   const canUpdate = request != null && !isFinalized;
+  const statusOptions = allowedStatuses.map((status) => ({
+    value: status,
+    label: getRequestStatusLabel(status),
+  }));
 
   return (
     <div className="space-y-5">
@@ -219,21 +227,21 @@ export function SupervisorRequestDetailSheet({
             <span className="mb-2 block text-body-sm-strong text-ink">
               تغییر وضعیت درخواست
             </span>
-            <select
-              className={fieldClassName}
+            <ResponsiveDropdown
+              value={watch("status")}
+              onChange={(nextValue) => {
+                onClearMessages();
+                setValue("status", nextValue, { shouldValidate: true });
+              }}
+              onBlur={() => {
+                void trigger("status");
+              }}
               disabled={isSubmitting}
-              defaultValue=""
-              {...register("status", { onChange: onClearMessages })}
-            >
-              <option value="" disabled>
-                انتخاب وضعیت جدید
-              </option>
-              {allowedStatuses.map((status) => (
-                <option key={status} value={status}>
-                  {getRequestStatusLabel(status)}
-                </option>
-              ))}
-            </select>
+              elevated
+              options={statusOptions}
+              placeholder="انتخاب وضعیت جدید"
+              panelTitle="تغییر وضعیت درخواست"
+            />
             {errors.status?.message ? (
               <p className="mt-2 text-body-sm text-error">
                 {errors.status.message}

@@ -74,11 +74,12 @@ services:
              python manage.py collectstatic --noinput &&
              python manage.py runserver 0.0.0.0:8000"
 
-  # ─── React Frontend ────────────────────────────────────────────────────
+  # ─── React Frontend (Vite dev server with hot reload) ────────────────
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: development
     container_name: dormitory_frontend
     restart: unless-stopped
     environment:
@@ -88,7 +89,7 @@ services:
       - ./frontend:/app
       - /app/node_modules
     ports:
-      - "3000:80"
+      - "3000:3000"
     depends_on:
       - backend
     networks:

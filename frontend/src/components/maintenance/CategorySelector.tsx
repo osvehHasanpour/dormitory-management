@@ -1,4 +1,5 @@
 import { maintenanceCategories } from "../../types/maintenance";
+import { ResponsiveDropdown } from "../ui/ResponsiveDropdown";
 
 interface CategorySelectorProps {
   value: string;
@@ -18,19 +19,14 @@ export function CategorySelector({
       <span className="mb-3 block text-body-sm-strong text-ink">
         دسته‌بندی خرابی
       </span>
-      <select
+      <ResponsiveDropdown
         value={value}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={onChange}
         onBlur={onBlur}
-        className="h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30"
-      >
-        <option value="">انتخاب دسته‌بندی</option>
-        {maintenanceCategories.map((category) => (
-          <option key={category.value} value={category.value}>
-            {category.label}
-          </option>
-        ))}
-      </select>
+        options={maintenanceCategories}
+        placeholder="انتخاب دسته‌بندی"
+        panelTitle="دسته‌بندی خرابی"
+      />
       {error ? <p className="mt-2 text-body-sm text-error">{error}</p> : null}
     </label>
   );

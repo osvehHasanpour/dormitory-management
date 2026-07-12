@@ -49,6 +49,24 @@ class SupervisorClassService:
         return teacher
 
     @classmethod
+    def _validate_schedule(cls, *, start_time, end_time, day_of_week=None):
+        errors = {}
+
+        if day_of_week is not None:
+            valid_days = {choice.value for choice in Class.DayOfWeek}
+            if day_of_week not in valid_days:
+                errors['day_of_week'] = ['روز برگزاری انتخاب‌شده معتبر نیست.']
+
+        if start_time and end_time and end_time <= start_time:
+            errors['end_time'] = ['زمان پایان کلاس باید بعد از زمان شروع باشد.']
+
+        if errors:
+            raise ClassServiceError(
+                'اطلاعات برنامه کلاس نامعتبر است.',
+                errors,
+            )
+
+    @classmethod
     def _validate_capacity(cls, capacity):
         if capacity < 1:
             raise ClassServiceError(
@@ -101,6 +119,11 @@ class SupervisorClassService:
             end_datetime=data['end_datetime'],
             is_create=True,
         )
+        cls._validate_schedule(
+            start_time=data['start_time'],
+            end_time=data['end_time'],
+            day_of_week=data['day_of_week'],
+        )
         teacher = cls._get_teacher(data['teacher_id'])
 
         class_obj = Class.objects.create(
@@ -110,6 +133,9 @@ class SupervisorClassService:
             capacity=data['capacity'],
             start_datetime=data['start_datetime'],
             end_datetime=data['end_datetime'],
+            day_of_week=data['day_of_week'],
+            start_time=data['start_time'],
+            end_time=data['end_time'],
             category=data['category'],
             status=Class.Status.ACTIVE,
             created_by=user,
@@ -137,6 +163,17 @@ class SupervisorClassService:
                 start_datetime=start_datetime,
                 end_datetime=end_datetime,
                 is_create=False,
+            )
+
+        start_time = data.get('start_time', class_obj.start_time)
+        end_time = data.get('end_time', class_obj.end_time)
+        day_of_week = data.get('day_of_week', class_obj.day_of_week)
+
+        if 'start_time' in data or 'end_time' in data or 'day_of_week' in data:
+            cls._validate_schedule(
+                start_time=start_time,
+                end_time=end_time,
+                day_of_week=day_of_week,
             )
 
         if 'category' in data:
@@ -167,6 +204,15 @@ class SupervisorClassService:
         if 'end_datetime' in data:
             class_obj.end_datetime = data['end_datetime']
 
+        if 'day_of_week' in data:
+            class_obj.day_of_week = data['day_of_week']
+
+        if 'start_time' in data:
+            class_obj.start_time = data['start_time']
+
+        if 'end_time' in data:
+            class_obj.end_time = data['end_time']
+
         if 'teacher_id' in data:
             class_obj.teacher = cls._get_teacher(data['teacher_id'])
 
@@ -179,6 +225,9 @@ class SupervisorClassService:
                 'capacity',
                 'start_datetime',
                 'end_datetime',
+                'day_of_week',
+                'start_time',
+                'end_time',
                 'category',
                 'status',
                 'teacher',

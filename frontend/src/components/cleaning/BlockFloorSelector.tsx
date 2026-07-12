@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { fetchBlocks, fetchFloors } from "../../services/blockService";
 import type { Block, Floor } from "../../types/cleaning";
+import { ResponsiveDropdown } from "../ui/ResponsiveDropdown";
 
 interface BlockFloorSelectorProps {
   blockId: string;
@@ -140,8 +141,15 @@ export function BlockFloorSelector({
     onFloorSelect?.(null);
   };
 
-  const selectClassName =
-    "h-11 w-full rounded-md border border-stone bg-canvas px-4 text-body-md text-ink outline-none transition-colors focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30 disabled:cursor-not-allowed disabled:bg-surface-soft disabled:text-ash";
+  const blockOptions = blocks.map((block) => ({
+    value: String(block.id),
+    label: block.name,
+  }));
+
+  const floorOptions = floors.map((floor) => ({
+    value: String(floor.id),
+    label: floor.label,
+  }));
 
   return (
     <>
@@ -165,19 +173,14 @@ export function BlockFloorSelector({
             </button>
           </div>
         ) : (
-          <select
+          <ResponsiveDropdown
             value={blockId}
-            onChange={(event) => handleBlockChange(event.target.value)}
+            onChange={handleBlockChange}
             onBlur={onBlockBlur}
-            className={selectClassName}
-          >
-            <option value="">همه بلوک‌ها</option>
-            {blocks.map((block) => (
-              <option key={block.id} value={String(block.id)}>
-                {block.name}
-              </option>
-            ))}
-          </select>
+            options={blockOptions}
+            placeholder="همه بلوک‌ها"
+            panelTitle="انتخاب بلوک"
+          />
         )}
         {blockError ? (
           <p className="mt-2 text-body-sm text-error">{blockError}</p>
@@ -210,19 +213,14 @@ export function BlockFloorSelector({
             طبقه‌ای برای این بلوک یافت نشد.
           </p>
         ) : (
-          <select
+          <ResponsiveDropdown
             value={floorId}
-            onChange={(event) => onFloorChange(event.target.value)}
+            onChange={onFloorChange}
             onBlur={onFloorBlur}
-            className={selectClassName}
-          >
-            <option value="">همه طبقه‌ها</option>
-            {floors.map((floor) => (
-              <option key={floor.id} value={String(floor.id)}>
-                {floor.label}
-              </option>
-            ))}
-          </select>
+            options={floorOptions}
+            placeholder="همه طبقه‌ها"
+            panelTitle="انتخاب طبقه"
+          />
         )}
         {floorError ? (
           <p className="mt-2 text-body-sm text-error">{floorError}</p>

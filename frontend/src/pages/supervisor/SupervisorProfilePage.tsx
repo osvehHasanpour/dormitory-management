@@ -3,6 +3,9 @@ import { Building2, IdCard, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { BottomNav } from "../../components/layout/BottomNav";
+import { ContentContainer } from "../../components/layout/ContentContainer";
+import { PageHeader } from "../../components/layout/PageHeader";
+import { PageShell } from "../../components/layout/PageShell";
 import { ProfileAvatar } from "../../components/profile/ProfileAvatar";
 import { ProfileInfoList } from "../../components/profile/ProfileInfoList";
 import { Skeleton } from "../../components/ui/Skeleton";
@@ -36,20 +39,10 @@ export function SupervisorProfilePage() {
     : [];
 
   return (
-    <div className="page-gradient min-h-screen pb-28">
-      <header className="relative mx-auto flex w-full max-w-lg items-center justify-center px-4 pb-4 pt-5 sm:px-6">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="absolute right-4 top-5 flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/30 text-heading-lg text-ink backdrop-blur-sm active:bg-white/45 sm:right-6"
-          aria-label="بازگشت"
-        >
-          ‹
-        </button>
-        <h1 className="text-heading-lg text-ink">پروفایل</h1>
-      </header>
+    <PageShell>
+      <PageHeader title="پروفایل" onBack={() => navigate(-1)} />
 
-      <main className="mx-auto w-full max-w-lg space-y-4 px-4 sm:px-6">
+      <ContentContainer as="main" className="space-y-4 md:max-w-xl">
         {error ? (
           <div
             role="alert"
@@ -77,9 +70,9 @@ export function SupervisorProfilePage() {
             <ProfileInfoList items={profileItems} />
           </>
         ) : null}
-      </main>
+      </ContentContainer>
 
       <BottomNav variant="supervisor" activeTab="profile" />
-    </div>
+    </PageShell>
   );
 }

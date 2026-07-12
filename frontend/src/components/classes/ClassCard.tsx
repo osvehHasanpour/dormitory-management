@@ -1,5 +1,7 @@
 import type { ClassesTabValue, StudentClassItem } from "../../types/class";
+import { formatClassSchedule } from "../../utils/formatClassSchedule";
 import { formatPersianDateShort } from "../../utils/formatRelativeDate";
+import { formatEnglishNumber } from "../../utils/formatNumber";
 
 type CardActionType = "register" | "cancel" | "rate";
 
@@ -85,7 +87,7 @@ function getActionConfig(
 
   return {
     label: classItem.user_rating
-      ? `امتیاز: ${classItem.user_rating}/5`
+      ? `امتیاز: ${formatEnglishNumber(classItem.user_rating, 0)}/5`
       : "امتیاز ثبت شده",
     variant: "secondary",
     isPending: false,
@@ -107,7 +109,12 @@ export function ClassCard({
   const averageRatingText =
     classItem.average_rating == null
       ? "بدون امتیاز"
-      : `${classItem.average_rating.toFixed(1)} از ۵`;
+      : `${formatEnglishNumber(classItem.average_rating)} از 5`;
+  const scheduleText = formatClassSchedule(
+    classItem.day_of_week_display,
+    classItem.start_time,
+    classItem.end_time,
+  );
   const actionConfig = getActionConfig(
     tab,
     classItem,
@@ -148,6 +155,11 @@ export function ClassCard({
           <p className="mt-1 text-body-sm text-mute">
             تاریخ: {formatPersianDateShort(classItem.start_datetime)}
           </p>
+          {scheduleText !== "—" ? (
+            <p className="mt-1 text-body-sm text-mute">
+              برنامه: {scheduleText}
+            </p>
+          ) : null}
         </div>
         <span
           className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-caption-md font-medium ${statusBadgeClass}`}
@@ -172,8 +184,8 @@ export function ClassCard({
         </div>
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-3">
-        <div>
+      <div className="flex flex-col gap-3 min-[480px]:flex-row min-[480px]:items-end min-[480px]:justify-between">
+        <div className="min-w-0">
           <div className="flex items-center gap-1 text-heading-md leading-none text-warning">
             {buildRatingStars(classItem.average_rating).map((star, index) => (
               <span key={index} aria-hidden="true">
@@ -188,7 +200,7 @@ export function ClassCard({
           type="button"
           onClick={actionConfig.onClick}
           disabled={!actionConfig.onClick || actionConfig.isPending}
-          className={`inline-flex h-10 min-w-[110px] items-center justify-center gap-2 rounded-md px-4 text-button-md transition-colors disabled:cursor-not-allowed disabled:hover:bg-inherit ${actionClass}`}
+          className={`inline-flex h-10 w-full min-w-0 items-center justify-center gap-2 rounded-md px-4 text-button-md transition-colors disabled:cursor-not-allowed disabled:hover:bg-inherit min-[480px]:w-auto min-[480px]:min-w-[6.875rem] ${actionClass}`}
         >
           {actionConfig.isPending ? (
             <span

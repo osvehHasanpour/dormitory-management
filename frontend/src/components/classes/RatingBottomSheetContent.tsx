@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 
 import type { StudentClassItem } from "../../types/class";
+import { formatClassSchedule } from "../../utils/formatClassSchedule";
 
 interface RatingBottomSheetContentProps {
   classItem: StudentClassItem;
   isSubmitting: boolean;
   error: string | null;
-  onSubmit: (score: number, comment: string) => Promise<void>;
+  onSubmit: (score: number) => Promise<void>;
 }
 
 const STAR_VALUES = [1, 2, 3, 4, 5];
@@ -18,12 +19,10 @@ export function RatingBottomSheetContent({
   onSubmit,
 }: RatingBottomSheetContentProps) {
   const [score, setScore] = useState<number>(0);
-  const [comment, setComment] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
 
   useEffect(() => {
     setScore(0);
-    setComment("");
     setLocalError(null);
   }, [classItem.id]);
 
@@ -36,14 +35,23 @@ export function RatingBottomSheetContent({
     }
 
     setLocalError(null);
-    await onSubmit(score, comment);
+    await onSubmit(score);
   };
+
+  const scheduleText = formatClassSchedule(
+    classItem.day_of_week_display,
+    classItem.start_time,
+    classItem.end_time,
+  );
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
       <div className="glass-card p-4">
         <p className="text-heading-md text-ink">{classItem.title}</p>
-        <p className="mt-1 text-body-sm text-mute">امتیاز شما (۱ تا ۵)</p>
+        {scheduleText !== "—" ? (
+          <p className="mt-1 text-body-sm text-mute">برنامه: {scheduleText}</p>
+        ) : null}
+        <p className="mt-3 text-body-sm text-mute">امتیاز شما (۱ تا ۵)</p>
 
         <div className="mt-3 flex items-center justify-center gap-1">
           {STAR_VALUES.map((value) => {
@@ -67,17 +75,6 @@ export function RatingBottomSheetContent({
           })}
         </div>
       </div>
-
-      <label className="block glass-card p-4">
-        <span className="mb-3 block text-body-sm-strong text-ink">نظر شما</span>
-        <textarea
-          rows={4}
-          value={comment}
-          onChange={(event) => setComment(event.target.value)}
-          placeholder="نظر خود را بنویسید..."
-          className="min-h-28 w-full resize-y rounded-md border border-stone bg-canvas px-4 py-3 text-body-md text-ink outline-none transition-colors placeholder:text-ash focus:border-2 focus:border-primary focus:ring-[3px] focus:ring-primary/30"
-        />
-      </label>
 
       {localError ? (
         <div className="rounded-md border border-error/20 bg-error-pale px-4 py-3 text-body-sm text-error">

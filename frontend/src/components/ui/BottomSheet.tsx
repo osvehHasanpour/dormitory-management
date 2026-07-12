@@ -55,7 +55,7 @@ export function BottomSheet({
         role="dialog"
         aria-modal="true"
         aria-labelledby="request-detail-title"
-        className="relative z-10 flex max-h-[92vh] w-full max-w-lg flex-col animate-sheet-panel overflow-hidden rounded-t-lg sm:max-h-[88vh] sm:rounded-lg"
+        className="relative z-10 flex max-h-[92vh] w-full max-w-lg flex-col animate-sheet-panel overflow-hidden rounded-t-lg min-[480px]:max-w-xl sm:max-h-[88vh] sm:rounded-lg md:max-w-2xl"
       >
         <div className="glass-card-modal flex min-h-0 flex-1 flex-col rounded-t-lg sm:rounded-lg">
           <div
@@ -87,7 +87,7 @@ export function BottomSheet({
             </div>
           </header>
 
-          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-7">
+          <div className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-4 py-4 min-[480px]:px-5 sm:px-7">
             {children}
           </div>
 

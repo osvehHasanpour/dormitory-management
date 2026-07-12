@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { feedbackFilterTabs } from "../data/supervisorFeedbackItems";
+import {
+  feedbackFilterTabs,
+  normalizeFeedbackType,
+} from "../data/supervisorFeedbackItems";
 import { fetchSupervisorFeedback } from "../services/supervisorFeedbackService";
 import { useAuth } from "./useAuth";
 import type {
@@ -21,7 +24,7 @@ interface UseSupervisorFeedbackFeedResult {
 
 function getApiTypeForFilter(
   filter: FeedbackFilterValue,
-): "complaint" | "suggestion" | undefined {
+): "complaint" | "idea" | undefined {
   const tab = feedbackFilterTabs.find((entry) => entry.value === filter);
   return tab?.apiType;
 }
@@ -83,7 +86,8 @@ export function useSupervisorFeedbackFeed(): UseSupervisorFeedbackFeedResult {
       setItems((current) => {
         const apiType = getApiTypeForFilter(activeFilter);
         const matchesFilter =
-          activeFilter === "all" || (apiType != null && item.type === apiType);
+          activeFilter === "all" ||
+          (apiType != null && normalizeFeedbackType(item.type) === apiType);
 
         if (!matchesFilter) {
           return current.filter((entry) => entry.id !== item.id);

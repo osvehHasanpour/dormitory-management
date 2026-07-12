@@ -1,3 +1,4 @@
+import { normalizeFeedbackType } from "../data/supervisorFeedbackItems";
 import type {
   FeedbackAuthorSummary,
   FeedbackStatus,
@@ -42,14 +43,14 @@ export function buildFeedbackPreview(
 
 export function canMarkReviewed(item: SupervisorFeedbackItem): boolean {
   return (
-    (item.type === "complaint" || item.type === "suggestion") &&
+    normalizeFeedbackType(item.type) === "complaint" &&
     item.status === "pending"
   );
 }
 
 export function canRespond(item: SupervisorFeedbackItem): boolean {
   return (
-    (item.type === "complaint" || item.type === "suggestion") &&
+    normalizeFeedbackType(item.type) === "complaint" &&
     (item.status === "pending" || item.status === "reviewed")
   );
 }
@@ -59,17 +60,21 @@ export function canReject(item: SupervisorFeedbackItem): boolean {
 }
 
 export function canApproveIdea(item: SupervisorFeedbackItem): boolean {
-  return item.type === "idea" && item.status === "pending";
+  return (
+    normalizeFeedbackType(item.type) === "idea" && item.status === "pending"
+  );
 }
 
 export function canRejectIdea(item: SupervisorFeedbackItem): boolean {
-  return item.type === "idea" && item.status === "pending";
+  return (
+    normalizeFeedbackType(item.type) === "idea" && item.status === "pending"
+  );
 }
 
 export function hasAvailableFeedbackActions(
   item: SupervisorFeedbackItem,
 ): boolean {
-  if (item.type === "idea") {
+  if (normalizeFeedbackType(item.type) === "idea") {
     return canApproveIdea(item) || canRejectIdea(item);
   }
 

@@ -26,6 +26,10 @@ class ClassDetailSerializer(serializers.Serializer):
     is_full = serializers.BooleanField()
     start_datetime = serializers.DateTimeField()
     end_datetime = serializers.DateTimeField()
+    day_of_week = serializers.CharField(allow_blank=True)
+    day_of_week_display = serializers.CharField(allow_blank=True)
+    start_time = serializers.TimeField(allow_null=True)
+    end_time = serializers.TimeField(allow_null=True)
     teacher = UserSummarySerializer(allow_null=True)
     created_by = UserSummarySerializer(allow_null=True)
     average_rating = serializers.FloatField(allow_null=True)
@@ -93,6 +97,25 @@ class SupervisorClassCreateSerializer(serializers.Serializer):
             'invalid': 'فرمت زمان پایان نامعتبر است.',
         },
     )
+    day_of_week = serializers.ChoiceField(
+        choices=Class.DayOfWeek.choices,
+        error_messages={
+            'required': 'روز برگزاری الزامی است.',
+            'invalid_choice': 'روز برگزاری انتخاب‌شده معتبر نیست.',
+        },
+    )
+    start_time = serializers.TimeField(
+        error_messages={
+            'required': 'زمان شروع کلاس الزامی است.',
+            'invalid': 'فرمت زمان شروع کلاس نامعتبر است.',
+        },
+    )
+    end_time = serializers.TimeField(
+        error_messages={
+            'required': 'زمان پایان کلاس الزامی است.',
+            'invalid': 'فرمت زمان پایان کلاس نامعتبر است.',
+        },
+    )
     teacher_id = serializers.IntegerField(
         error_messages={
             'required': 'شناسه مدرس الزامی است.',
@@ -109,6 +132,9 @@ class SupervisorClassUpdateSerializer(serializers.Serializer):
     capacity = serializers.IntegerField(min_value=1, required=False)
     start_datetime = serializers.DateTimeField(required=False)
     end_datetime = serializers.DateTimeField(required=False)
+    day_of_week = serializers.ChoiceField(choices=Class.DayOfWeek.choices, required=False)
+    start_time = serializers.TimeField(required=False)
+    end_time = serializers.TimeField(required=False)
     teacher_id = serializers.IntegerField(required=False)
     status = serializers.ChoiceField(choices=Class.Status.choices, required=False)
 
@@ -128,6 +154,10 @@ class SupervisorClassDetailSerializer(serializers.Serializer):
     is_full = serializers.BooleanField()
     start_datetime = serializers.DateTimeField()
     end_datetime = serializers.DateTimeField()
+    day_of_week = serializers.CharField(allow_blank=True)
+    day_of_week_display = serializers.CharField(allow_blank=True)
+    start_time = serializers.TimeField(allow_null=True)
+    end_time = serializers.TimeField(allow_null=True)
     teacher = UserSummarySerializer(allow_null=True)
     created_by = UserSummarySerializer(allow_null=True)
     average_rating = serializers.FloatField(allow_null=True)
