@@ -84,7 +84,7 @@ services:
     restart: unless-stopped
     environment:
       VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000/api}
-      VITE_GRAPHQL_URL: ${VITE_GRAPHQL_URL:-http://localhost:8000/graphql}
+      VITE_GRAPHQL_URL: ${VITE_GRAPHQL_URL:-http://localhost:8000/graphql/}
     volumes:
       - ./frontend:/app
       - /app/node_modules
