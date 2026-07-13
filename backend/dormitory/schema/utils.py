@@ -2,6 +2,14 @@ from requests_app.models import RequestBase
 from requests_app.serializers import serialize_request_detail
 
 
+def format_datetime_value(value):
+    if value is None:
+        return None
+    if isinstance(value, str):
+        return value
+    return value.isoformat()
+
+
 def build_request_payload(request_obj):
     data = serialize_request_detail(request_obj)
     data['photo_url'] = _absolute_media_url(request_obj, data.get('photo_url'))

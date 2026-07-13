@@ -39,8 +39,8 @@ export function IdeaSortMenu({ activeOrdering, onChange }: IdeaSortMenuProps) {
       variant="compact"
       renderCompactTrigger={({ isOpen }) => (
         <span
-          className={`flex h-10 w-10 items-center justify-center rounded-full border border-white/50 bg-white/30 text-ink backdrop-blur-sm transition-colors active:bg-white/45 ${
-            isOpen ? "bg-white/50" : ""
+          className={`flex h-10 w-10 items-center justify-center rounded-full border border-overlay-border bg-overlay-bg text-ink backdrop-blur-sm transition-colors active:bg-overlay-press ${
+            isOpen ? "bg-overlay-bg-strong" : ""
           }`}
         >
           <SortIcon className="h-5 w-5" />

@@ -46,6 +46,7 @@ jobs:
         run: python -m pip install -r backend/requirements.txt
 
       - name: Run migrations
+        working-directory: backend
         env:
           SECRET_KEY: ci-secret-key
           DEBUG: "True"
@@ -54,9 +55,10 @@ jobs:
           POSTGRES_DB: dormitory_db
           POSTGRES_USER: dormitory_user
           POSTGRES_PASSWORD: dormitory_pass
-        run: python backend/manage.py migrate --noinput
+        run: python manage.py migrate --noinput
 
       - name: Run backend tests
+        working-directory: backend
         env:
           SECRET_KEY: ci-secret-key
           DEBUG: "True"
@@ -65,7 +67,7 @@ jobs:
           POSTGRES_DB: dormitory_db
           POSTGRES_USER: dormitory_user
           POSTGRES_PASSWORD: dormitory_pass
-        run: python backend/manage.py test
+        run: python manage.py test
 
   frontend:
     name: Frontend (Jest)

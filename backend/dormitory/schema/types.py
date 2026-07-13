@@ -1,6 +1,10 @@
 import graphene
 
-from dormitory.schema.utils import build_request_payload, get_child_specific_fields
+from dormitory.schema.utils import (
+    build_request_payload,
+    format_datetime_value,
+    get_child_specific_fields,
+)
 
 
 class UserSummaryType(graphene.ObjectType):
@@ -20,7 +24,7 @@ class RequestStatusHistoryType(graphene.ObjectType):
     acting_supervisor = graphene.Field(UserSummaryType)
     comment = graphene.String()
     rejection_reason = graphene.String()
-    created_at = graphene.DateTime()
+    created_at = graphene.String()
 
 
 class RequestType(graphene.ObjectType):
@@ -30,13 +34,14 @@ class RequestType(graphene.ObjectType):
     status = graphene.String()
     status_display = graphene.String()
     description = graphene.String()
-    created_at = graphene.DateTime()
-    updated_at = graphene.DateTime()
+    created_at = graphene.String()
+    updated_at = graphene.String()
     ai_content_flag = graphene.Boolean()
     user = graphene.Field(UserSummaryType)
     handled_by = graphene.Field(UserSummaryType)
     assigned_staff = graphene.Field(UserSummaryType)
     rejection_reason = graphene.String()
+    supervisor_response = graphene.String()
     status_timeline = graphene.List(RequestStatusHistoryType)
     location = graphene.String()
     extra_description = graphene.String()
@@ -109,7 +114,7 @@ def map_status_history(entry):
         acting_supervisor=map_user(entry.acting_supervisor),
         comment=entry.comment,
         rejection_reason=entry.rejection_reason,
-        created_at=entry.created_at,
+        created_at=format_datetime_value(entry.created_at),
     )
 
 
@@ -124,13 +129,14 @@ def map_request(request_obj):
         status=payload['status'],
         status_display=payload['status_display'],
         description=payload['description'],
-        created_at=payload['created_at'],
-        updated_at=payload['updated_at'],
+        created_at=format_datetime_value(payload['created_at']),
+        updated_at=format_datetime_value(payload['updated_at']),
         ai_content_flag=payload.get('ai_content_flag'),
         user=map_user(request_obj.user),
         handled_by=map_user(request_obj.handled_by),
         assigned_staff=map_user(request_obj.assigned_staff),
         rejection_reason=payload.get('rejection_reason', ''),
+        supervisor_response=payload.get('supervisor_response'),
         status_timeline=timeline,
         location=child_fields.get('location'),
         extra_description=child_fields.get('extra_description'),

@@ -5,6 +5,7 @@ import { BottomNav } from "../../components/layout/BottomNav";
 import { ContentContainer } from "../../components/layout/ContentContainer";
 import { PageHeader } from "../../components/layout/PageHeader";
 import { PageShell } from "../../components/layout/PageShell";
+import { FloatingThemeButton } from "../../components/profile/FloatingThemeButton";
 import { ProfileHeaderCard } from "../../components/profile/ProfileHeaderCard";
 import { ProfileInfoList } from "../../components/profile/ProfileInfoList";
 import { Skeleton } from "../../components/ui/Skeleton";
@@ -37,7 +38,11 @@ export function ProfilePage() {
 
   return (
     <PageShell>
-      <PageHeader title="پروفایل" onBack={() => navigate(-1)} />
+      <PageHeader
+        title="پروفایل"
+        onBack={() => navigate(-1)}
+        leftAction={<FloatingThemeButton />}
+      />
 
       <ContentContainer as="main" className="space-y-4 md:max-w-xl">
         {error ? (

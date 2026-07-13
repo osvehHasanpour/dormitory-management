@@ -211,23 +211,31 @@ class FeedbackWorkflowTests(TestCase):
             role=self.student_role,
         )
 
+    def _feedback_payload(self, *, title, description, category=None):
+        """ComplaintService validates category; include a valid choice in every submission."""
+        return {
+            'title': title,
+            'description': description,
+            'category': category or IdeaComplaint.Category.OTHER,
+        }
+
     def test_max_five_active_feedback_combined_limit(self):
         for index in range(5):
             ComplaintService.create_complaint(
                 user=self.student,
-                data={
-                    'title': f'شکایت فعال {index + 1}',
-                    'description': 'توضیح نمونه برای شکایت.',
-                },
+                data=self._feedback_payload(
+                    title=f'شکایت فعال {index + 1}',
+                    description='توضیح نمونه برای شکایت.',
+                ),
             )
 
         with self.assertRaises(RequestServiceError) as ctx:
             ComplaintService.create_suggestion(
                 user=self.student,
-                data={
-                    'title': 'پیشنهاد ششم',
-                    'description': 'این پیشنهاد باید رد شود.',
-                },
+                data=self._feedback_payload(
+                    title='پیشنهاد ششم',
+                    description='این پیشنهاد باید رد شود.',
+                ),
             )
 
         self.assertIn('حداکثر ۵', ctx.exception.message)
@@ -238,9 +246,10 @@ class FeedbackWorkflowTests(TestCase):
 
         suggestion = ComplaintService.create_suggestion(
             user=self.student,
-            data={
-                'title': 'نصب اینverter در لاندری',
-                'description': 'برای کاهش مصرف برق لاندری از اینverter استفاده شود.',
-            },
+            data=self._feedback_payload(
+                title='نصب اینverter در لاندری',
+                description='برای کاهش مصرف برق لاندری از اینverter استفاده شود.',
+                category=IdeaComplaint.Category.FACILITIES,
+            ),
         )
         self.assertEqual(suggestion.type, IdeaComplaint.Type.SUGGESTION)

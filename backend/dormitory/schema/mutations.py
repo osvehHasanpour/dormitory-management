@@ -15,6 +15,7 @@ class ChangeRequestStatus(graphene.Mutation):
         new_status = graphene.String(required=True)
         comment = graphene.String()
         rejection_reason = graphene.String()
+        supervisor_response = graphene.String()
         assigned_staff_id = graphene.Int()
 
     Output = ChangeRequestStatusResponseType
@@ -26,6 +27,7 @@ class ChangeRequestStatus(graphene.Mutation):
         new_status,
         comment='',
         rejection_reason='',
+        supervisor_response=None,
         assigned_staff_id=None,
     ):
         user = info.context.user
@@ -44,6 +46,7 @@ class ChangeRequestStatus(graphene.Mutation):
                 new_status=new_status,
                 comment=comment or '',
                 rejection_reason=rejection_reason or '',
+                supervisor_response=supervisor_response,
                 assigned_staff_id=assigned_staff_id,
             )
         except RequestServiceError as exc:

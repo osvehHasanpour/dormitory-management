@@ -6,6 +6,9 @@ import { formatRelativeDate } from "../../utils/formatRelativeDate";
 interface IdeaCardProps {
   idea: IdeaFeedItem;
   isVoting: boolean;
+  isExpanded: boolean;
+  anyExpanded: boolean;
+  onToggle: () => void;
   onVote: (ideaId: number, voteType: IdeaVoteType) => void;
 }
 
@@ -104,7 +107,7 @@ function VoteButton({
       disabled={isVoting}
       aria-label={label}
       aria-pressed={isActive}
-      className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-body-md text-[#2E1145] transition-colors duration-500 ${
+      className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-body-md text-ink transition-colors duration-500 ${
         isActive ? "bg-primary/30" : "bg-transparent hover:bg-primary/15"
       } ${isVoting ? "cursor-not-allowed opacity-60" : "active:bg-primary/25"}`}
     >
@@ -119,8 +122,14 @@ function VoteButton({
   );
 }
 
-export function IdeaCard({ idea, isVoting, onVote }: IdeaCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+export function IdeaCard({
+  idea,
+  isVoting,
+  isExpanded,
+  anyExpanded,
+  onToggle,
+  onVote,
+}: IdeaCardProps) {
   const [poppingVote, setPoppingVote] = useState<IdeaVoteType | null>(null);
   const popTimeoutRef = useRef<number | null>(null);
 
@@ -157,16 +166,29 @@ export function IdeaCard({ idea, isVoting, onVote }: IdeaCardProps) {
     ""
   ).trim();
 
+  const articleClassName = [
+    "glass-card flex w-full flex-col overflow-hidden rounded-md border border-hairline p-4 text-right shadow-elevated",
+    isExpanded ? "self-start" : "",
+    !isExpanded && anyExpanded ? "self-start min-h-[8.5rem]" : "",
+    !isExpanded && !anyExpanded ? "h-full" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <article className="glass-card overflow-hidden rounded-md border border-hairline p-4 text-right shadow-elevated">
+    <article className={articleClassName}>
       <button
         type="button"
-        onClick={() => setIsExpanded((value) => !value)}
+        onClick={onToggle}
         aria-expanded={isExpanded}
-        className="w-full text-right"
+        className="w-full shrink-0 text-right"
       >
         <div className="flex items-center justify-between gap-3">
-          <span className="min-w-0 flex-1 break-words text-heading-md text-ink">
+          <span
+            className={`min-w-0 flex-1 break-words text-heading-md text-ink ${
+              isExpanded ? "" : "line-clamp-2"
+            }`}
+          >
             {idea.title}
           </span>
           <ChevronDownIcon
@@ -177,7 +199,7 @@ export function IdeaCard({ idea, isVoting, onVote }: IdeaCardProps) {
         </div>
       </button>
 
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="mt-4 flex shrink-0 flex-wrap items-center gap-2">
         <VoteButton
           type="up"
           count={idea.likes_count}
@@ -196,8 +218,12 @@ export function IdeaCard({ idea, isVoting, onVote }: IdeaCardProps) {
         />
       </div>
 
+      {!isExpanded && !anyExpanded ? (
+        <div className="min-h-0 flex-1" aria-hidden="true" />
+      ) : null}
+
       <div
-        className={`grid transition-[grid-template-rows] duration-500 ease-out ${
+        className={`grid shrink-0 transition-[grid-template-rows] duration-500 ease-out ${
           isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >

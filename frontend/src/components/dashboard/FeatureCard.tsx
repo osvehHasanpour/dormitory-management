@@ -18,7 +18,7 @@ export function FeatureCard({
   return (
     <Link
       to={route}
-      className={`flex flex-col items-center justify-center gap-3 glass-card p-4 transition-colors active:bg-white/55 ${
+      className={`flex flex-col items-center justify-center gap-3 glass-card p-4 transition-colors active:bg-interactive-soft ${
         isLarge
           ? "min-h-[132px] rounded-lg sm:min-h-[148px] md:min-h-[168px]"
           : "min-h-[112px] sm:min-h-[120px] md:min-h-[140px]"

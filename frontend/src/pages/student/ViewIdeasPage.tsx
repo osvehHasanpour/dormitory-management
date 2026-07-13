@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { IdeaCard } from "../../components/idea/IdeaCard";
@@ -13,6 +14,7 @@ import { useIdeasFeed } from "../../hooks/useIdeasFeed";
 
 export function ViewIdeasPage() {
   const navigate = useNavigate();
+  const [expandedId, setExpandedId] = useState<number | null>(null);
   const {
     ideas,
     isLoading,
@@ -23,6 +25,11 @@ export function ViewIdeasPage() {
     retry,
     vote,
   } = useIdeasFeed();
+  const anyExpanded = expandedId !== null;
+  const gridClassName = [
+    "space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0",
+    anyExpanded ? "md:items-start" : "md:items-stretch",
+  ].join(" ");
 
   return (
     <PageShell>
@@ -38,7 +45,7 @@ export function ViewIdeasPage() {
           <h1 className="text-page-title text-ink">مشاهده ایده‌ها</h1>
         </section>
 
-        <section className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
+        <section className={gridClassName}>
           {isLoading
             ? Array.from({ length: 4 }, (_, index) => (
                 <IdeaCardSkeleton key={index} />
@@ -57,6 +64,13 @@ export function ViewIdeasPage() {
                   key={idea.id}
                   idea={idea}
                   isVoting={votingIds.has(idea.id)}
+                  isExpanded={expandedId === idea.id}
+                  anyExpanded={anyExpanded}
+                  onToggle={() =>
+                    setExpandedId((current) =>
+                      current === idea.id ? null : idea.id,
+                    )
+                  }
                   onVote={vote}
                 />
               ))

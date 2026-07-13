@@ -156,7 +156,7 @@ export function FloatingPanel({
   }
 
   const panelSurfaceClass =
-    "overflow-hidden border border-hairline/50 bg-white shadow-[0_12px_48px_rgba(46,17,69,0.16)]";
+    "overflow-hidden border border-hairline/50 bg-canvas shadow-panel";
 
   const panelContent = (
     <div
@@ -171,7 +171,7 @@ export function FloatingPanel({
         <button
           type="button"
           aria-label="بستن"
-          className="absolute inset-0 animate-sheet-scrim bg-ink/45 backdrop-blur-[2px]"
+          className="absolute inset-0 animate-sheet-scrim bg-scrim-soft backdrop-blur-[2px]"
           onClick={onClose}
         />
       ) : null}
