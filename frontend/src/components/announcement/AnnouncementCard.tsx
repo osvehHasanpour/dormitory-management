@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import type { AnnouncementListItem } from "../../types/announcement";
 import {
@@ -8,6 +8,9 @@ import {
 
 interface AnnouncementCardProps {
   announcement: AnnouncementListItem;
+  isExpanded: boolean;
+  anyExpanded: boolean;
+  onToggle: () => void;
 }
 
 function SpeakerFilledIcon({ className = "" }: { className?: string }) {
@@ -48,9 +51,12 @@ function ChevronDownIcon({ className = "" }: { className?: string }) {
   );
 }
 
-export function AnnouncementCard({ announcement }: AnnouncementCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
+export function AnnouncementCard({
+  announcement,
+  isExpanded,
+  anyExpanded,
+  onToggle,
+}: AnnouncementCardProps) {
   const previewText = useMemo(() => {
     const normalized = announcement.content.replace(/\s+/g, " ").trim();
     if (normalized.length <= 100) {
@@ -59,13 +65,22 @@ export function AnnouncementCard({ announcement }: AnnouncementCardProps) {
     return `${normalized.slice(0, 100).trim()}...`;
   }, [announcement.content]);
 
+  const articleClassName = [
+    "glass-card flex w-full flex-col overflow-hidden rounded-md border border-hairline p-4 text-right shadow-elevated",
+    isExpanded ? "self-start" : "",
+    !isExpanded && anyExpanded ? "self-start min-h-[9.5rem]" : "",
+    !isExpanded && !anyExpanded ? "h-full" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <article className="glass-card overflow-hidden rounded-md border border-hairline p-4 text-right shadow-elevated">
+    <article className={articleClassName}>
       <button
         type="button"
-        onClick={() => setIsExpanded((value) => !value)}
+        onClick={onToggle}
         aria-expanded={isExpanded}
-        className="w-full text-right"
+        className="w-full shrink-0 text-right"
       >
         <div className="flex flex-col gap-2 min-[480px]:flex-row min-[480px]:items-start min-[480px]:justify-between">
           <div className="flex min-w-0 flex-1 items-start gap-3">
@@ -73,7 +88,11 @@ export function AnnouncementCard({ announcement }: AnnouncementCardProps) {
               <SpeakerFilledIcon className="h-7 w-7 text-ink" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block break-words text-heading-md text-ink">
+              <span
+                className={`block break-words text-heading-md text-ink ${
+                  isExpanded ? "" : "line-clamp-2"
+                }`}
+              >
                 {announcement.title}
               </span>
               <span className="mt-1 block line-clamp-2 break-words text-body-sm text-body-text">
@@ -95,8 +114,12 @@ export function AnnouncementCard({ announcement }: AnnouncementCardProps) {
         </div>
       </button>
 
+      {!isExpanded && !anyExpanded ? (
+        <div className="min-h-0 flex-1" aria-hidden="true" />
+      ) : null}
+
       <div
-        className={`grid transition-[grid-template-rows] duration-500 ease-out ${
+        className={`grid shrink-0 transition-[grid-template-rows] duration-500 ease-out ${
           isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >

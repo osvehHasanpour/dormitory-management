@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { AnnouncementCard } from "../../components/announcement/AnnouncementCard";
@@ -13,7 +14,13 @@ import { useAnnouncementsFeed } from "../../hooks/useAnnouncementsFeed";
 
 export function SupervisorAnnouncementsPage() {
   const navigate = useNavigate();
+  const [expandedId, setExpandedId] = useState<number | null>(null);
   const { announcements, isLoading, error, retry } = useAnnouncementsFeed();
+  const anyExpanded = expandedId !== null;
+  const gridClassName = [
+    "space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0",
+    anyExpanded ? "md:items-start" : "md:items-stretch",
+  ].join(" ");
 
   return (
     <PageShell bottomSpacing="nav-cta">
@@ -27,7 +34,7 @@ export function SupervisorAnnouncementsPage() {
           </p>
         </section>
 
-        <section className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
+        <section className={gridClassName}>
           {isLoading
             ? Array.from({ length: 4 }, (_, index) => (
                 <AnnouncementCardSkeleton key={index} />
@@ -45,6 +52,13 @@ export function SupervisorAnnouncementsPage() {
                 <AnnouncementCard
                   key={announcement.id}
                   announcement={announcement}
+                  isExpanded={expandedId === announcement.id}
+                  anyExpanded={anyExpanded}
+                  onToggle={() =>
+                    setExpandedId((current) =>
+                      current === announcement.id ? null : announcement.id,
+                    )
+                  }
                 />
               ))
             : null}
