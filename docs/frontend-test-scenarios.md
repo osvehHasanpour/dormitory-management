@@ -74,25 +74,8 @@ The project primarily uses:
 
 ---
 
-## 2.2 Dashboard & Role-Based Access
 
-### Positive Cases
-
-No explicit positive access-enforcement test exists for this module in the current suite.
-
-### Negative Cases
-
-No explicit deny-redirect assertion is implemented in current tests for supervisor routes.
-
-### Edge Cases
-
-| Feature name | Tested component/page/hook/service | Scenario description | Preconditions | Test steps | Expected result |
-|---|---|---|---|---|---|
-| Documented RBAC mismatch | `SupervisorDashboardPage` (rendered through `TestProviders`) | Test documents that authenticated student can access supervisor dashboard UI | Authenticated student context | Render supervisor dashboard route as student | Supervisor dashboard items render; no unauthorized message shown |
-
----
-
-## 2.3 Announcements
+## 2. Announcements
 
 ### Positive Cases
 
@@ -100,10 +83,6 @@ No explicit deny-redirect assertion is implemented in current tests for supervis
 |---|---|---|---|---|---|
 | Create announcement success | `AnnouncementForm` + `announcementService.createAnnouncement` | Supervisor submits a valid announcement | Supervisor auth context with access token; service mocked success | Fill title/content, click **ارسال اطلاعیه** | Service called with payload + token; success alert shown; navigates to `/supervisor/announcements` after timer |
 | View announcements list | `AnnouncementsPage` + `announcementService.fetchAnnouncements` | Student sees fetched announcements | Student auth context; service mocked list | Render announcements page | Page heading appears; announcement title/content shown; fetch called with access token |
-
-### Negative Cases
-
-No explicit failed create/list scenario is asserted in current announcement tests.
 
 ### Edge Cases
 
@@ -113,7 +92,7 @@ No explicit failed create/list scenario is asserted in current announcement test
 
 ---
 
-## 2.4 Ideas & Voting
+## 2.3 Ideas & Voting
 
 ### Positive Cases
 
@@ -122,9 +101,6 @@ No explicit failed create/list scenario is asserted in current announcement test
 | Like action from idea card | `IdeaCard` | Clicking like triggers vote callback with correct payload | Idea card rendered with idea data | Click **پسندیدن ایده** | `onVote` called with `(ideaId, "up")` |
 | Feed vote state update | `useIdeasFeed` + `ideaService.fetchIdeas/voteIdea` | Successful vote updates local feed counters and user vote | Authenticated context; fetch + vote mocked success | Initialize hook, invoke `vote(ideaId, "up")` | Vote service called with token; local `likes_count` and `user_vote` updated |
 
-### Negative Cases
-
-No explicit vote failure or unauthenticated vote test is present in current ideas tests.
 
 ### Edge Cases
 
@@ -134,7 +110,7 @@ No explicit vote failure or unauthenticated vote test is present in current idea
 
 ---
 
-## 2.5 Student Requests (Booth, Cleaning, Item)
+## 2.4 Student Requests (Booth, Cleaning, Item)
 
 ### Positive Cases
 
@@ -159,17 +135,13 @@ No explicit vote failure or unauthenticated vote test is present in current idea
 
 ---
 
-## 2.6 Supervisor Request Management
+## 2.5 Supervisor Request Management
 
 ### Positive Cases
 
 | Feature name | Tested component/page/hook/service | Scenario description | Preconditions | Test steps | Expected result |
 |---|---|---|---|---|---|
 | Update request status success | `useSupervisorRequestUpdate` + `requestService.updateSupervisorRequestStatus` | Supervisor updates request status and response text | Authenticated context; service mocked success | Set form values (`status`, `supervisor_response`), submit item | Service called with token/type/id/payload; success toast shown; `onSuccess` called with updated item |
-
-### Negative Cases
-
-No explicit failed status-update scenario is asserted in this test file.
 
 ### Edge Cases
 
@@ -179,7 +151,7 @@ No explicit failed status-update scenario is asserted in this test file.
 
 ---
 
-## 2.7 Classes (Student + Supervisor)
+## 2.6 Classes (Student + Supervisor)
 
 ### Positive Cases
 
@@ -187,10 +159,6 @@ No explicit failed status-update scenario is asserted in this test file.
 |---|---|---|---|---|---|
 | Student sees available classes and registers | `useClassRegistration` + `classService.fetchActiveClasses/fetchMyClasses/registerClass` | Hook loads classes, registers selected class, then refreshes data | Authenticated context; services mocked success | Initialize hook, call `registerInClass(classId)` | Register service called; success feedback shown; active/enrolled lists re-fetched |
 | Supervisor creates class | `useSupervisorClassForm` + `supervisorClassService.createSupervisorClass` | Supervisor class form submits creation payload | Authenticated context; create service mocked success | Reset form with valid values, submit in create mode | Create service called; `onSuccess` called with created class and mode |
-
-### Negative Cases
-
-No explicit failed class registration/class creation path is asserted in current class tests.
 
 ### Edge Cases
 
@@ -200,7 +168,7 @@ No explicit failed class registration/class creation path is asserted in current
 
 ---
 
-## 2.8 Supervisor Feedback (Ideas/Complaints)
+## 2.7 Supervisor Feedback (Ideas/Complaints)
 
 ### Positive Cases
 
@@ -208,9 +176,6 @@ No explicit failed class registration/class creation path is asserted in current
 |---|---|---|---|---|---|
 | Submit supervisor response | `useSupervisorFeedbackResponse` + `supervisorFeedbackService.respondToFeedback` | Supervisor responds to feedback item successfully | Authenticated context; response service mocked success | Set `response_text`, apply `"answered"` action | Service called with token/id/response text; success toast shown; `onSuccess` invoked; form value retained/reset to updated response |
 
-### Negative Cases
-
-No explicit failed feedback-response scenario is asserted in current tests.
 
 ### Edge Cases
 
