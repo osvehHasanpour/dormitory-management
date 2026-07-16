@@ -83,40 +83,8 @@ The project uses a layered strategy:
 
 ---
 
-## 2.3 Notifications (`core`)
 
-### Positive Cases
-
-| Feature name | Tested endpoint/service | Scenario description | Preconditions | Test steps | Expected result |
-|---|---|---|---|---|---|
-| List own notifications | `GET notifications:notification-list` | Student sees only own notifications | Student + other user notifications exist | Call list endpoint as student | Only student notifications returned |
-| Unread first ordering | `GET notifications:notification-list` + selector | Unread notifications are prioritized | Mix of read/unread notifications | Call list/selector | Unread entries appear before read ones |
-| Unread count in response | `GET notifications:notification-list` | Response includes unread count aggregate | At least one unread notification | Call list endpoint | `unread_count` present and accurate |
-| Mark single notification read | `POST notifications:notification-mark-read` | Student marks own notification as read | Student has unread notification | Post read action by notification id | `200 OK`, notification becomes read |
-| Mark all read | `POST notifications:notification-mark-all-read` | Student marks all own unread notifications as read | Student has unread notifications | Post read-all action | `200 OK`, `updated_count` equals unread amount |
-
-### Negative Cases
-
-| Feature name | Tested endpoint/service | Scenario description | Preconditions | Test steps | Expected result |
-|---|---|---|---|---|---|
-| List requires auth | `GET notifications:notification-list` | Unauthenticated access denied | No token | Call list endpoint | `401 Unauthorized` |
-| Mark other user's notification | `POST notifications:notification-mark-read` | User cannot modify another user notification | Student + other user notification exists | Attempt mark-read on foreign notification id | `404 Not Found` |
-| Mark non-existent notification | `POST notifications:notification-mark-read` | Missing notification id rejected | Authenticated user | Mark-read with invalid id | `404 Not Found` |
-| Mark read requires auth | `POST notifications:notification-mark-read` | Unauthenticated mark-read denied | No token | Post read action | `401 Unauthorized` |
-| Mark all read requires auth | `POST notifications:notification-mark-all-read` | Unauthenticated mark-all denied | No token | Post read-all | `401 Unauthorized` |
-
-### Edge Cases
-
-| Feature name | Tested endpoint/service | Scenario description | Preconditions | Test steps | Expected result |
-|---|---|---|---|---|---|
-| Mark-read idempotency | `NotificationService.mark_read` + REST | Re-marking an already read notification is safe | Target notification already read | Mark read repeatedly | State remains read, no failure |
-| Mark-all when none unread | `NotificationService.mark_all_read` + REST | No unread notifications returns zero updates | All notifications already read | Execute mark-all | `updated_count = 0` |
-| Isolation on mark-all | `NotificationService.mark_all_read` + REST | Mark-all affects only current user | Multiple users have unread notifications | Student calls mark-all | Other users’ notifications remain unread |
-| Missing selector fetch | `NotificationSelector.get_by_id_for_user` | Missing notification id raises service error | Authenticated user | Fetch missing id | Service error with `404` semantics |
-
----
-
-## 2.4 Requests Domain (`requests_app`)
+## 2.3 Requests Domain (`requests_app`)
 
 ### Positive Cases
 
@@ -134,7 +102,7 @@ The project uses a layered strategy:
 | Typed detail fields (item/booth) | `GET requests:student-request-detail` | Detail includes type-specific fields | Item/booth requests exist | Fetch detail for each type | Item quantity and booth fields present |
 | Supervisor status change | `PATCH requests:maintenance-request-change-status` | Supervisor moves request to in-progress | Pending maintenance request exists | Patch status with comment | `200 OK`, status changes, `handled_by` set |
 | Supervisor response persistence | Status change endpoint + student detail | Supervisor note is stored and visible to student | Existing request | Supervisor patches `supervisor_response`, student fetches detail | Response text persisted and returned |
-| Staff assignment on status change | Status change endpoint | Supervisor assigns staff while changing status | Request exists | Patch with `assigned_staff` | Assigned staff saved and returned |
+
 | Timeline endpoint | `GET requests:maintenance-request-timeline` | Student views request status timeline | Request has status history entries | Call timeline endpoint | `200 OK`, timeline items returned |
 | Initial history on create | Create endpoints + `RequestStatusHistory` | New request creates initial status history row | Authenticated student | Create request | History row with `previous_status = None`, `new_status = pending` |
 | GraphQL list for supervisor | GraphQL `allRequests` query | Supervisor can query requests list | Requests exist | Execute query as supervisor | Success with total count + items |
@@ -171,7 +139,7 @@ The project uses a layered strategy:
 
 ---
 
-## 2.5 Feedback API (Complaints/Suggestions via `requests_app`)
+## 2.4 Feedback API (Complaints/Suggestions via `requests_app`)
 
 ### Positive Cases
 
@@ -196,7 +164,7 @@ The project uses a layered strategy:
 
 ---
 
-## 2.6 Classes (`classes`)
+## 2.5 Classes (`classes`)
 
 ### Positive Cases
 
@@ -244,7 +212,7 @@ The project uses a layered strategy:
 
 ---
 
-## 2.7 Announcements (`announcements`)
+## 2.6 Announcements (`announcements`)
 
 ### Positive Cases
 
@@ -285,7 +253,7 @@ The project uses a layered strategy:
 
 ---
 
-## 2.8 Ideas & Voting (`ideas`)
+## 2.7 Ideas & Voting (`ideas`)
 
 ### Positive Cases
 
@@ -317,7 +285,7 @@ The project uses a layered strategy:
 
 ---
 
-## 2.9 Supervisor Feedback Workflow (`ideas` supervisor APIs)
+## 2.8 Supervisor Feedback Workflow (`ideas` supervisor APIs)
 
 ### Positive Cases
 
@@ -353,7 +321,7 @@ The project uses a layered strategy:
 
 ---
 
-## 2.10 Dormitory GraphQL App (`dormitory`)
+## 2.9 Dormitory GraphQL App (`dormitory`)
 
 ### Positive Cases
 
