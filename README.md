@@ -202,26 +202,6 @@ docker-compose logs -f backend
 docker-compose exec backend python manage.py makemigrations
 ```
 
----
-
-## 🚀 Development Status
-
-### ✅ Completed
-
-- [x] Full Docker setup
-- [x] Modular backend (users, requests_app, ideas, classes, etc.)
-- [x] JWT Authentication & role-based access
-- [x] Request management (recent fixes for "My Requests")
-- [x] Announcements & notifications
-- [x] Database models & migrations
-
-### 🔄 In Progress
-
-- [ ] Advanced frontend pages
-- [ ] Testing & polishing
-
----
-
 ## 👥 Team
 
 <div align="center">
@@ -240,13 +220,6 @@ docker-compose exec backend python manage.py makemigrations
 
 ---
 
-## 🤝 Contributing
-
-1. Fork & create a feature branch
-2. Follow Clean Code / SOLID principles
-3. Submit a PR with tests
-
----
 
 <div align="center">
 
