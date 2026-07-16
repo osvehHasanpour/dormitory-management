@@ -235,7 +235,7 @@ The project uses a layered strategy:
 | Student cannot create/update/deactivate | Announcement CRUD endpoints | Student role cannot manage announcements | Authenticated student | Attempt create/update/delete | `403 Forbidden` |
 | Missing required fields | `POST announcements:announcement-list` | Title/content required | Authenticated supervisor | Submit payload missing title or content | `400 Bad Request` with field errors |
 | Whitespace-only fields rejected | Create endpoint | Title/content cannot be blank after trimming | Authenticated supervisor | Submit `"   "` title or content | `400 Bad Request` |
-| Title max length validation | Create endpoint | Overlength title rejected | Authenticated supervisor | Submit title > 200 chars | `400 Bad Request`, title error |
+| Title max length validation | Create endpoint | Overlength title rejected | Authenticated supervisor | Submit title > 200 chars | `400 Bad Request`, title error|
 | Empty update body rejected | `PUT announcements:announcement-detail` + service update | Update requires at least one field | Authenticated manager | Submit empty payload | `400 Bad Request` / service error |
 | Student cannot access inactive detail | `GET announcements:announcement-detail` | Students cannot view inactive announcement | Inactive announcement exists | Fetch inactive detail as student | `404 Not Found` |
 | Nonexistent detail lookup | Detail endpoint | Missing announcement id returns not found | Authenticated user | Fetch non-existing id | `404 Not Found` |
