@@ -213,7 +213,6 @@ docker-compose exec backend python manage.py makemigrations
 | **Mahshid Haji Shirmohammadi** | Developer |
 | **Zeinab Golchin** | Developer |
 | **Hanieh Tebianian** | Developer |
-| **Mohammad Saeed Zare** | Mentor |
 | **Dr. Mehran Alidoust Nia** | Supervisor |
 
 </div>
