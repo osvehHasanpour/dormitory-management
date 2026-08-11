@@ -27,7 +27,7 @@
 
 A **full-stack SOA-based** web platform that digitizes dormitory management. It connects **students**, **supervisors**, and **admins** with transparent, efficient digital workflows — replacing paper-based processes.
 
-**Key Features** (aligned with SRS):
+**Key Features**:
 
 | Feature | Description |
 |---|---|
